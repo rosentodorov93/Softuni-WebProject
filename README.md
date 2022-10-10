@@ -1,2 +1,2 @@
 # Softuni-WebProject
-Asp.net app project for Softuni Asp.Net Advanced course
+Asp.net mvc app for Softuni Asp.Net Advanced course
