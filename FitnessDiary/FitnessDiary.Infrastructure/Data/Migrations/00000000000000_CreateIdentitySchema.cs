@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace FitnessDiary.Data.Migrations
+namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

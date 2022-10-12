@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitnessDiary.Data
+namespace FitnessDiary.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
