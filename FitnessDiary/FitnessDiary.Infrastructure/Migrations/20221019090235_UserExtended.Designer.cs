@@ -12,14 +12,14 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221012173059_ApplicationUserAndActivityLevelTableAdded")]
-    partial class ApplicationUserAndActivityLevelTableAdded
+    [Migration("20221019090235_UserExtended")]
+    partial class UserExtended
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "6.0.10")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
@@ -42,9 +42,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("DailyTargetCalories")
-                        .HasColumnType("float");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -55,6 +52,9 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Property<string>("FitnessGoal")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("FitnessGoalId")
+                        .HasColumnType("int");
 
                     b.Property<string>("FullName")
                         .IsRequired()

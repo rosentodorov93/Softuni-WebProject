@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -13,7 +8,7 @@ namespace FitnessDiary.Infrastructure.Data
         public int Id { get; set; }
 
         [Required]
-        [StringLength(15)]
+        [MaxLength(15)]
         public string Type { get; set; } = null!;
 
         [Required]

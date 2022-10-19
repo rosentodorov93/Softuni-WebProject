@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -24,12 +25,17 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public double Weight { get; set; }
 
         [Required]
+        public int ActivityLevelId { get; set; }
+
+        [Required]
+        [ForeignKey(nameof(ActivityLevelId))]
         public ActivityLevel ActivityLevel { get; set; }= null!;
 
         [Required]
-        public string FitnessGoal { get; set; } = null!;
+        public int FitnessGoalId { get; set; }
 
-        [Required]
-        public double DailyTargetCalories { get; set; }
+        [ForeignKey(nameof(FitnessGoalId))]
+        public FitnessGoal FitnessGoal { get; set; } = null!;
+
     }
 }

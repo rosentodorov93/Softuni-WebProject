@@ -4,7 +4,7 @@
 
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
-    public partial class ApplicationUserAndActivityLevelTableAdded : Migration
+    public partial class UserExtended : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -22,19 +22,19 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                 nullable: false,
                 defaultValue: 0);
 
-            migrationBuilder.AddColumn<double>(
-                name: "DailyTargetCalories",
-                table: "AspNetUsers",
-                type: "float",
-                nullable: false,
-                defaultValue: 0.0);
-
             migrationBuilder.AddColumn<string>(
                 name: "FitnessGoal",
                 table: "AspNetUsers",
                 type: "nvarchar(max)",
                 nullable: false,
                 defaultValue: "");
+
+            migrationBuilder.AddColumn<int>(
+                name: "FitnessGoalId",
+                table: "AspNetUsers",
+                type: "int",
+                nullable: false,
+                defaultValue: 0);
 
             migrationBuilder.AddColumn<string>(
                 name: "FullName",
@@ -108,11 +108,11 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "DailyTargetCalories",
+                name: "FitnessGoal",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
-                name: "FitnessGoal",
+                name: "FitnessGoalId",
                 table: "AspNetUsers");
 
             migrationBuilder.DropColumn(
