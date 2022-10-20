@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using FitnessDiary.Infrastructure.Data.Enums;
+using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -23,6 +24,10 @@ namespace FitnessDiary.Infrastructure.Data.Account
 
         [Required]
         public double Weight { get; set; }
+
+        [Required]
+        [StringLength(7)]
+        public Gender Gender { get; set; }
 
         [Required]
         public int ActivityLevelId { get; set; }
