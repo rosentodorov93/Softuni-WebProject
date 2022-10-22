@@ -10,6 +10,10 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Threading;
 using System.Threading.Tasks;
+using FitnessDiary.Core.Contracts;
+using FitnessDiary.Infrastructure.Data;
+using FitnessDiary.Infrastructure.Data.Account;
+using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -23,26 +27,26 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<IdentityUser> _signInManager;
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly IUserStore<IdentityUser> _userStore;
-        private readonly IUserEmailStore<IdentityUser> _emailStore;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAccountService _service;
+
+
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSender _emailSender;
+
 
         public RegisterModel(
-            UserManager<IdentityUser> userManager,
-            IUserStore<IdentityUser> userStore,
-            SignInManager<IdentityUser> signInManager,
-            ILogger<RegisterModel> logger,
-            IEmailSender emailSender)
+            UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
+            IAccountService accountService,
+            ILogger<RegisterModel> logger)
         {
             _userManager = userManager;
-            _userStore = userStore;
-            _emailStore = GetEmailStore();
+            _service = accountService;
+
             _signInManager = signInManager;
             _logger = logger;
-            _emailSender = emailSender;
+
         }
 
         /// <summary>
@@ -63,6 +67,8 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
+        public IEnumerable<ActivityLevel> ActivityLevels { get; set; } = new List<ActivityLevel>();
+        public IEnumerable<FitnessGoal> FitnessGoals { get; set; } = new List<FitnessGoal>();
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -70,6 +76,9 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         /// </summary>
         public class InputModel
         {
+            [Required]
+            [StringLength(25, MinimumLength = 5)]
+            public string Username { get; set; } = null!;
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
@@ -97,13 +106,40 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             [Display(Name = "Confirm password")]
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
+            [Required]
+            [StringLength(80, MinimumLength = 5)]
+            public string FullName { get; set; } = null!;
+
+            [Required]
+            [Range(1, 110)]
+            public int Age { get; set; }
+
+            [Required]
+            public int Gender { get; set; }
+
+            [Required]
+            [Range(1, 250)]
+            public int Height { get; set; }
+
+            [Required]
+            [Range(typeof(double), "0.0", "500.0")]
+            public double Weight { get; set; }
+
+            [Required]
+            public int ActivityLevelId { get; set; }
+
+            [Required]
+            public int FitnessGoalId { get; set; }
+
         }
 
 
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+            this.ActivityLevels = _service.GetActivityLevels();
+            this.FitnessGoals = _service.GetFitnessGoals();
+            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
@@ -112,37 +148,31 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = CreateUser();
+                var user = new ApplicationUser()
+                {
+                    UserName = Input.Username,
+                    Email = Input.Email,
+                    FullName = Input.FullName,
+                    Gender = (Gender)Input.Gender,
+                    Age = Input.Age,
+                    Height = Input.Height,
+                    Weight = Input.Height,
+                    ActivityLevelId = Input.ActivityLevelId,
+                    FitnessGoalId = Input.FitnessGoalId
+                };
 
-                await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
-                await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
+
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    var userId = await _userManager.GetUserIdAsync(user);
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
-                    var callbackUrl = Url.Page(
-                        "/Account/ConfirmEmail",
-                        pageHandler: null,
-                        values: new { area = "Identity", userId = userId, code = code, returnUrl = returnUrl },
-                        protocol: Request.Scheme);
+                    return RedirectToAction("Index", "Home");
 
-                    await _emailSender.SendEmailAsync(Input.Email, "Confirm your email",
-                        $"Please confirm your account by <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicking here</a>.");
+                    //await _signInManager.SignInAsync(user, isPersistent: false);
+                    //return LocalRedirect(returnUrl);
 
-                    if (_userManager.Options.SignIn.RequireConfirmedAccount)
-                    {
-                        return RedirectToPage("RegisterConfirmation", new { email = Input.Email, returnUrl = returnUrl });
-                    }
-                    else
-                    {
-                        await _signInManager.SignInAsync(user, isPersistent: false);
-                        return LocalRedirect(returnUrl);
-                    }
                 }
                 foreach (var error in result.Errors)
                 {
@@ -151,30 +181,20 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
+            this.FitnessGoals = _service.GetFitnessGoals();
+            this.ActivityLevels = _service.GetActivityLevels();
             return Page();
         }
 
-        private IdentityUser CreateUser()
-        {
-            try
-            {
-                return Activator.CreateInstance<IdentityUser>();
-            }
-            catch
-            {
-                throw new InvalidOperationException($"Can't create an instance of '{nameof(IdentityUser)}'. " +
-                    $"Ensure that '{nameof(IdentityUser)}' is not an abstract class and has a parameterless constructor, or alternatively " +
-                    $"override the register page in /Areas/Identity/Pages/Account/Register.cshtml");
-            }
-        }
 
-        private IUserEmailStore<IdentityUser> GetEmailStore()
-        {
-            if (!_userManager.SupportsUserEmail)
-            {
-                throw new NotSupportedException("The default UI requires a user store with email support.");
-            }
-            return (IUserEmailStore<IdentityUser>)_userStore;
-        }
+
+        //private IUserEmailStore<IdentityUser> GetEmailStore()
+        //{
+        //    if (!_userManager.SupportsUserEmail)
+        //    {
+        //        throw new NotSupportedException("The default UI requires a user store with email support.");
+        //    }
+        //    return (IUserEmailStore<IdentityUser>)_userStore;
+        //}
     }
 }
