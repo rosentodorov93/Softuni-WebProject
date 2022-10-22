@@ -23,4 +23,8 @@
     <ProjectReference Include="..\FitnessDiary.Core\FitnessDiary.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\Account\" />
+  </ItemGroup>
+
 </Project>
