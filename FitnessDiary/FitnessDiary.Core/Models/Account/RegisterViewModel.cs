@@ -29,6 +29,9 @@ namespace FitnessDiary.Core.Models.Account
         public int Age { get; set; }
 
         [Required]
+        public int Gender { get; set; }
+
+        [Required]
         [Range(1,250)]
         public int Height { get; set; }
 
