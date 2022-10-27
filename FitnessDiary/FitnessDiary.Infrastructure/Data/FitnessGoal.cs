@@ -10,7 +10,7 @@ namespace FitnessDiary.Infrastructure.Data
     public class FitnessGoal
     {
         [Key]
-        public int Id { get; set; }
+        public int Id { get; init; }
 
         [Required]
         [MaxLength(25)]

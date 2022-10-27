@@ -42,5 +42,7 @@ namespace FitnessDiary.Infrastructure.Data.Account
         [ForeignKey(nameof(FitnessGoalId))]
         public FitnessGoal FitnessGoal { get; set; } = null!;
 
+        public IList<Food> Foods { get; set; } = new List<Food>();
+
     }
 }
