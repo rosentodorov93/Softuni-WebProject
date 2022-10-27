@@ -1,0 +1,61 @@
+﻿@model FoodViewModel
+@{
+    ViewBag.Title = "Add Food";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form method="post">
+            <div class="mb-3">
+                <label asp-for="@Model.Name" class="form-label">Name</label>
+                <input asp-for="@Model.Name" class="form-control" aria-required="true" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Type" class="form-label">Type</label>
+                <input asp-for="@Model.Type" class="form-control" aria-required="true" />
+                <span asp-validation-for="Type" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.MeassureUnit" class="form-label">Genre</label>
+                <select asp-for="@Model.MeassureUnit" class="form-control">
+                    <option value="1">per 100gs</option>
+                    <option value="2">per item</option>
+                </select>
+                <span asp-validation-for="MeassureUnit" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="@Model.Calories" class="form-label">Calories</label>
+                <input asp-for="@Model.Calories" class="form-control" value="" />
+                <span asp-validation-for="Calories" class="text-danger"></span>
+            </div>
+                 <div class="mb-3">
+                <label asp-for="@Model.Carbohydtrates" class="form-label">Carbs</label>
+                <input asp-for="@Model.Carbohydtrates" class="form-control" value="" />
+                <span asp-validation-for="Carbohydtrates" class="text-danger"></span>
+            </div>
+                 <div class="mb-3">
+                <label asp-for="@Model.Proteins" class="form-label">Protein</label>
+                <input asp-for="@Model.Proteins" class="form-control" value="" />
+                <span asp-validation-for="Proteins" class="text-danger"></span>
+            </div>
+                 <div class="mb-3">
+                <label asp-for="@Model.Fats" class="form-label">Fats</label>
+                <input asp-for="@Model.Fats" class="form-control" value="" />
+                <span asp-validation-for="Fats" class="text-danger"></span>
+            </div>
+
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Add" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

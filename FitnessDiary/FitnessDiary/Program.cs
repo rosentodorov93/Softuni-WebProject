@@ -25,7 +25,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services
+    .AddScoped<IAccountService, AccountService>()
+    .AddScoped<IFoodService, FoodService>();
 
 var app = builder.Build();
 

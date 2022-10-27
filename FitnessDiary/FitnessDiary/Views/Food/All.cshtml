@@ -1,0 +1,56 @@
+﻿@using FitnessDiary.Infrastructure.Data.Enums
+@model IEnumerable<FoodViewModel>
+@{
+    ViewBag.Title = "All foods";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+
+<hr />
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">My Foods</h3>
+        <div class="card-tools">
+            <div class="input-group input-group-sm" style="width: 150px;">
+                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
+                <div class="input-group-append">
+                    <button type="submit" class="btn btn-default">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body table-responsive p-0">
+        <table class="table table-hover text-nowrap">
+            <thead>
+                <tr>
+                    <th>Type</th>
+                    <th>Name</th>
+                    <th>Unit</th>
+                    <th>Calories</th>
+                    <th>Carbs</th>
+                    <th>Proteins</th>
+                    <th>Fats</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var food in Model)
+                {
+                    <tr>
+                        <td>@food.Type</td>
+                        <td>@food.Name</td>
+                        <td>@((MeassureUnitType)food.MeassureUnit)</td>
+                        <td>@food.Calories</td>
+                        <td>@food.Carbohydtrates</td>
+                        <td>@food.Proteins</td>
+                        <td>@food.Fats</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>
