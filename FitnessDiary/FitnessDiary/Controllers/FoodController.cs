@@ -1,6 +1,7 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
@@ -37,6 +38,23 @@ namespace FitnessDiary.Controllers
             await service.AddFood(model);
 
             return RedirectToAction("All", "Food");
+        }
+        public async Task<IActionResult> Mine()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+
+            var foods = await service.GetAllById(userId);
+
+            return View(foods);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddToCollection(string foodId)
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            await service.AddToCollectionAsync(userId, foodId);
+
+            return RedirectToAction("Mine", "Food");
         }
 
     }

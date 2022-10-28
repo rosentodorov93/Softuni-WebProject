@@ -11,5 +11,7 @@ namespace FitnessDiary.Core.Contracts
     {
         public Task<IEnumerable<FoodViewModel>> GetAllAsync();
         Task AddFood(FoodViewModel model);
+        Task AddToCollectionAsync(string? userId, string foodId);
+        public Task<IEnumerable<FoodViewModel>> GetAllById(string? userId);
     }
 }

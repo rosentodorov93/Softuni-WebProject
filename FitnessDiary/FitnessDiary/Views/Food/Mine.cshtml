@@ -1,7 +1,7 @@
 ﻿@using FitnessDiary.Infrastructure.Data.Enums
 @model IEnumerable<FoodViewModel>
 @{
-    ViewBag.Title = "All foods";
+    ViewBag.Title = "My foods";
 }
 
 <h2 class="text-center">@ViewBag.Title</h2>
@@ -10,7 +10,7 @@
 
 <div class="card">
     <div class="card-header">
-        <h3 class="card-title">My Foods</h3>
+        <h3 class="card-title">My Foods real</h3>
         <div class="card-tools">
             <div class="input-group input-group-sm" style="width: 150px;">
                 <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
@@ -34,7 +34,6 @@
                     <th>Carbs</th>
                     <th>Proteins</th>
                     <th>Fats</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -48,11 +47,6 @@
                         <td>@food.Carbohydtrates</td>
                         <td>@food.Proteins</td>
                         <td>@food.Fats</td>
-                        <td>
-                            <form class="input-group-sm" asp-route-foodId="@food.Id" asp-controller="Food" asp-action="AddToCollection" method="post">
-                                <input type="submit" value="Add to My Foods" class="fs-6 btn btn-success mb-3 p-2" />
-                            </form>
-                        </td>
                     </tr>
                 }
             </tbody>

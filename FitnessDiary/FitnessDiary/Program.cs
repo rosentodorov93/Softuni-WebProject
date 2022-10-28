@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Services;
+using FitnessDiary.Infrastructure.Data.Common;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,6 +28,7 @@ builder.Services.AddControllersWithViews();
 
 builder.Services
     .AddScoped<IAccountService, AccountService>()
+    .AddScoped<IRepository, Repository>()
     .AddScoped<IFoodService, FoodService>();
 
 var app = builder.Build();
