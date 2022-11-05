@@ -29,7 +29,8 @@ builder.Services.AddControllersWithViews();
 builder.Services
     .AddScoped<IAccountService, AccountService>()
     .AddScoped<IRepository, Repository>()
-    .AddScoped<IFoodService, FoodService>();
+    .AddScoped<IFoodService, FoodService>()
+    .AddScoped<IRecipeService, RecipeService>();
 
 var app = builder.Build();
 

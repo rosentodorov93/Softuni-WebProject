@@ -39,13 +39,19 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("All", "Food");
         }
-        public async Task<IActionResult> Mine()
+        public async Task<IActionResult> Mine([FromQuery] MinePageViewModel query)
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            var foods = await service.GetAllById(userId);
+            var foodsResult = await service.GetAllById(userId, query.Type, query.SearchTerm, query.Sorting, query.CurrentPage);
 
-            return View(foods);
+            var foodTypes = await service.getAllTypesAsync();
+
+            query.Types = foodTypes;
+            query.TotalFoods = foodsResult.TotalFoods;
+            query.Foods = foodsResult.Foods;
+
+            return View(query);
         }
 
         [HttpPost]
