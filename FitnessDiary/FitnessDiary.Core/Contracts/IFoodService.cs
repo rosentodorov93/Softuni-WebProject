@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Core.Models.Food;
+﻿using FitnessDiary.Core.Models.Enums;
+using FitnessDiary.Core.Models.Food;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,9 +10,16 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IFoodService
     {
-        public Task<IEnumerable<FoodViewModel>> GetAllAsync();
+        Task<IEnumerable<FoodViewModel>> GetAllAsync();
         Task AddFood(FoodViewModel model);
         Task AddToCollectionAsync(string? userId, string foodId);
-        public Task<IEnumerable<FoodViewModel>> GetAllById(string? userId);
+        Task<MinePageViewModel> GetAllById(string? userId,
+            string type = null,
+            string searchTerm = null,
+            FoodSorting sorting = FoodSorting.PerName,
+            int currentPage = 1,
+            int foodsPerPage = int.MaxValue);
+        Task<IEnumerable<string>> getAllTypesAsync();
+       
     }
 }

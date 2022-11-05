@@ -1,4 +1,5 @@
 ﻿using FitnessDiary.Core.Contracts;
+using FitnessDiary.Core.Models.Enums;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Account;
@@ -87,7 +88,11 @@ namespace FitnessDiary.Core.Services
             });
         }
 
-        public async Task<IEnumerable<FoodViewModel>> GetAllById(string? userId)
+        public async Task<MinePageViewModel> GetAllById(string? userId,
+            string type = null, string searchTerm = null,
+            FoodSorting sorting = FoodSorting.PerName,
+            int currentPage = 1,
+            int foodsPerPage = int.MaxValue)
         {
             var user = await repo.All<ApplicationUser>().Include(u => u.Foods).ThenInclude(f => f.Nutrition).FirstOrDefaultAsync(u => u.Id == userId);
 
@@ -96,7 +101,7 @@ namespace FitnessDiary.Core.Services
                 throw new ArgumentException("Invalid user ID");
             }
 
-            return user.Foods.Select(f => new FoodViewModel()
+            var userFoods = user.Foods.Select(f => new FoodViewModel()
             {
                 Id = f.Id,
                 Name = f.Name,
@@ -107,6 +112,40 @@ namespace FitnessDiary.Core.Services
                 Proteins = f.Nutrition.Proteins,
                 Fats = f.Nutrition.Fats
             });
+            
+            if (type != null)
+            {
+                userFoods = userFoods.Where(f => f.Type == type);
+            }
+
+            if (searchTerm != null)
+            {
+                userFoods = userFoods.Where(f => f.Name.ToLower().Contains(searchTerm.ToLower()));
+            }
+
+            userFoods = sorting switch
+            {
+                FoodSorting.PerCalories => userFoods.OrderByDescending(c => c.Calories),
+                FoodSorting.PerType => userFoods.OrderBy(c => c.Type),
+                FoodSorting.PerName or _ => userFoods.OrderByDescending(c => c.Name)
+            };
+
+            var totalFoods = userFoods.Count();
+
+            userFoods = userFoods.Skip((currentPage - 1) * foodsPerPage).Take(foodsPerPage);
+
+            return new MinePageViewModel()
+            {
+                TotalFoods = totalFoods,
+                CurrentPage = currentPage,
+                FoodsPerPage = foodsPerPage,
+                Foods = userFoods,
+            };
         }
+
+        public async Task<IEnumerable<string>> getAllTypesAsync()
+            => await repo.All<Food>().Select(f => f.Type).Distinct().ToListAsync();
+
+      
     }
 }
