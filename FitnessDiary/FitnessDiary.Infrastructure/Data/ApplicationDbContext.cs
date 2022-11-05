@@ -13,6 +13,7 @@ namespace FitnessDiary.Infrastructure.Data
         public DbSet<ActivityLevel> ActivityLevels { get; set; }
         public DbSet<FitnessGoal> FitnessGoals { get; set; }
         public DbSet<Food> Foods { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
         public DbSet<NutritionData> Nutritions { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)

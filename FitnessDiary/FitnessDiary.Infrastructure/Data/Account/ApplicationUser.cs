@@ -43,5 +43,6 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public FitnessGoal FitnessGoal { get; set; } = null!;
 
         public IList<Food> Foods { get; set; } = new List<Food>();
+        public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
     }
 }
