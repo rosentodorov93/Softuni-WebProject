@@ -11,7 +11,9 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IRecipeService
     {
-        Task AddAsync(CreateViewModel model);
+        Task<int> AddAsync(CreateViewModel model);
         Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, int recepieId);
+        Task<DetailsViewModel> GetByIdAsync(int id);
+        Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId);
     }
 }

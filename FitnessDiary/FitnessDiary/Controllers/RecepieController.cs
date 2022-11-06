@@ -32,9 +32,9 @@ namespace FitnessDiary.Controllers
                 return View(model);
             }
 
-            await recepieService.AddAsync(model);
+            var resultId = await recepieService.AddAsync(model);
 
-            return RedirectToAction($"AddIngredient/{model.Id}", "Recepie");
+            return RedirectToAction($"AddIngredient", "Recepie", new {id = resultId});
         }
 
         public async Task <IActionResult> AddIngredient(int Id)
@@ -53,12 +53,20 @@ namespace FitnessDiary.Controllers
 
             var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
 
-            return RedirectToAction("Details", "Recepie", recipe);
+            return RedirectToAction("Details", "Recepie", new {id = recipe.Id});
         }
-        public IActionResult Details(DetailsViewModel model)
+        public async Task<IActionResult> Details(int id)
         {
+            var recipe = await recepieService.GetByIdAsync(id);
+            return View(recipe);
+        }
+        public async Task<IActionResult> Mine()
+        {
+            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            return View(model);
+            var recipes = await recepieService.GetAllById(userId);
+
+            return View(recipes);
         }
     }
 }

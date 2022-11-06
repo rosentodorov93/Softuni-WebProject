@@ -1,1 +1,33 @@
-﻿
+﻿@model DetailsViewModel
+
+@{
+    ViewBag.Title = "Recipe Details";
+}
+
+<div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">@Model.Name Details</h3>
+        <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <p>Servings @Model.ServingsSize</p>
+        <p>Units @Model.Unit</p>
+        <h3>Nutrition</h3>
+        <ul>
+          <li>Total Calories: @Model.TotalCalories</li>
+          <li>Calories per serving: @Model.CaloriesPerPortion</li>
+          <li>Total Carbs: @Model.Carbs</li>
+          <li>Total Proteins: @Model.Protein</li>
+          <li>Total Fats: @Model.Fats</li>
+        </ul>
+        <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id ="@Model.Id">Add more ingredients</a>
+        <a asp-controller="Recepie" asp-action="FinishRecipie" asp-route-id ="@Model.Id">Finilize</a>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer">
+        The footer of the card
+    </div>
+    <!-- /.card-footer -->
+</div>
+<!-- /.card -->

@@ -22,7 +22,7 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddAsync(CreateViewModel model)
+        public async Task<int> AddAsync(CreateViewModel model)
         {
             var recipe = new Recipe()
             {
@@ -35,6 +35,9 @@ namespace FitnessDiary.Core.Services
 
             await repo.AddAsync<Recipe>(recipe);
             await repo.SaveChangesAsync();
+
+            var result = await repo.GetLatest<Recipe>();
+            return result.Id;
         }
 
         public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, int recepieId)
@@ -57,6 +60,8 @@ namespace FitnessDiary.Core.Services
             recipe.Nutrition.Proteins += food.Nutrition.Proteins * ingredient.Amount;
             recipe.Nutrition.Fats += food.Nutrition.Fats * ingredient.Amount;
 
+            await repo.SaveChangesAsync();
+
             return new DetailsViewModel()
             {
                 Id = recipe.Id,
@@ -68,6 +73,48 @@ namespace FitnessDiary.Core.Services
                 Fats = recipe.Nutrition.Fats,
                 Unit = (int)recipe.Unit,
                 CaloriesPerPortion = recipe.CaloriesPerServing,
+                isFinished = recipe.isFinished
+            };
+        }
+
+        public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId)
+        {
+            var recipe = await repo.All<Recipe>()
+                 .Where(r => r.UserId == userId)
+                 .Include(r => r.Nutrition)
+                 .ThenInclude(r => r.Foods)
+                 .ToListAsync();
+
+            return recipe.Select(r => new RecipeListingViewModel()
+            {
+                Id = r.Id,
+                Name = r.Name,
+                ServingsSize = r.ServingsSize,
+                Unit = (int)r.Unit,
+                TotalCalories = r.Nutrition.Calories,
+                CaloriesPerPortion = r.CaloriesPerServing
+            });
+        }
+
+        public async Task<DetailsViewModel> GetByIdAsync(int id)
+        {
+            var recipe = await repo.All<Recipe>()
+                 .Where(r => r.Id == id)
+                 .Include(r => r.Nutrition)
+                 .ThenInclude(r => r.Foods)
+                 .FirstOrDefaultAsync();
+
+            return new DetailsViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                ServingsSize = recipe.ServingsSize,
+                Unit = (int)recipe.Unit,
+                CaloriesPerPortion = recipe.CaloriesPerServing,
+                TotalCalories = recipe.Nutrition.Calories,
+                Carbs = recipe.Nutrition.Carbohydrates,
+                Protein = recipe.Nutrition.Proteins,
+                Fats = recipe.Nutrition.Fats,
                 isFinished = recipe.isFinished
             };
         }

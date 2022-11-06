@@ -178,5 +178,10 @@ namespace FitnessDiary.Infrastructure.Data.Common
             var entities = All<T>(deleteWhereClause);
             DeleteRange(entities);
         }
+
+        public async Task<T> GetLatest<T>() where T : class
+        {
+           return await this.DbSet<T>().OrderBy(x => x).LastOrDefaultAsync();
+        }
     }
 }
