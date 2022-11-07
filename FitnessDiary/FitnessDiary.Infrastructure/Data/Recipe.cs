@@ -18,7 +18,7 @@ namespace FitnessDiary.Infrastructure.Data
         [Required]
         [MaxLength(50)]
         public string Name { get; set; } = null!;
-        public List<Food> Foods { get; set; } = new List<Food>();
+        public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public int ServingsSize { get; set; }
         public MeassureUnitType Unit { get; set; }
 

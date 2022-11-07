@@ -32,5 +32,6 @@ namespace FitnessDiary.Infrastructure.Data
 
         [ForeignKey(nameof(NutritionId))]
         public NutritionData Nutrition { get; set; } = null!;
+
     }
 }
