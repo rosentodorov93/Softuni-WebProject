@@ -1,0 +1,31 @@
+﻿@model RemoveIngredientViewModel
+
+
+@{
+    ViewBag.Title = "Choose Ingredient from remove";
+}
+
+<h2 class="text-center">@ViewBag.Title</h2>
+<hr />
+
+<div class="row">
+    <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
+        <form asp-controller="Recepie" asp-action="RemoveIngredient" method="post">
+            <input type="hidden" asp-for="@Model.Recipeid" value="@Model.Recipeid"/>
+            <div class="mb-3">
+                <label class="form-label">Ingrdedients</label>
+                <select asp-for="@Model.IngredientToRemove" class="form-control">
+                    
+                    @foreach (var ingredient in Model.Ingredients)
+                    {
+                        <option value="@ingredient.Id">@ingredient.Name - @ingredient.Amount</option>
+                    }
+                </select>
+
+            </div>
+            <div class="mb-3">
+                <input class="btn btn-primary" type="submit" value="Save" />
+            </div>
+        </form>
+    </div>
+</div>

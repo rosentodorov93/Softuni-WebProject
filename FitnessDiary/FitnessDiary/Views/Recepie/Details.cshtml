@@ -13,20 +13,31 @@
     <div class="card-body">
         <p>Servings @Model.ServingsSize</p>
         <p>Units @Model.Unit</p>
-        <h3>Nutrition</h3>
+        <h3>Ingredients:</h3>
         <ul>
-          <li>Total Calories: @Model.TotalCalories</li>
-          <li>Calories per serving: @Model.CaloriesPerPortion</li>
-          <li>Total Carbs: @Model.Carbs</li>
-          <li>Total Proteins: @Model.Protein</li>
-          <li>Total Fats: @Model.Fats</li>
+            @foreach (var item in @Model.Ingredients)
+            {
+                <li>@item.Name - @item.Amount</li>
+            }
         </ul>
-        <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id ="@Model.Id">Add more ingredients</a>
-        <a asp-controller="Recepie" asp-action="FinishRecipie" asp-route-id ="@Model.Id">Finilize</a>
+        <h3>Nutrition:</h3>
+        <ul>
+            <li>Total Calories: @Model.TotalCalories</li>
+            <li>Calories per serving: @Model.CaloriesPerPortion</li>
+            <li>Total Carbs: @Model.Carbs</li>
+            <li>Total Proteins: @Model.Protein</li>
+            <li>Total Fats: @Model.Fats</li>
+        </ul>
+        <div class="row">
+            <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>
+            <a asp-controller="Recepie" asp-action="RemoveIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Remove ingredients</a>
+            <a asp-controller="Recepie" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
+            <a asp-controller="Recepie" asp-action="FinishRecipie" asp-route-id="@Model.Id" class="btn btn-primary">Finilize Recipe</a>
+        </div>
     </div>
     <!-- /.card-body -->
     <div class="card-footer">
-        The footer of the card
+        Fitness Diary
     </div>
     <!-- /.card-footer -->
 </div>

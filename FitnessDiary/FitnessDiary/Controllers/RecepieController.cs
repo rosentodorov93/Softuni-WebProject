@@ -34,31 +34,75 @@ namespace FitnessDiary.Controllers
 
             var resultId = await recepieService.AddAsync(model);
 
-            return RedirectToAction($"AddIngredient", "Recepie", new {id = resultId});
+            return RedirectToAction($"Details", "Recepie", new {id = resultId});
         }
 
-        public async Task <IActionResult> AddIngredient(int Id)
+        public async Task <IActionResult> AddIngredient(int id)
         {
             var model = new AddIngredientViewModel()
             {
-                RecepieId = Id,
+                RecepieId = id,
                 Foods = await foodService.GetAllAsync()
             };
 
             return View(model);
         }
 
-        public async Task<IActionResult> AddToCollection(AddIngredientViewModel model)
+        [HttpPost]
+        public async Task<IActionResult> AddIngredient(AddIngredientViewModel model)
         {
 
             var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
 
             return RedirectToAction("Details", "Recepie", new {id = recipe.Id});
         }
+
+        [HttpGet]
+        public async Task<IActionResult> RemoveIngredient(int id)
+        {
+            var ingredients = await recepieService.GetIngredientsAsync(id);
+
+            var model = new RemoveIngredientViewModel()
+            {
+                Recipeid = id,
+                Ingredients = ingredients
+            };
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> RemoveIngredient(RemoveIngredientViewModel model)
+        {
+            await recepieService.RemoveIngredient(model.Recipeid, model.IngredientToRemove);
+
+            return RedirectToAction("Details", "Recepie", new { id = model.Recipeid });
+        }
         public async Task<IActionResult> Details(int id)
         {
             var recipe = await recepieService.GetByIdAsync(id);
             return View(recipe);
+        }
+        public async Task<IActionResult> Edit(int id)
+        {
+            var recipe = await recepieService.GetByIdAsync(id);
+            var model = new EditViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                ServingsSize = recipe.ServingsSize,
+                Unit = recipe.Unit,
+                Ingredients = recipe.Ingredients
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Edit(EditViewModel model)
+        {
+            await recepieService.EditAsync(model);
+
+            return RedirectToAction("Details", "Recepie", new { id = model.Id });
         }
         public async Task<IActionResult> Mine()
         {
