@@ -1,12 +1,7 @@
 ﻿using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Infrastructure.Data.Account
 {
@@ -42,6 +37,11 @@ namespace FitnessDiary.Infrastructure.Data.Account
         [ForeignKey(nameof(FitnessGoalId))]
         public FitnessGoal FitnessGoal { get; set; } = null!;
 
+        [Required]
+        public int DiaryId { get; set; }
+
+        [ForeignKey(nameof(DiaryId))]
+        public Diary Diary { get; set; } = null!;
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
     }

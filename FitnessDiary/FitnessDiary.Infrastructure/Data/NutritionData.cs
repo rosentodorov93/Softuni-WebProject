@@ -26,5 +26,7 @@ namespace FitnessDiary.Infrastructure.Data
 
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
+        public IList<Serving> Servings { get; set; } = new List<Serving>();
+        public IList<DiaryDay> DiaryDays { get; set; } = new List<DiaryDay>();
     }
 }

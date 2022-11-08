@@ -16,6 +16,9 @@ namespace FitnessDiary.Infrastructure.Data
         public DbSet<Ingredient> Ingredients { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<NutritionData> Nutritions { get; set; }
+        public DbSet<Serving> Servings { get; set; }
+        public DbSet<DiaryDay> DiaryDays { get; set; }
+        public DbSet<Diary> Diaries { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
