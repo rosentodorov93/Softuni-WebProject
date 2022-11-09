@@ -46,7 +46,5 @@ namespace FitnessDiary.Core.Models.Account
 
         [Required]
         public int FitnessGoalId { get; set; }
-
-        public IEnumerable<FitnessGoal> FitnessGoals { get; set; } = new List<FitnessGoal>();
     }
 }

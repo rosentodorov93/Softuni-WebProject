@@ -1,4 +1,6 @@
-﻿using FitnessDiary.Infrastructure.Data;
+﻿using FitnessDiary.Core.Models.Diary;
+using FitnessDiary.Infrastructure.Data;
+using FitnessDiary.Infrastructure.Data.Account;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +11,8 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IAccountService
     {
-        IEnumerable<ActivityLevel> GetActivityLevels();
-        IEnumerable<FitnessGoal> GetFitnessGoals();
+        Task<IEnumerable<ActivityLevel>> GetActivityLevels();
+        NutritionServiceModel CalculateTargetNutrientsAsync(ApplicationUser user);
+        Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId);
     }
 }
