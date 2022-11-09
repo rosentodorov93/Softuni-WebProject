@@ -19,7 +19,7 @@ namespace FitnessDiary.Infrastructure.Data
         public string Name { get; set; } = null!;
 
         [Required]
-        public DateTime Time { get; set; }
+        public double Amount { get; set; }
 
         [Required]
         public ServingCategory Category { get; set; }

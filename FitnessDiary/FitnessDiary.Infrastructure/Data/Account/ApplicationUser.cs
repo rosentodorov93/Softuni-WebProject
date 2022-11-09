@@ -24,25 +24,22 @@ namespace FitnessDiary.Infrastructure.Data.Account
         [StringLength(7)]
         public Gender Gender { get; set; }
 
-        [Required]
-        public int ActivityLevelId { get; set; }
+        public double ActivityLevel { get; set; }
 
         [Required]
-        [ForeignKey(nameof(ActivityLevelId))]
-        public ActivityLevel ActivityLevel { get; set; }= null!;
+        public FitnessGoalType FitnessGoal { get; set; }
 
         [Required]
-        public int FitnessGoalId { get; set; }
+        public int NutritionId { get; set; }
 
-        [ForeignKey(nameof(FitnessGoalId))]
-        public FitnessGoal FitnessGoal { get; set; } = null!;
-
-        [Required]
-        public int DiaryId { get; set; }
-
-        [ForeignKey(nameof(DiaryId))]
-        public Diary Diary { get; set; } = null!;
+        [ForeignKey(nameof(NutritionId))]
+        public NutritionData TargetNutrients { get; set; } = null!;
+        public int CarbsPercent { get; set; } = 50;
+        public int ProteinPercent { get; set; } = 20;
+        public int FatsPercent { get; set; } = 30;
+        public IList<DiaryDay> Diary { get; set; } = new List<DiaryDay>();
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
+
     }
 }

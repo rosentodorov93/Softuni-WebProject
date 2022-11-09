@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221109115935_RemoveFitnesGoalTable")]
+    partial class RemoveFitnesGoalTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,6 +44,9 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DiaryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Email")
                         .HasMaxLength(256)
@@ -112,6 +117,8 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("DiaryId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -149,27 +156,45 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         new
                         {
                             Id = 1,
-                            Type = "Light ",
-                            Value = 1.375
+                            Type = "Low",
+                            Value = 1.1000000000000001
                         },
                         new
                         {
                             Id = 2,
-                            Type = "Moderate ",
-                            Value = 1.55
+                            Type = "Medium",
+                            Value = 1.2
                         },
                         new
                         {
                             Id = 3,
-                            Type = "Very Active",
-                            Value = 1.7250000000000001
+                            Type = "High",
+                            Value = 1.3
                         },
                         new
                         {
                             Id = 4,
-                            Type = "Extra Active",
-                            Value = 1.8999999999999999
+                            Type = "Very High",
+                            Value = 1.3999999999999999
                         });
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Diary", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("DiaryDayId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DiaryDayId");
+
+                    b.ToTable("Diaries");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
@@ -180,18 +205,18 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.Property<DateTime>("DateTime")
                         .HasColumnType("datetime2");
+
+                    b.Property<int?>("DiaryId")
+                        .HasColumnType("int");
 
                     b.Property<int>("NutritionId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("DiaryId");
 
                     b.HasIndex("NutritionId");
 
@@ -499,20 +524,39 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>
                 {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.Diary", "Diary")
+                        .WithMany()
+                        .HasForeignKey("DiaryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FitnessDiary.Infrastructure.Data.NutritionData", "TargetNutrients")
                         .WithMany()
                         .HasForeignKey("NutritionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Diary");
+
                     b.Navigation("TargetNutrients");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Diary", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.DiaryDay", "CurrentDiaryDay")
+                        .WithMany()
+                        .HasForeignKey("DiaryDayId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("CurrentDiaryDay");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
                 {
-                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", null)
-                        .WithMany("Diary")
-                        .HasForeignKey("ApplicationUserId");
+                    b.HasOne("FitnessDiary.Infrastructure.Data.Diary", null)
+                        .WithMany("DiaryDays")
+                        .HasForeignKey("DiaryId");
 
                     b.HasOne("FitnessDiary.Infrastructure.Data.NutritionData", "Nutrition")
                         .WithMany()
@@ -644,11 +688,14 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>
                 {
-                    b.Navigation("Diary");
-
                     b.Navigation("Foods");
 
                     b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Diary", b =>
+                {
+                    b.Navigation("DiaryDays");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>

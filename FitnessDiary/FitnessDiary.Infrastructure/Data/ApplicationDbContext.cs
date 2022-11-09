@@ -10,15 +10,13 @@ namespace FitnessDiary.Infrastructure.Data
             : base(options)
         {
         }
-        public DbSet<ActivityLevel> ActivityLevels { get; set; }
-        public DbSet<FitnessGoal> FitnessGoals { get; set; }
-        public DbSet<Food> Foods { get; set; }
-        public DbSet<Ingredient> Ingredients { get; set; }
-        public DbSet<Recipe> Recipes { get; set; }
-        public DbSet<NutritionData> Nutritions { get; set; }
-        public DbSet<Serving> Servings { get; set; }
-        public DbSet<DiaryDay> DiaryDays { get; set; }
-        public DbSet<Diary> Diaries { get; set; }
+        public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
+        public DbSet<Food> Foods { get; set; } = null!;
+        public DbSet<Ingredient> Ingredients { get; set; } = null!;
+        public DbSet<Recipe> Recipes { get; set; } = null!;
+        public DbSet<NutritionData> Nutritions { get; set; } = null!;
+        public DbSet<Serving> Servings { get; set; } = null!;
+        public DbSet<DiaryDay> DiaryDays { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -27,41 +25,25 @@ namespace FitnessDiary.Infrastructure.Data
                 .HasData(new ActivityLevel()
                 {
                     Id = 1,
-                    Type = "Low",
-                    Value = 1.1
+                    Type = "Light ",
+                    Value = 1.375
                 },
                 new ActivityLevel()
                 {
                     Id = 2,
-                    Type = "Medium",
-                    Value = 1.2
+                    Type = "Moderate ",
+                    Value = 1.55
                 }, new ActivityLevel()
                 {
                     Id = 3,
-                    Type = "High",
-                    Value = 1.3
+                    Type = "Very Active",
+                    Value = 1.725
                 },
                 new ActivityLevel()
                 {
                     Id = 4,
-                    Type = "Very High",
-                    Value = 1.4
-                });
-            builder.Entity<FitnessGoal>()
-                .HasData(new FitnessGoal()
-                {
-                    Id = 1,
-                    Type = "Lose weight",
-                },
-                new FitnessGoal()
-                {
-                    Id = 2,
-                    Type = "Gain weight",
-                },
-                new FitnessGoal()
-                {
-                    Id = 3,
-                    Type = "Maintain weight",
+                    Type = "Extra Active",
+                    Value = 1.9
                 });
 
             base.OnModelCreating(builder);

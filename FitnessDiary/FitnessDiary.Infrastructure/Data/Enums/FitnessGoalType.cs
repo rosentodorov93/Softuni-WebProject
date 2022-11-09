@@ -6,9 +6,10 @@ using System.Threading.Tasks;
 
 namespace FitnessDiary.Infrastructure.Data.Enums
 {
-    public enum Gender
+    public enum FitnessGoalType
     {
-        Male = 1,
-        Female = 2,
+        LoseWeight = 1,
+        GainWeight = 2,
+        MaintainWeight = 3,
     }
 }

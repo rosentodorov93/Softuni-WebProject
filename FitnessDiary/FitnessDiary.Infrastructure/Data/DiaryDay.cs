@@ -13,12 +13,12 @@ namespace FitnessDiary.Infrastructure.Data
         [Key]
         public int Id { get; set; }
         public  DateTime DateTime { get; set; }
-        public IList<Serving> Servings { get; set; }
+        public IList<Serving> Servings { get; set; } = new List<Serving>();
 
         [Required]
         public int NutritionId { get; set; }
 
         [ForeignKey(nameof(NutritionId))]
-        public NutritionData Nutrition { get; set; }
+        public NutritionData Nutrition { get; set; } = null!;
     }
 }
