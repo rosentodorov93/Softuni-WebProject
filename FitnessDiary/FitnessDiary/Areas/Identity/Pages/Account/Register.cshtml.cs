@@ -68,7 +68,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         /// </summary>
         public IList<AuthenticationScheme> ExternalLogins { get; set; }
         public IEnumerable<ActivityLevel> ActivityLevels { get; set; } = new List<ActivityLevel>();
-        public IEnumerable<FitnessGoal> FitnessGoals { get; set; } = new List<FitnessGoal>();
+
 
         /// <summary>
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -126,10 +126,10 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             public double Weight { get; set; }
 
             [Required]
-            public int ActivityLevelId { get; set; }
+            public double ActivityLevel { get; set; }
 
             [Required]
-            public int FitnessGoalId { get; set; }
+            public int FitnessGoal { get; set; }
 
         }
 
@@ -137,8 +137,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         public async Task OnGetAsync(string returnUrl = null)
         {
             ReturnUrl = returnUrl;
-            this.ActivityLevels = _service.GetActivityLevels();
-            this.FitnessGoals = _service.GetFitnessGoals();
+            this.ActivityLevels = await _service.GetActivityLevels();
             //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
@@ -156,11 +155,19 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                     Gender = (Gender)Input.Gender,
                     Age = Input.Age,
                     Height = Input.Height,
-                    Weight = Input.Height,
-                    ActivityLevelId = Input.ActivityLevelId,
-                    FitnessGoalId = Input.FitnessGoalId
+                    Weight = Input.Weight,
+                    ActivityLevel = Input.ActivityLevel,
+                    FitnessGoal = (FitnessGoalType)Input.FitnessGoal,
+                    TargetNutrients = new NutritionData(),
+                    Diary = new List<DiaryDay>()
                 };
 
+                var target = _service.CalculateTargetNutrientsAsync(user);
+
+                user.TargetNutrients.Calories = target.Calories;
+                user.TargetNutrients.Carbohydrates = target.Carbs;
+                user.TargetNutrients.Proteins = target.Protein;
+                user.TargetNutrients.Fats = target.Fats;
 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
@@ -181,12 +188,9 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
-            this.FitnessGoals = _service.GetFitnessGoals();
-            this.ActivityLevels = _service.GetActivityLevels();
+            this.ActivityLevels = await _service.GetActivityLevels();
             return Page();
         }
-
-
 
         //private IUserEmailStore<IdentityUser> GetEmailStore()
         //{

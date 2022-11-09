@@ -64,24 +64,23 @@
                         <span asp-validation-for="Input.Gender" class="text-danger"></span>
                     </div>
                     <div class="form-group col-6">
-                        <label asp-for="Input.ActivityLevelId" class="form-label">Activity Level</label>
-                        <select asp-for="Input.ActivityLevelId" class="form-control">
+                        <label asp-for="Input.ActivityLevel" class="form-label">Activity Level</label>
+                        <select asp-for="Input.ActivityLevel" class="form-control">
                             @foreach (var al in this.Model.ActivityLevels)
                             {
-                                <option value="@al.Id">@al.Type</option>
+                                <option value="@al.Value">@al.Type</option>
                             }
                         </select>
-                        <span asp-validation-for="Input.ActivityLevelId" class="text-danger"></span>
+       
                     </div>
                     <div class="form-group col-6">
-                        <label asp-for="Input.FitnessGoalId" class="form-label">Fitness Goal</label>
-                        <select asp-for="Input.FitnessGoalId" class="form-control">
-                            @foreach (var goal in this.Model.FitnessGoals)
-                            {
-                                <option value="@goal.Id">@goal.Type</option>
-                            }
+                        <label asp-for="Input.FitnessGoal" class="form-label">Fitness Goal</label>
+                        <select asp-for="Input.FitnessGoal" class="form-control">
+                            <option value="1">Lose Weight</option>
+                            <option value="2">Gain Weight</option>
+                            <option value="3">Maintain Weight</option>
                         </select>
-                        <span asp-validation-for="Input.FitnessGoalId" class="text-danger"></span>
+                        <span asp-validation-for="Input.FitnessGoal" class="text-danger"></span>
                     </div>
                 </div>
 

@@ -1,0 +1,106 @@
+﻿@model IdexViewQueryModel
+
+@{
+    ViewBag.Title = "Your records for";
+}
+
+
+<h1 class="text-center">@ViewBag.Title @Model.CurrentDayDate</h1>
+
+
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>Breakfast</th>
+            <th>Calories </th>
+            <th>Carbs</th>
+            <th>Proteins</th>
+            <th>Fats</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var serving in Model.Breakfast)
+        {
+            <tr>
+                <td>@serving.Name</td>
+                <td>@serving.Nutrition.Calories</td>
+                <td>@serving.Nutrition.Carbs</td>
+                <td>@serving.Nutrition.Protein</td>
+                <td>@serving.Nutrition.Fats</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>Lunch</th>
+            <th>Calories</th>
+            <th>Carbs</th>
+            <th>Proteins</th>
+            <th>Fats</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var serving in Model.Lunch)
+        {
+            <tr>
+                <td>@serving.Name</td>
+                <td>@serving.Nutrition.Calories</td>
+                <td>@serving.Nutrition.Carbs</td>
+                <td>@serving.Nutrition.Protein</td>
+                <td>@serving.Nutrition.Fats</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>Dinner</th>
+            <th>Calories</th>
+            <th>Carbs</th>
+            <th>Proteins</th>
+            <th>Fats</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var serving in Model.Dinner)
+        {
+            <tr>
+                <td>@serving.Name</td>
+                <td>@serving.Nutrition.Calories</td>
+                <td>@serving.Nutrition.Carbs</td>
+                <td>@serving.Nutrition.Protein</td>
+                <td>@serving.Nutrition.Fats</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<table class="table table-hover text-nowrap">
+    <thead>
+        <tr>
+            <th>TotalCalories</th>
+            <th>TotalCarbs</th>
+            <th>TotalProteins</th>
+            <th>TotalFats</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@Model.NutritionStatistics.CurrentNutrition.Calories</td>
+            <td>@Model.NutritionStatistics.CurrentNutrition.Carbs</td>
+            <td>@Model.NutritionStatistics.CurrentNutrition.Protein</td>
+            <td>@Model.NutritionStatistics.CurrentNutrition.Fats</td>
+
+        </tr>
+        <tr>
+            <td>@Model.NutritionStatistics.RequiredNutrition.Calories</td>
+            <td>@Model.NutritionStatistics.RequiredNutrition.Carbs</td>
+            <td>@Model.NutritionStatistics.RequiredNutrition.Protein</td>
+            <td>@Model.NutritionStatistics.RequiredNutrition.Fats</td>
+
+        </tr>
+    </tbody>
+</table>
+
