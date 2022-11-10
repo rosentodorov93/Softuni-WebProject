@@ -34,10 +34,10 @@ namespace FitnessDiary.Controllers
 
             var resultId = await recepieService.AddAsync(model);
 
-            return RedirectToAction($"Details", "Recepie", new {id = resultId});
+            return RedirectToAction($"Details", "Recepie", new { id = resultId });
         }
 
-        public async Task <IActionResult> AddIngredient(int id)
+        public async Task<IActionResult> AddIngredient(string id)
         {
             var model = new AddIngredientViewModel()
             {
@@ -54,11 +54,11 @@ namespace FitnessDiary.Controllers
 
             var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
 
-            return RedirectToAction("Details", "Recepie", new {id = recipe.Id});
+            return RedirectToAction("Details", "Recepie", new { id = recipe.Id });
         }
 
         [HttpGet]
-        public async Task<IActionResult> RemoveIngredient(int id)
+        public async Task<IActionResult> RemoveIngredient(string id)
         {
             var ingredients = await recepieService.GetIngredientsAsync(id);
 
@@ -77,12 +77,12 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("Details", "Recepie", new { id = model.Recipeid });
         }
-        public async Task<IActionResult> Details(int id)
+        public async Task<IActionResult> Details(string id)
         {
             var recipe = await recepieService.GetByIdAsync(id);
             return View(recipe);
         }
-        public async Task<IActionResult> Edit(int id)
+        public async Task<IActionResult> Edit(string id)
         {
             var recipe = await recepieService.GetByIdAsync(id);
             var model = new EditViewModel()

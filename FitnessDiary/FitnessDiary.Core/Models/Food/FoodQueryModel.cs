@@ -4,11 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace FitnessDiary.Core.Models.Recepie
+namespace FitnessDiary.Core.Models.Food
 {
-    public class EditViewModel : CreateViewModel
+    public class FoodQueryModel: FoodViewModel
     {
         public string Id { get; set; }
-        public List<IngredientDetailsViewModel> Ingredients { get; set; }
     }
 }

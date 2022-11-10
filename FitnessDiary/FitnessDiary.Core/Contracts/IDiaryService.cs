@@ -10,5 +10,11 @@ namespace FitnessDiary.Core.Contracts
     public interface IDiaryService
     {
         Task<DiaryDayServiceModel> GetByIdAsync(string userId);
+        Task AddFromDatabaseAsync(string userId, string id, double amount, string category);
+        Task<List<FoodDiaryServiceModel>> GetFoodsFromDbAsync();
+        Task<List<FoodDiaryServiceModel>> GetMineFoodsFromDbAsync(string userId);
+        Task<List<FoodDiaryServiceModel>> GetRecipesFromDbAsync(string userId);
+        Task AddRecipeAsync(string userId, string id, double amount, string category);
+        Task RemoveServingAsync(string userId, int id);
     }
 }

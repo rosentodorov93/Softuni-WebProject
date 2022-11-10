@@ -1,11 +1,10 @@
 ﻿namespace FitnessDiary.Core.Models.Diary
 {
-    public class ServingViewModel
+    public class ServingServiceModel
     {
-        public int Id { get; set; }
+        public string Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public double Amount { get; set; }
-        public NutritionServiceModel Nutrition { get; set; }
     }
 }

@@ -7,34 +7,80 @@
 
 <h1 class="text-center">@ViewBag.Title @Model.CurrentDayDate</h1>
 
-
+<h3>Breakfast</h3>
+<ul class="list-group">
+    @foreach (var serving in Model.Breakfast)
+    {
+        <li class="list-group-item">
+            @serving.Name
+            @serving.Amount
+            @serving.Nutrition.Calories,
+            @serving.Nutrition.Carbs,
+            @serving.Nutrition.Protein,
+            @serving.Nutrition.Fats,
+            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
+        </li>
+    }
+</ul>
+<h3>Lunch</h3>
+<ul class="list-group">
+    @foreach (var serving in Model.Lunch)
+    {
+        <li class="list-group-item">
+            @serving.Name
+            @serving.Amount
+            @serving.Nutrition.Calories,
+            @serving.Nutrition.Carbs,
+            @serving.Nutrition.Protein,
+            @serving.Nutrition.Fats,
+            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
+        </li>
+    }
+</ul>
+<h3>Dinner</h3>
+<ul class="list-group">
+    @foreach (var serving in Model.Dinner)
+    {
+        <li class="list-group-item">
+            @serving.Name
+            @serving.Amount
+            @serving.Nutrition.Calories,
+            @serving.Nutrition.Carbs,
+            @serving.Nutrition.Protein,
+            @serving.Nutrition.Fats,
+            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
+        </li>
+    }
+</ul>
+<h3>Snack</h3>
+<ul class="list-group">
+    @foreach (var serving in Model.Snack)
+    {
+        <li class="list-group-item">
+            @serving.Name
+            @serving.Amount
+            @serving.Nutrition.Calories,
+            @serving.Nutrition.Carbs,
+            @serving.Nutrition.Protein,
+            @serving.Nutrition.Fats,
+            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
+        </li>
+    }
+</ul>
+<div class="dropdown">
+  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+    Add Food
+  </button>
+  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromDatabase">From Database</a>
+    <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromMine">From My Foods</a>
+    <a class="dropdown-item" asp-controller="Diary" asp-action="AddRecipe">Add My Recipe</a>
+  </div>
+</div>
 <table class="table table-hover text-nowrap">
     <thead>
         <tr>
-            <th>Breakfast</th>
-            <th>Calories </th>
-            <th>Carbs</th>
-            <th>Proteins</th>
-            <th>Fats</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var serving in Model.Breakfast)
-        {
-            <tr>
-                <td>@serving.Name</td>
-                <td>@serving.Nutrition.Calories</td>
-                <td>@serving.Nutrition.Carbs</td>
-                <td>@serving.Nutrition.Protein</td>
-                <td>@serving.Nutrition.Fats</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<table class="table table-hover text-nowrap">
-    <thead>
-        <tr>
-            <th>Lunch</th>
+            <th></th>
             <th>Calories</th>
             <th>Carbs</th>
             <th>Proteins</th>
@@ -42,52 +88,8 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var serving in Model.Lunch)
-        {
-            <tr>
-                <td>@serving.Name</td>
-                <td>@serving.Nutrition.Calories</td>
-                <td>@serving.Nutrition.Carbs</td>
-                <td>@serving.Nutrition.Protein</td>
-                <td>@serving.Nutrition.Fats</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<table class="table table-hover text-nowrap">
-    <thead>
         <tr>
-            <th>Dinner</th>
-            <th>Calories</th>
-            <th>Carbs</th>
-            <th>Proteins</th>
-            <th>Fats</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var serving in Model.Dinner)
-        {
-            <tr>
-                <td>@serving.Name</td>
-                <td>@serving.Nutrition.Calories</td>
-                <td>@serving.Nutrition.Carbs</td>
-                <td>@serving.Nutrition.Protein</td>
-                <td>@serving.Nutrition.Fats</td>
-            </tr>
-        }
-    </tbody>
-</table>
-<table class="table table-hover text-nowrap">
-    <thead>
-        <tr>
-            <th>TotalCalories</th>
-            <th>TotalCarbs</th>
-            <th>TotalProteins</th>
-            <th>TotalFats</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
+            <td>Totals</td>
             <td>@Model.NutritionStatistics.CurrentNutrition.Calories</td>
             <td>@Model.NutritionStatistics.CurrentNutrition.Carbs</td>
             <td>@Model.NutritionStatistics.CurrentNutrition.Protein</td>
@@ -95,11 +97,11 @@
 
         </tr>
         <tr>
+            <td>Required</td>
             <td>@Model.NutritionStatistics.RequiredNutrition.Calories</td>
             <td>@Model.NutritionStatistics.RequiredNutrition.Carbs</td>
             <td>@Model.NutritionStatistics.RequiredNutrition.Protein</td>
             <td>@Model.NutritionStatistics.RequiredNutrition.Fats</td>
-
         </tr>
     </tbody>
 </table>

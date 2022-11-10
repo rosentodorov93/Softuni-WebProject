@@ -27,7 +27,6 @@ namespace FitnessDiary.Core.Services
         {
             var food = new Food()
             {
-                Id = model.Id,
                 Name = model.Name,
                 Type = model.Type,
                 MeassureUnits = (MeassureUnitType)model.MeassureUnit,
@@ -71,13 +70,13 @@ namespace FitnessDiary.Core.Services
             }
         }
 
-        public async Task<IEnumerable<FoodViewModel>> GetAllAsync()
+        public async Task<IEnumerable<FoodQueryModel>> GetAllAsync()
         {
             var foods = await repo.All<Food>().Include(f => f.Nutrition).ToListAsync();
 
-            return foods.Select(f => new FoodViewModel()
+            return foods.Select(f => new FoodQueryModel()
             {
-                Id= f.Id,
+                Id = f.Id,
                 Name = f.Name,
                 Type = f.Type,
                 MeassureUnit = (int)f.MeassureUnits,
@@ -101,9 +100,9 @@ namespace FitnessDiary.Core.Services
                 throw new ArgumentException("Invalid user ID");
             }
 
-            var userFoods = user.Foods.Select(f => new FoodViewModel()
+            var userFoods = user.Foods.Select(f => new FoodQueryModel()
             {
-                Id = f.Id,
+                Id=f.Id,
                 Name = f.Name,
                 Type = f.Type,
                 MeassureUnit = (int)f.MeassureUnits,

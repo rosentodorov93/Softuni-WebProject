@@ -9,8 +9,8 @@ namespace FitnessDiary.Core.Models.Recepie
 {
     public class AddIngredientViewModel
     {
-        public int RecepieId { get; set; }
-        public IEnumerable<FoodViewModel> Foods { get; set; }
+        public string RecepieId { get; set; }
+        public IEnumerable<FoodQueryModel> Foods { get; set; }
         public IngredientViewModel Ingredient { get; set; }
     }
 }

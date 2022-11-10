@@ -8,6 +8,7 @@ namespace FitnessDiary.Core.Models.Diary
 {
     public class DiaryDayServiceModel
     {
+        public int Id { get; set; }
         public DateTime Date { get; set; }
         public IList<ServingViewModel> BreakfastServings { get; set; } = new List<ServingViewModel>();
         public IList<ServingViewModel> LunchServings { get; set; } = new List<ServingViewModel>();

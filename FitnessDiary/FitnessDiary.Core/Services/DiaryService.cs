@@ -5,11 +5,6 @@ using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Infrastructure.Data.Common;
 using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Services
 {
@@ -22,24 +17,83 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task<DiaryDayServiceModel> GetByIdAsync(string userId)
+        public async Task AddFromDatabaseAsync(string userId, string id, double amount, string category)
         {
+            var food = await repo.All<Food>()
+                .Where(f => f.Id == id)
+                .Include(f => f.Nutrition)
+                .FirstOrDefaultAsync();
+
+            //validate
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
                 .Include(x => x.Diary)
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
 
-            if (user.Diary.Count == 0)
+            var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
+            //validate
+
+            currentDay.Servings.Add(new Serving()
+            {
+                Name = food.Name,
+                Amount = amount,
+                Nutrition = food.Nutrition,
+                Category = (ServingCategory)Enum.Parse(typeof(ServingCategory), category, true),
+                DiaryDay = currentDay
+            });
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task AddRecipeAsync(string userId, string id, double amount, string category)
+        {
+            var recipe = await repo.All<Recipe>()
+                .Where(r => r.Id == id)
+                .Include(f => f.Nutrition)
+                .FirstOrDefaultAsync();
+
+            //validate
+            var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
+                .Include(x => x.Diary)
+                .ThenInclude(d => d.Nutrition)
+                .FirstOrDefaultAsync();
+
+            var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
+            //validate
+
+            currentDay.Servings.Add(new Serving()
+            {
+                Name = recipe.Name,
+                Amount = amount,
+                Nutrition = recipe.Nutrition,
+                Category = (ServingCategory)Enum.Parse(typeof(ServingCategory), category, true),
+                DiaryDay = currentDay
+            });
+
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<DiaryDayServiceModel> GetByIdAsync(string userId)
+        {
+            var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
+                .Include(x => x.Diary)
+                .ThenInclude(x => x.Servings)
+                .ThenInclude(s => s.Nutrition)
+                .Include(x => x.Diary)
+                .ThenInclude(d => d.Nutrition)
+                .FirstOrDefaultAsync();
+
+            var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
+
+            if (currentDay == null || currentDay.DateTime.Date < DateTime.Today)
             {
                 var diaryDay = new DiaryDay()
                 {
-                    DateTime = DateTime.Now.Date,
+                    DateTime = DateTime.Today,
                     Nutrition = new NutritionData()
                 };
-                user.Diary.Add(diaryDay);
+                user?.Diary.Add(diaryDay);
             }
-
-            var currentDay = user.Diary.OrderBy(x => x.Id).Last();
 
             List<ServingViewModel> breakfastServings = GetServings(currentDay, ServingCategory.Breakfast);
             List<ServingViewModel> lunchServings = GetServings(currentDay, ServingCategory.Lunch);
@@ -52,7 +106,7 @@ namespace FitnessDiary.Core.Services
 
             return new DiaryDayServiceModel()
             {
-
+                Id = currentDay.Id,
                 BreakfastServings = breakfastServings,
                 LunchServings = lunchServings,
                 DinnerServings = dinnerServings,
@@ -69,8 +123,64 @@ namespace FitnessDiary.Core.Services
             };
         }
 
+        public async Task<List<FoodDiaryServiceModel>> GetFoodsFromDbAsync()
+        {
+            return await repo.All<Food>().Select(x => new FoodDiaryServiceModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+            }).ToListAsync();
+        }
+
+        public async Task<List<FoodDiaryServiceModel>> GetMineFoodsFromDbAsync(string userId)
+        {
+            var user = await repo.All<ApplicationUser>()
+                .Where(u => u.Id == userId)
+                .Include(u => u.Foods)
+                .FirstOrDefaultAsync();
+            //validate
+            return user.Foods.Select(x => new FoodDiaryServiceModel()
+            {
+                Id = x.Id,
+                Name = x.Name,
+            }).ToList();
+        }
+
+        public async Task<List<FoodDiaryServiceModel>> GetRecipesFromDbAsync(string userId)
+        {
+            var user = await repo.All<ApplicationUser>()
+               .Where(u => u.Id == userId)
+               .Include(u => u.Recipes)
+               .FirstOrDefaultAsync();
+            //validate
+            return user.Recipes.Select(r => new FoodDiaryServiceModel()
+            {
+                Name = r.Name,
+                Id = r.Id,
+            }).ToList();
+        }
+
+        public async Task RemoveServingAsync(string userId, int id)
+        {
+            var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
+                .Include(x => x.Diary)
+                .ThenInclude(d => d.Servings)
+                .ThenInclude(d => d.Nutrition)
+                .FirstOrDefaultAsync();
+            //validate
+            var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
+            var serving = currentDay.Servings.FirstOrDefault(s => s.Id == id);
+            currentDay.Servings.Remove(serving);
+            await repo.SaveChangesAsync();
+        }
+
         private void CalculateDayNutrition(DiaryDay currentDiaryDay)
         {
+            currentDiaryDay.Nutrition.Calories = 0;
+            currentDiaryDay.Nutrition.Carbohydrates = 0;
+            currentDiaryDay.Nutrition.Proteins = 0;
+            currentDiaryDay.Nutrition.Fats = 0;
+
             foreach (var serving in currentDiaryDay.Servings)
             {
                 currentDiaryDay.Nutrition.Calories += serving.Nutrition.Calories * serving.Amount;
@@ -86,6 +196,7 @@ namespace FitnessDiary.Core.Services
                 .Where(s => s.Category == category)
                 .Select(s => new ServingViewModel()
                 {
+                    Id = s.Id,
                     Name = s.Name,
                     Category = s.Category.ToString(),
                     Amount = s.Amount,

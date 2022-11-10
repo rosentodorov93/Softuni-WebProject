@@ -22,7 +22,7 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task<int> AddAsync(CreateViewModel model)
+        public async Task<string> AddAsync(CreateViewModel model)
         {
             var recipe = new Recipe()
             {
@@ -40,7 +40,7 @@ namespace FitnessDiary.Core.Services
             return result.Id;
         }
 
-        public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, int recepieId)
+        public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recepieId)
         {
             var food = await repo.All<Food>()
                 .Where(f => f.Id == ingredient.FoodId)
@@ -62,10 +62,10 @@ namespace FitnessDiary.Core.Services
                 Amount = ingredient.Amount,
             });
 
-            recipe.Nutrition.Calories += food.Nutrition.Calories;
-            recipe.Nutrition.Carbohydrates += food.Nutrition.Carbohydrates;
-            recipe.Nutrition.Proteins += food.Nutrition.Proteins;
-            recipe.Nutrition.Fats += food.Nutrition.Fats;
+            recipe.Nutrition.Calories += (food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Carbohydrates += (food.Nutrition.Carbohydrates * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Proteins += (food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Fats += (food.Nutrition.Fats * ingredient.Amount) / recipe.ServingsSize;
 
             await repo.SaveChangesAsync();
 
@@ -130,10 +130,10 @@ namespace FitnessDiary.Core.Services
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                recipe.Nutrition.Calories += ingredient.Food.Nutrition.Calories;
-                recipe.Nutrition.Carbohydrates += ingredient.Food.Nutrition.Carbohydrates;
-                recipe.Nutrition.Proteins += ingredient.Food.Nutrition.Proteins;
-                recipe.Nutrition.Fats += ingredient.Food.Nutrition.Fats;
+                recipe.Nutrition.Calories += ingredient.Food.Nutrition.Calories / recipe.ServingsSize;
+                recipe.Nutrition.Carbohydrates += ingredient.Food.Nutrition.Carbohydrates / recipe.ServingsSize;
+                recipe.Nutrition.Proteins += ingredient.Food.Nutrition.Proteins / recipe.ServingsSize;
+                recipe.Nutrition.Fats += ingredient.Food.Nutrition.Fats / recipe.ServingsSize;
             }
             recipe.CaloriesPerServing = recipe.Nutrition.Calories / recipe.ServingsSize;
         }
@@ -159,7 +159,7 @@ namespace FitnessDiary.Core.Services
             });
         }
 
-        public async Task<DetailsViewModel> GetByIdAsync(int id)
+        public async Task<DetailsViewModel> GetByIdAsync(string id)
         {
             var recipe = await repo.All<Recipe>()
                  .Where(r => r.Id == id)
@@ -189,7 +189,7 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        public async Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(int id)
+        public async Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id)
         {
             var recipe = await repo.All<Recipe>()
                 .Where(r => r.Id == id)
@@ -207,7 +207,7 @@ namespace FitnessDiary.Core.Services
             });
         }
 
-        public async Task RemoveIngredient(int recipeid, int ingredientToRemove)
+        public async Task RemoveIngredient(string recipeid, int ingredientToRemove)
         {
             var recipie = await repo.All<Recipe>()
                  .Where(r => r.Id == recipeid)
@@ -219,11 +219,11 @@ namespace FitnessDiary.Core.Services
 
             var ingredient = recipie.Ingredients.FirstOrDefault(i => i.Id == ingredientToRemove);
 
-            recipie.Nutrition.Calories -= ingredient.Food.Nutrition.Calories * ingredient.Amount;
-            recipie.Nutrition.Carbohydrates -= ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount;
-            recipie.Nutrition.Proteins -= ingredient.Food.Nutrition.Proteins * ingredient.Amount;
-            recipie.Nutrition.Fats -= ingredient.Food.Nutrition.Fats * ingredient.Amount;
-            recipie.CaloriesPerServing = recipie.Nutrition.Calories / recipie.ServingsSize;
+            recipie.Nutrition.Calories -= (ingredient.Food.Nutrition.Calories * ingredient.Amount) / recipie.ServingsSize;
+            recipie.Nutrition.Carbohydrates -= (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount) / recipie.ServingsSize;
+            recipie.Nutrition.Proteins -= (ingredient.Food.Nutrition.Proteins * ingredient.Amount) / recipie.ServingsSize;
+            recipie.Nutrition.Fats -= (ingredient.Food.Nutrition.Fats * ingredient.Amount) / recipie.ServingsSize;
+            recipie.CaloriesPerServing = recipie.Nutrition.Calories;
 
             recipie.Ingredients.Remove(ingredient);
 

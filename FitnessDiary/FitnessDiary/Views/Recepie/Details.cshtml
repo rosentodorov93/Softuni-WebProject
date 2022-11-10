@@ -24,9 +24,9 @@
         <ul>
             <li>Total Calories: @Model.TotalCalories</li>
             <li>Calories per serving: @Model.CaloriesPerPortion</li>
-            <li>Total Carbs: @Model.Carbs</li>
-            <li>Total Proteins: @Model.Protein</li>
-            <li>Total Fats: @Model.Fats</li>
+            <li>Per Serving Carbs: @Model.Carbs</li>
+            <li>Per Serving Proteins: @Model.Protein</li>
+            <li>Per Serving Fats: @Model.Fats</li>
         </ul>
         <div class="row">
             <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>

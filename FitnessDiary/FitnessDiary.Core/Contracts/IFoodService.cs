@@ -10,7 +10,7 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IFoodService
     {
-        Task<IEnumerable<FoodViewModel>> GetAllAsync();
+        Task<IEnumerable<FoodQueryModel>> GetAllAsync();
         Task AddFood(FoodViewModel model);
         Task AddToCollectionAsync(string? userId, string foodId);
         Task<MinePageViewModel> GetAllById(string? userId,
