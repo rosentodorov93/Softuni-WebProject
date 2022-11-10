@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221110120736_RecipeTableRemoved")]
+    partial class RecipeTableRemoved
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -247,14 +249,9 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("RecipeId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("FoodId");
-
-                    b.HasIndex("RecipeId");
 
                     b.ToTable("Ingredients");
                 });
@@ -282,45 +279,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Nutritions");
-                });
-
-            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Recipe", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<double>("CaloriesPerServing")
-                        .HasColumnType("float");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
-
-                    b.Property<int>("NutrtionId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ServingsSize")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Unit")
-                        .HasColumnType("int");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasMaxLength(450)
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("isFinished")
-                        .HasColumnType("bit");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("NutrtionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Recipe");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Serving", b =>
@@ -543,30 +501,7 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitnessDiary.Infrastructure.Data.Recipe", null)
-                        .WithMany("Ingredients")
-                        .HasForeignKey("RecipeId");
-
                     b.Navigation("Food");
-                });
-
-            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Recipe", b =>
-                {
-                    b.HasOne("FitnessDiary.Infrastructure.Data.NutritionData", "Nutrition")
-                        .WithMany()
-                        .HasForeignKey("NutrtionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", "User")
-                        .WithMany("Recipes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Nutrition");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Serving", b =>
@@ -644,18 +579,11 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Navigation("Diary");
 
                     b.Navigation("Foods");
-
-                    b.Navigation("Recipes");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
                 {
                     b.Navigation("Servings");
-                });
-
-            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Recipe", b =>
-                {
-                    b.Navigation("Ingredients");
                 });
 #pragma warning restore 612, 618
         }
