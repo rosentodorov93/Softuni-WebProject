@@ -1,0 +1,30 @@
+﻿@model ArticleDetailsViewModel
+
+@{
+    ViewBag.Title = "Article Details";
+}
+
+<div class="card card-info">
+    <div class="card-header">
+        <h3 class="card-title">@Model.Title</h3>
+        <!-- /.card-tools -->
+    </div>
+    <!-- /.card-header -->
+    <div class="card-body">
+        <p>@Model.Category</p>
+        <p>@Model.Author</p>
+        <p>@Model.Date</p>
+        <div>
+            @Html.Raw(@Model.Content);
+        </div>
+        <div class="row">
+            <a asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Article</a>
+        </div>
+    </div>
+    <!-- /.card-body -->
+    <div class="card-footer">
+        Fitness Diary
+    </div>
+    <!-- /.card-footer -->
+</div>
+<!-- /.card -->

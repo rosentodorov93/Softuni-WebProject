@@ -1,0 +1,27 @@
+﻿@model AddViewModel;
+
+<form asp-controller="Article" asp-action="Add" method="post">
+    <div>
+        <label asp-for="Title">Title</label>
+        <input asp-for="@Model.Title"/>
+    </div>
+    <div>
+        <label asp-for="Author">Author</label>
+        <input asp-for="@Model.Author"/>
+    </div>
+    <div>
+        <label asp-for="Category">Category</label>
+        <input asp-for="@Model.Category"/>
+    </div>
+    <div>
+        <label asp-for="Content">Content</label>
+         <textarea id="article-content" asp-for="@Model.Content"></textarea>
+    </div>
+
+    <input type="submit" value="Save"/>
+   
+</form>
+
+<script>
+
+</script>

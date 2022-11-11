@@ -31,7 +31,8 @@ builder.Services
     .AddScoped<IRepository, Repository>()
     .AddScoped<IFoodService, FoodService>()
     .AddScoped<IRecipeService, RecipeService>()
-    .AddScoped<IDiaryService, DiaryService>();
+    .AddScoped<IDiaryService, DiaryService>()
+    .AddScoped<IArticleService, ArticleService>();
 
 var app = builder.Build();
 

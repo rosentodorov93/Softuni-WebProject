@@ -1,0 +1,31 @@
+﻿@model List<ListingViewModel>
+
+<div class="row">
+    @if (Model.Any())
+    {
+        foreach (var article in Model)
+        {
+            <div class="card card-primary">
+                <div class="card-header">
+                    <h3 class="card-title">@article.Title</h3>
+                    <!-- /.card-tools -->
+                </div>
+                <!-- /.card-header -->
+                <div class="card-body">
+                    <p>@article.Category</p>
+                    <p>@article.Author</p>
+                    <p>@article.Date</p>
+
+                    <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id">Read More</a>
+                </div>
+                <!-- /.card-body -->
+                <div class="card-footer">
+                    The footer of the card
+                </div>
+                <!-- /.card-footer -->
+            </div>
+            <!-- /.card -->
+        }
+    }
+</div>
+

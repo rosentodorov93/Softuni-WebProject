@@ -1,0 +1,27 @@
+﻿@model ArticleDetailsViewModel;
+
+<form asp-controller="Article" asp-action="Edit" method="post">
+    <div>
+        <label asp-for="Title">Title</label>
+        <input asp-for="@Model.Title" type="text"/>
+    </div>
+    <div>
+        <label asp-for="Author">Author</label>
+        <input asp-for="@Model.Author" type="text"/>
+    </div>
+    <div>
+        <label asp-for="Category">Category</label>
+        <input asp-for="@Model.Category" type="text"/>
+    </div>
+     <div>
+        <label asp-for="Date">Date</label>
+        <input asp-for="@Model.Date" type="text"/>
+    </div>
+    <div>
+        <label asp-for="Content">Content</label>
+         <textarea id="article-content" asp-for="@Model.Content"></textarea>
+    </div>
+
+    <input type="submit" value="Edit"/>
+   
+</form>

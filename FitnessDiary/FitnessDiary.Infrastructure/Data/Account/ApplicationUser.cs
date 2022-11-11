@@ -40,6 +40,7 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public IList<DiaryDay> Diary { get; set; } = new List<DiaryDay>();
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
+        public IList<Article> Articles { get; set; } = new List<Article>();
 
     }
 }
