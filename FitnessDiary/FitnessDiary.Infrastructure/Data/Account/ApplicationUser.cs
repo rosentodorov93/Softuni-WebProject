@@ -1,4 +1,5 @@
 ﻿using FitnessDiary.Infrastructure.Data.Enums;
+using FitnessDiary.Infrastructure.Data.WorkoutEntites;
 using Microsoft.AspNetCore.Identity;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,6 +42,7 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
         public IList<Article> Articles { get; set; } = new List<Article>();
+        public IList<Workout> Workouts { get; set; } = new List<Workout>();
 
     }
 }

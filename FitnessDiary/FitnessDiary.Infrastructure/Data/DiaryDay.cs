@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using FitnessDiary.Infrastructure.Data.WorkoutEntites;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -20,5 +17,9 @@ namespace FitnessDiary.Infrastructure.Data
 
         [ForeignKey(nameof(NutritionId))]
         public NutritionData Nutrition { get; set; } = null!;
+        public string WorkoutId { get; set; }
+
+        [ForeignKey(nameof(WorkoutId))]
+        public Workout Workout { get; set; }
     }
 }

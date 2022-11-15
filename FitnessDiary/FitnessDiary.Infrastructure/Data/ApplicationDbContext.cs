@@ -1,4 +1,5 @@
 ﻿using FitnessDiary.Infrastructure.Data.Account;
+using FitnessDiary.Infrastructure.Data.WorkoutEntites;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,11 +14,13 @@ namespace FitnessDiary.Infrastructure.Data
         public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
         public DbSet<Food> Foods { get; set; } = null!;
         public DbSet<Ingredient> Ingredients { get; set; } = null!;
-        
         public DbSet<NutritionData> Nutritions { get; set; } = null!;
         public DbSet<Serving> Servings { get; set; } = null!;
         public DbSet<DiaryDay> DiaryDays { get; set; } = null!;
         public DbSet<Article> Articles { get; set; } = null!;
+        public DbSet<Workout> Workouts { get; set; } = null!;
+        public DbSet<Exercise> Exercises { get; set; } = null!;
+        public DbSet<Set> Sets { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
