@@ -50,6 +50,7 @@ namespace FitnessDiary.Controllers
 
             return View(article);
         }
+
         [HttpPost]
         public async Task<IActionResult> Edit(ArticleDetailsViewModel model)
         {
