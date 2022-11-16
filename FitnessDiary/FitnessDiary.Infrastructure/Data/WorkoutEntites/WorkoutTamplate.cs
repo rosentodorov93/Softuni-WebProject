@@ -1,13 +1,15 @@
-﻿using System;
+﻿using FitnessDiary.Infrastructure.Data.Account;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 {
-    public class Workout
+    public class WorkoutTamplate
     {
         [Key]
         public string Id { get; set; } = Guid.NewGuid().ToString();
@@ -18,6 +20,12 @@ namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 
         [MaxLength(250)]
         public string? Description { get; set; }
-        public IList<Exercise> Exercises { get; set; } = new List<Exercise>();
+        public IList<ExerciseTamplate> Exercises { get; set; }
+
+        [Required]
+        public string UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public ApplicationUser User { get; set; }
     }
 }

@@ -42,7 +42,7 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public IList<Food> Foods { get; set; } = new List<Food>();
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
         public IList<Article> Articles { get; set; } = new List<Article>();
-        public IList<Workout> Workouts { get; set; } = new List<Workout>();
+        public IList<WorkoutTamplate> WorkoutTamplates { get; set; } = new List<WorkoutTamplate>();
 
     }
 }

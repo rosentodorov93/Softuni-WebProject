@@ -19,7 +19,9 @@ namespace FitnessDiary.Infrastructure.Data
         public DbSet<DiaryDay> DiaryDays { get; set; } = null!;
         public DbSet<Article> Articles { get; set; } = null!;
         public DbSet<Workout> Workouts { get; set; } = null!;
+        public DbSet<WorkoutTamplate> WorkoutTamplates { get; set; } = null!;
         public DbSet<Exercise> Exercises { get; set; } = null!;
+        public DbSet<ExerciseTamplate> ExerciseTamplates { get; set; } = null!;
         public DbSet<Set> Sets { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
