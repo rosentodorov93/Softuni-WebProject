@@ -3,6 +3,7 @@ using FitnessDiary.Core.Models.Workout;
 using FitnessDiary.Infrastructure.Data.Common;
 using FitnessDiary.Infrastructure.Data.Enums;
 using FitnessDiary.Infrastructure.Data.WorkoutEntites;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnessDiary.Core.Services
 {
@@ -14,33 +15,67 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-        public async Task CreateAsync(CreateWorkoutViewModel model)
+        public async Task<string> CreateTamplateAsync(CreateWorkoutViewModel model, string userId)
         {
-            var workout = new Workout()
+            var workout = new WorkoutTamplate()
             {
                 Name = model.Name,
                 Description = model.Description,
-            };
-
-            for (int i = 0; i < model.Exercises.Length; i++)
-            {
-                var currenExercise = model.Exercises[i];
-
-                workout.Exercises.Add(new Exercise()
+                Exercises = model.Exercises.Select(e => new ExerciseTamplate()
                 {
-                    Name = currenExercise.Name,
-                    BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), currenExercise.BodyPart, true),
-                    Sets = new Set[currenExercise.SetCount]
-                });
-            }
+                    Name = e.Name,
+                    BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), e.BodyPart),
+                    SetCount = e.SetCount
+                }).ToList(),
+                UserId = userId
+            };
 
             await repo.AddAsync(workout);
             await repo.SaveChangesAsync();
+
+            return $"Creaated {model.Name}";
         }
 
-        public Task<IEnumerable<CreateWorkoutViewModel>> GetMineAsync()
+        public async Task<IEnumerable<ListingTamplateViewModel>> GetMineTamplatesAsync(string userId)
         {
-            throw new NotImplementedException();
+            return await repo.All<WorkoutTamplate>()
+                .Where(t => t.UserId == userId)
+                .Include(t => t.Exercises)
+                .Select(t => new ListingTamplateViewModel()
+                {
+                    Id = t.Id,
+                    Name = t.Name,
+                    Description = t.Description,
+                    Exercises = t.Exercises.Select(e => new ExerciseViewModel()
+                    {
+                        Name = e.Name,
+                        BodyPart = e.BodyPart.ToString(),
+                        SetCount = e.SetCount
+                    }).ToArray()
+                })
+                .ToListAsync();
+        }
+
+        public async Task<EditTamplateViewModel> GetTamplateById(string id)
+        {
+            var tamplate = await repo.All<WorkoutTamplate>()
+                .Where(t => t.Id == id)
+                .Include(t => t.Exercises)
+                .FirstOrDefaultAsync();
+
+            return new EditTamplateViewModel()
+            {
+                Id = tamplate.Id,
+                Name = tamplate.Name,
+                Description = tamplate.Description,
+                Exercises = tamplate.Exercises.Select(e => new EditExerciseViewModel()
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    BodyPart = e.BodyPart.ToString(),
+                    SetCount = e.SetCount
+                }).ToList()
+            };
         }
     }
 }

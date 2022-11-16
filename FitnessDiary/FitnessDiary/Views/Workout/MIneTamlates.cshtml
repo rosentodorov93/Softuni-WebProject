@@ -1,0 +1,28 @@
+﻿@model IEnumerable<ListingTamplateViewModel>
+@{
+    ViewBag.Title = "My Workout Sheets";
+}
+
+<h1 class="text-center">@ViewBag.Title</h1>
+<div class="row">
+    @foreach (var sheet in Model)
+    {
+        <div class="card" style="width: 18rem;">
+            <div class="card-body">
+                <h5 class="card-title">Name: @sheet.Name</h5>
+                <p class="card-text">Description: @sheet.Description</p>
+            </div>
+            <h5>Exercises</h5>
+            <ul class="list-group list-group-flush">
+                @foreach (var exercise in @sheet.Exercises)
+                {
+                    <li class="list-group-item">@exercise.Name - @exercise.BodyPart - Sets:@exercise.SetCount</li>
+                }
+            </ul>
+            <div class="card-body">
+                <a asp-controller="Workout" asp-action="EditTamplate" asp-route-id="@sheet.Id" class="card-link">Edit</a>
+                <a asp-controller="Workout" asp-action="DeleteSheet" asp-route-id="@sheet.Id" class="card-link">Delete</a>
+            </div>
+        </div>
+    }
+</div>

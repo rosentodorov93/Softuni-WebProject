@@ -4,7 +4,8 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IWorkoutService
     {
-        Task CreateAsync(CreateWorkoutViewModel model);
-        Task<IEnumerable<CreateWorkoutViewModel>> GetMineAsync();
+        Task<string> CreateTamplateAsync(CreateWorkoutViewModel model, string userId);
+        Task<IEnumerable<ListingTamplateViewModel>> GetMineTamplatesAsync(string userId);
+        Task<EditTamplateViewModel> GetTamplateById(string id);
     }
 }
