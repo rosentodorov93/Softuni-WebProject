@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Workout;
+using FitnessDiary.Core.Models.Workout;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -49,6 +50,37 @@ namespace FitnessDiary.Controllers
         {
 
             return RedirectToAction("MineTamplates");
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddExerciseToTamplate([FromBody] AddExerciseModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("MineTamplates");
+            }
+
+            await workoutService.AddExerciseToTamplateAsync(model);
+
+            return Json("success");
+        }
+        [HttpPost]
+        public async Task<IActionResult> RemoveExerciseFromTamplate([FromBody] RemoveExerciseModel model)
+        {
+            await workoutService.RemoveExerciseAsync(model.ExerciseId, model.TamplateId);
+
+            return Json("success");
+        }
+        public async Task<IActionResult> AddToDiary(string Id)
+        {
+            var tamplate = await workoutService.GetTamplateForDiaryByIdAsync(Id);
+
+            return View(tamplate);
+        }
+        [HttpPost]
+        public async Task<IActionResult> AddToDiary(AddToDiaryViewModel model)
+        {
+
+            return View(model);
         }
     }
 }

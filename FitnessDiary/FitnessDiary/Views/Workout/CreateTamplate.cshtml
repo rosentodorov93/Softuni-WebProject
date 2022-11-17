@@ -57,129 +57,131 @@
             <button id="saveWorkout" type="submit" class="btn btn-primary">Save Workout </button>
         </div>
     </form>
-    <div class="modal fade" id="exerciseModal">
-        <div class="modal-dialog modal-lg" style=" width: 900px !important;">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4>Add New Exercise</h4>
-                </div>
+</div>
 
-                <div class="modal-body">
+<div class="modal fade" id="exerciseModal">
+    <div class="modal-dialog modal-lg" style=" width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add New Exercise</h4>
+            </div>
 
-                    <h5 style="color:#ff6347">Exercise Details</h5>
-                    <hr />
-                    <div class="form-horizontal">
-                        <div class="form-group">
-                            <label class="control-label col-md-2">
-                                Exercise Name
-                            </label>
-                            <div class="col-md-4">
-                                <input type="text" id="exrciseName" name="name" class="form-control" />
-                            </div>
-                            <label class="control-label col-md-2">
-                                Body Part
-                            </label>
-                            <div class="col-md-4">
-                                <select id="bodyPart" class="form-control">
-                                  @foreach (var name in Enum.GetNames<BodyPartType>())
-                                    {
-                                        <option value="@name">@name</option>
-                                    }
-                                </select>
-                            </div>
-                            <label class="control-label col-md-2">
-                                Number of Sets
-                            </label>
-                            <div class="col-md-4">
-                                <input type="text" id="sets" name="sets" class="form-control" />
-                            </div>
+            <div class="modal-body">
+
+                <h5 style="color:#ff6347">Exercise Details</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Exercise Name
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="exrciseName" name="name" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Body Part
+                        </label>
+                        <div class="col-md-4">
+                            <select id="bodyPart" class="form-control">
+                                @foreach (var name in Enum.GetNames<BodyPartType>())
+                                {
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Number of Sets
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="sets" name="sets" class="form-control" />
                         </div>
                     </div>
-
-                    <div class="modal-footer">
-                        <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
-                        <button id="saveExercise" type="submit" class="btn btn-danger">Save Exercise</button>
-                    </div>
-
                 </div>
+
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="saveExercise" type="submit" class="btn btn-danger">Save Exercise</button>
+                </div>
+
             </div>
         </div>
     </div>
+</div>
 
-    @section Scripts{
-        <script>
-            function addNewExercise() {
-                $("#exerciseModal").modal();
+@section Scripts{
+    <script>
+        function addNewExercise() {
+            $("#exerciseModal").modal();
+        }
+
+        $("#saveExercise").click(function(e) {
+            e.preventDefault();
+
+            if ($.trim($("#exrciseName").val()) == "" || $.trim($("#bodyPart").val()) == "" || $.trim($("#sets").val()) == "") {
+                return alert("All fields are required!")
+            }
+            if ($.trim($("#sets").val()) <= 0) {
+                return alert("Sets must be positive number!")
             }
 
-            $("#saveExercise").click(function(e) {
-                e.preventDefault();
+            let exerciseName = $("#exrciseName").val();
+            var bodyPart = $('#bodyPart').find(":selected").val();
+            let sets = $("#sets").val();
+            let detailsTableBody = $("#exerciseTable tbody");
 
-                if ($.trim($("#exrciseName").val()) == "" || $.trim($("#bodyPart").val()) == "" || $.trim($("#sets").val()) == "") {
-                    return alert("All fields are required!")
-                }
-                if ($.trim($("#sets").val()) <= 0){
-                    return alert("Sets must be positive number!")
-                }
+            var exercise = document.createElement('tr');
+            var nameTd = document.createElement('td');
+            nameTd.textContent = exerciseName;
 
-                let exerciseName = $("#exrciseName").val();
-                var bodyPart = $('#bodyPart').find(":selected").val();
-                let sets = $("#sets").val();
-                let detailsTableBody = $("#exerciseTable tbody");
+            var bodyPartTd = document.createElement('td');
+            bodyPartTd.textContent = bodyPart;
 
-                var exercise = document.createElement('tr');
-                var nameTd = document.createElement('td');
-                nameTd.textContent = exerciseName;
+            var setTd = document.createElement('td');
+            setTd.textContent = sets;
 
-                var bodyPartTd = document.createElement('td');
-                bodyPartTd.textContent = bodyPart;
+            exercise.appendChild(nameTd);
+            exercise.appendChild(bodyPartTd);
+            exercise.appendChild(setTd);
 
-                var setTd = document.createElement('td');
-                setTd.textContent = sets;
+            detailsTableBody.append(exercise);
+            clearItem();
+        });
+        function clearItem() {
+            $("#exrciseName").val('');
+            $("#bodyPart").val('');
+            $("#sets").val('');
+        }
 
-                exercise.appendChild(nameTd);
-                exercise.appendChild(bodyPartTd);
-                exercise.appendChild(setTd);
+        $("#saveWorkout").click(function(e) {
+            e.preventDefault();
 
-                detailsTableBody.append(exercise);
-                clearItem();
-            });
-            function clearItem() {
-                $("#exrciseName").val('');
-                $("#bodyPart").val('');
-                $("#sets").val('');
-            }
+            var exerciseArr = [];
+            exerciseArr.length = 0;
 
-            $("#saveWorkout").click(function(e) {
-                e.preventDefault();
-
-                var exerciseArr = [];
-                exerciseArr.length = 0;
-
-                $.each($("#exerciseTable tbody tr"), function() {
-                    exerciseArr.push({
-                        Name: $(this).find('td:eq(0)').html(),
-                        BodyPart: $(this).find('td:eq(1)').html(),
-                        SetCount: $(this).find('td:eq(2)').html(),
-                    });
-                });
-
-                var data = {
-                    Name: $("#name").val(),
-                    Description: $("#description").val(),
-                    Exercises: exerciseArr
-                };
-
-                $.ajax({
-                    contentType: 'application/json; charset=utf-8',
-                    dataType: 'json',
-                    method: 'POST',
-                    url: "/Workout/CreateTamplate",
-                    data: JSON.stringify(data),
-                    success: function(result) {
-                        window.location = "https://localhost:7043/workout/MineTamlates";
-                    }
+            $.each($("#exerciseTable tbody tr"), function() {
+                exerciseArr.push({
+                    Name: $(this).find('td:eq(0)').html(),
+                    BodyPart: $(this).find('td:eq(1)').html(),
+                    SetCount: $(this).find('td:eq(2)').html(),
                 });
             });
-        </script>
+
+            var data = {
+                Name: $("#name").val(),
+                Description: $("#description").val(),
+                Exercises: exerciseArr
+            };
+
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                method: 'POST',
+                url: "/Workout/CreateTamplate",
+                data: JSON.stringify(data),
+                success: function(result) {
+                    window.location = "https://localhost:7043/workout/MineTamlates";
+                }
+            });
+        });
+    </script>
     }

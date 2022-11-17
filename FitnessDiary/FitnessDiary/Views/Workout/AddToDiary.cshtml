@@ -1,0 +1,61 @@
+﻿@model AddToDiaryViewModel
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="row">
+            <h2 class="panel-title pull-left" style="margin-left:10px;">
+                <strong>Add Workout to Diary</strong>
+            </h2>
+        </div>
+    </div>
+
+
+
+    <form asp-controller="Workout" asp-action="AddToDiary" method="post">
+        <div>
+            <h5 style="color:#ff6347">Workout</h5>
+            <hr />
+            <div class="form-horizontal">
+                <input type="hidden" id="CustomerId" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label col-md-2" >
+                        Workout Name: @Model.Name
+                    </label>
+                    @Html.HiddenFor(modelItem => Model.Name)
+                    <label asp-for="Description" class="control-label col-md-2">
+                        Description: @Model.Description
+                    </label>
+                    @Html.HiddenFor(modelItem => Model.Description)
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body">
+            <ul class="list-group">
+                
+                @for (int i = 0; i < Model.Exercises.Count; i++)
+                {
+                    <li>
+                          <p>@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
+                          @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
+                          @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
+                          <ul>
+                             @for (int j = 0; j < @Model.Exercises[i].Sets.Count; j++)
+                            {
+                                <label>Reps</label>
+                                @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
+                                <label>Load</label>
+                                @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
+                            }
+                          </ul>
+                      </li>
+                }
+                   
+            </ul>
+
+        </div>
+        <div>
+            <button  type="submit" class="btn btn-primary">Save Workout </button>
+        </div>
+    </form>
+</div>

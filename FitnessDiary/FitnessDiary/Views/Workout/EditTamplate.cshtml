@@ -1,11 +1,12 @@
-﻿@model EditTamplateViewModel
+﻿@using FitnessDiary.Infrastructure.Data.Enums
+@model EditTamplateViewModel
 
 <form asp-controller="Workout" asp-action="EditTamplate" method="post">
     <div>
         <h5 style="color:#ff6347">Edit Workout</h5>
         <hr />
         <div class="form-horizontal">
-
+            <input id="tamplateId" type="hidden" value="@Model.Id"/>
             <div class="form-group">
                 <label asp-for="Name" class="control-label col-md-2">
                     Workout Name
@@ -51,9 +52,6 @@
                         })
                         </td>
                         <td>@Html.EditorFor(modelItem => Model.Exercises[i].SetCount)</td>
-                        <td>
-                            <a asp-controller="Workout" asp-action="RemoveExercise" asp-route-id="@Model.Exercises[i].Id">Remove</a>
-                        </td>
                     </tr>
                 }
             </tbody>
@@ -61,6 +59,158 @@
 
     </div>
     <div>
-        <button type="submit" class="btn btn-primary">Save Workout </button>
+        <button type="submit" class="btn btn-primary">Edit Workout </button>
+        <button type="button" class="btn btn-primary" onclick="addExercise()">Add exercise </button>
+        <button type="button" class="btn btn-primary" onclick="removeExercise()">Remove exercise </button>
     </div>
 </form>
+
+<div class="modal fade" id="addExerciseModal">
+    <div class="modal-dialog modal-lg" style=" width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add New Exercise</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <h5 style="color:#ff6347">Exercise Details</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Exercise Name
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="exrciseName" name="name" class="form-control" />
+                        </div>
+                        <label class="control-label col-md-2">
+                            Body Part
+                        </label>
+                        <div class="col-md-4">
+                            <select id="bodyPart" class="form-control">
+                                @foreach (var name in Enum.GetNames<BodyPartType>())
+                                {
+                                    <option value="@name">@name</option>
+                                }
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Number of Sets
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="sets" name="sets" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="save" type="button" class="btn btn-danger">Save Exercise</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="removeExerciseModal">
+    <div class="modal-dialog modal-lg" style=" width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Remove Exercise</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <h5 style="color:#ff6347">Exercise Details</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <div class="col-md-4">
+                            <select id="exercise" class="form-control">
+                                @foreach (var exercise in Model.Exercises)
+                                {
+                                    <option value="@exercise.Id">@exercise.Name</option>
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="remove" type="button" class="btn btn-danger">Remove Exercise</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+            function addExercise() {
+            $("#addExerciseModal").modal();
+        }
+
+        $("#save").click(function(e) {
+            e.preventDefault();
+
+            let exerciseName = $("#exrciseName").val();
+            let bodyPart = $('#bodyPart').find(":selected").val();
+            let sets = $("#sets").val();
+            let tamplateId = $("#tamplateId").val();
+
+            let data = {
+                WorkoutId: tamplateId,
+                ExerciseName: exerciseName,
+                BodyPart: bodyPart,
+                SetCount: sets
+            }
+
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                method: 'POST',
+                url: "/Workout/AddExerciseToTamplate",
+                data: JSON.stringify(data),
+                success: function(result) {
+                    window.location = `${tamplateId}`;
+                }
+            });
+            clearItem();
+        })
+
+        function clearItem() {
+            $("#exrciseName").val('');
+            $("#bodyPart").val('');
+            $("#sets").val('');
+        }
+
+
+           function removeExercise() {
+            $("#removeExerciseModal").modal();
+        }
+
+        $("#remove").click(function(e) {
+            e.preventDefault();
+
+            let exerciseId = $('#exercise').find(":selected").val();
+            let tamplateId = $("#tamplateId").val();
+
+            let removedata = {
+                ExerciseId: exerciseId,
+                TamplateId: tamplateId
+            };
+
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                method: 'POST',
+                url: "/Workout/RemoveExerciseFromTamplate",
+                data: JSON.stringify(removedata),
+                success: function(result) {
+                    window.location = `${tamplateId}`;
+                }
+            });
+        });
+    </script>
+}

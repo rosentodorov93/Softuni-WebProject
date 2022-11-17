@@ -15,6 +15,31 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
+
+        public async Task AddExerciseToTamplateAsync(AddExerciseModel model)
+        {
+            var workout = await repo.All<WorkoutTamplate>()
+                .Where(t => t.Id == model.WorkoutId)
+                .Include(t => t.Exercises)
+                .FirstOrDefaultAsync();
+
+            if (workout == null)
+            {
+                throw new ArgumentException("Workout is invalid");
+            }
+
+            var exercise = new ExerciseTamplate()
+            {
+                Name = model.ExerciseName,
+                BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), model.BodyPart),
+                SetCount = int.Parse(model.SetCount),
+            };
+
+            workout.Exercises.Add(exercise);
+
+            await repo.SaveChangesAsync();
+        }
+
         public async Task<string> CreateTamplateAsync(CreateWorkoutViewModel model, string userId)
         {
             var workout = new WorkoutTamplate()
@@ -77,5 +102,56 @@ namespace FitnessDiary.Core.Services
                 }).ToList()
             };
         }
+
+        public async Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id)
+        {
+            var tamplate = await repo.All<WorkoutTamplate>()
+               .Where(t => t.Id == id)
+               .Include(t => t.Exercises)
+               .FirstOrDefaultAsync();
+
+            var result = new AddToDiaryViewModel()
+            {
+                Name = tamplate.Name,
+                Description = tamplate.Description,
+                Exercises = tamplate.Exercises.Select(e => new ExerciseWithSetsViewModel()
+                {
+                    Name = e.Name,
+                    BodyPart = e.BodyPart.ToString(),
+                    Sets = CreateSets(e.SetCount)
+                }).ToList()
+            };
+            
+
+            return result;
+        }
+
+        
+        public async Task RemoveExerciseAsync(string exerciseId, string tamplateId)
+        {
+            var tamplate = await repo.All<WorkoutTamplate>()
+                .Where(t => t.Id == tamplateId)
+                .Include(t => t.Exercises)
+                .FirstOrDefaultAsync();
+
+            var exercise = tamplate.Exercises.FirstOrDefault(e => e.Id == exerciseId);
+
+            tamplate.Exercises.Remove(exercise);
+
+            await repo.SaveChangesAsync();
+        }
+
+        private List<SetViewModel> CreateSets(int setCount)
+        {
+            var result = new List<SetViewModel>();
+
+            for (int i = 0; i < setCount; i++)
+            {
+                result.Add(new SetViewModel());
+            }
+
+            return result;
+        }
+
     }
 }
