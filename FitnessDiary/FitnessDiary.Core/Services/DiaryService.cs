@@ -1,9 +1,11 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Diary;
+using FitnessDiary.Core.Models.Workout;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Infrastructure.Data.Common;
 using FitnessDiary.Infrastructure.Data.Enums;
+using FitnessDiary.Infrastructure.Data.WorkoutEntites;
 using Microsoft.EntityFrameworkCore;
 
 namespace FitnessDiary.Core.Services
@@ -81,6 +83,10 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(s => s.Nutrition)
                 .Include(x => x.Diary)
                 .ThenInclude(d => d.Nutrition)
+                .Include(x => x.Diary)
+                .ThenInclude(d => d.Workout)
+                .ThenInclude(w => w.Exercises)
+                .ThenInclude(e => e.Sets)
                 .FirstOrDefaultAsync();
 
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
@@ -93,6 +99,7 @@ namespace FitnessDiary.Core.Services
                     Nutrition = new NutritionData()
                 };
                 user?.Diary.Add(diaryDay);
+                currentDay = diaryDay;
             }
 
             List<ServingViewModel> breakfastServings = GetServings(currentDay, ServingCategory.Breakfast);
@@ -100,10 +107,12 @@ namespace FitnessDiary.Core.Services
             List<ServingViewModel> dinnerServings = GetServings(currentDay, ServingCategory.Dinner);
             List<ServingViewModel> snackServings = GetServings(currentDay, ServingCategory.Snack);
 
+            
+
             CalculateDayNutrition(currentDay);
-
+             
             await repo.SaveChangesAsync();
-
+            
             return new DiaryDayServiceModel()
             {
                 Id = currentDay.Id,
@@ -112,6 +121,7 @@ namespace FitnessDiary.Core.Services
                 DinnerServings = dinnerServings,
                 SnackServings = snackServings,
                 Date = currentDay.DateTime.Date,
+                Workout = LoadWorkout(currentDay.Workout),
                 Nutrition = new NutritionServiceModel()
                 {
                     Calories = currentDay.Nutrition.Calories,
@@ -121,6 +131,32 @@ namespace FitnessDiary.Core.Services
                 }
 
             };
+        }
+
+        private AddToDiaryViewModel LoadWorkout(Workout workout)
+        {
+
+            if (workout != null)
+            {
+                return new AddToDiaryViewModel()
+                {
+                    Id = workout.Id,
+                    Name = workout.Name,
+                    Description = workout.Description,
+                    Exercises = workout.Exercises.Select(e => new ExerciseWithSetsViewModel()
+                    {
+                        Id = e.Id,
+                        Name = e.Name,
+                        BodyPart = e.BodyPart.ToString(),
+                        Sets = e.Sets.Select(s => new SetViewModel()
+                        {
+                            Reps = s.Reps,
+                            Load = s.Load,
+                        }).ToList()
+                    }).ToList(),
+                };
+            }
+            return null;
         }
 
         public async Task<List<FoodDiaryServiceModel>> GetFoodsFromDbAsync()

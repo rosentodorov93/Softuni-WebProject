@@ -37,6 +37,7 @@
                 {
                     <li>
                           <p>@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
+                          @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
                           @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
                           @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
                           <ul>
@@ -55,7 +56,7 @@
 
         </div>
         <div>
-            <button  type="submit" class="btn btn-primary">Save Workout </button>
+            <button type="submit" class="btn btn-primary">Add to Diary </button>
         </div>
     </form>
 </div>

@@ -48,15 +48,21 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> EditTamplate(EditTamplateViewModel model)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
 
-            return RedirectToAction("MineTamplates");
+            await workoutService.EditTamplateAsync(model);
+
+            return RedirectToAction("MineTamlates");
         }
         [HttpPost]
         public async Task<IActionResult> AddExerciseToTamplate([FromBody] AddExerciseModel model)
         {
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("MineTamplates");
+                return RedirectToAction("MineTamlates");
             }
 
             await workoutService.AddExerciseToTamplateAsync(model);
@@ -76,11 +82,19 @@ namespace FitnessDiary.Controllers
 
             return View(tamplate);
         }
+
         [HttpPost]
         public async Task<IActionResult> AddToDiary(AddToDiaryViewModel model)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("AddToDiary", "Workout", new { Id = model.Id });
+            }
 
-            return View(model);
+            await workoutService.AddToDiaryAsync(model, userId);
+
+            return RedirectToAction("Index", "Diary");
         }
     }
 }

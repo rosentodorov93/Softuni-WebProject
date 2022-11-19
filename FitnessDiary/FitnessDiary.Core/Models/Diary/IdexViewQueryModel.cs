@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FitnessDiary.Core.Models.Workout;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,5 +15,6 @@ namespace FitnessDiary.Core.Models.Diary
         public IList<ServingViewModel> Dinner { get; set; } = new List<ServingViewModel>();
         public IList<ServingViewModel> Snack { get; set; } = new List<ServingViewModel>();
         public NutritionStatisticsViewModel NutritionStatistics { get; set; } = null!;
+        public AddToDiaryViewModel Workout { get; set; }
     }
 }

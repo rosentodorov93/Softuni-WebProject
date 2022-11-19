@@ -97,6 +97,14 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("Index", "Diary");
         }
+        public async Task<IActionResult> Statistics()
+        {
+
+            TempData["labels"] = "Monday, Tuesday, Wednesday, Thursday";
+            TempData["data"] = "1234, 2245, 3345, 1223";
+
+            return View();
+        }
 
     }
 }
