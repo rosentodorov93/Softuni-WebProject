@@ -19,6 +19,6 @@ namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 
         [Required]
         public BodyPartType BodyPart { get; set; }
-        public Set[] Sets { get; set; }
+        public List<Set> Sets { get; set; } = new List<Set>();
     }
 }

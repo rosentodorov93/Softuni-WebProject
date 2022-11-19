@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221119114141_DropWorkoutIdFromDiaryTable")]
+    partial class DropWorkoutIdFromDiaryTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -225,16 +227,11 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Property<int>("NutritionId")
                         .HasColumnType("int");
 
-                    b.Property<string>("WorkoutId")
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NutritionId");
-
-                    b.HasIndex("WorkoutId");
 
                     b.ToTable("DiaryDays");
                 });
@@ -683,13 +680,7 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("FitnessDiary.Infrastructure.Data.WorkoutEntites.Workout", "Workout")
-                        .WithMany()
-                        .HasForeignKey("WorkoutId");
-
                     b.Navigation("Nutrition");
-
-                    b.Navigation("Workout");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Food", b =>
