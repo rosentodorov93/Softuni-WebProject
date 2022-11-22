@@ -9,7 +9,7 @@ namespace FitnessDiary.Core.Models.Recepie
     public class IngredientDetailsViewModel
     {
         public int Id { get; set; }
-        public string Name { get; set; }
+        public string Name { get; set; } = null!;
         public double  Amount { get; set; }
     }
 }

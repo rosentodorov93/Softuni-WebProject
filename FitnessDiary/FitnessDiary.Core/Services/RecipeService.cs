@@ -30,7 +30,7 @@ namespace FitnessDiary.Core.Services
                 ServingsSize = model.ServingsSize,
                 Unit = (MeassureUnitType)model.Unit,
                 Nutrition = new NutritionData(),
-                UserId = model.UserId,
+                //UserId = model.UserId,
             };
 
             await repo.AddAsync<Recipe>(recipe);
@@ -55,7 +55,7 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            recipe.Ingredients.Add(new Ingredient()
+            recipe?.Ingredients.Add(new Ingredient()
             {
                 FoodId = food.Id,
                 Food = food,
@@ -116,7 +116,6 @@ namespace FitnessDiary.Core.Services
                 Fats = recipe.Nutrition.Fats,
                 Unit = (int)recipe.Unit,
                 CaloriesPerPortion = recipe.CaloriesPerServing,
-                isFinished = recipe.isFinished,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
                 {
                     Id = i.Id,
@@ -141,7 +140,7 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId)
         {
             var recipe = await repo.All<Recipe>()
-                 .Where(r => r.UserId == userId)
+                 //.Where(r => r.UserId == userId)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
                  .ThenInclude(i => i.Food)
@@ -179,7 +178,6 @@ namespace FitnessDiary.Core.Services
                 Fats = recipe.Nutrition.Fats,
                 Unit = (int)recipe.Unit,
                 CaloriesPerPortion = recipe.CaloriesPerServing,
-                isFinished = recipe.isFinished,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
                 {
                     Id = i.Id,

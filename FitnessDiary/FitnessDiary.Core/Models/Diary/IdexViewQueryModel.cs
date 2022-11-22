@@ -15,6 +15,6 @@ namespace FitnessDiary.Core.Models.Diary
         public IList<ServingViewModel> Dinner { get; set; } = new List<ServingViewModel>();
         public IList<ServingViewModel> Snack { get; set; } = new List<ServingViewModel>();
         public NutritionStatisticsViewModel NutritionStatistics { get; set; } = null!;
-        public AddToDiaryViewModel Workout { get; set; }
+        public AddToDiaryViewModel Workout { get; set; } = null!;
     }
 }

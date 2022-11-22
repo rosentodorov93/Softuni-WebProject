@@ -8,6 +8,6 @@ namespace FitnessDiary.Core.Models.Workout
 {
     public class ListingTamplateViewModel : CreateWorkoutViewModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     }
 }

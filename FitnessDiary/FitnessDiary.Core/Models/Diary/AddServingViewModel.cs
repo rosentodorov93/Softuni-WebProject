@@ -8,7 +8,7 @@ namespace FitnessDiary.Core.Models.Diary
 {
     public class AddServingViewModel
     {
-        public List<FoodDiaryServiceModel> Foods { get; set; }
-        public ServingServiceModel Serving { get; set; }
+        public List<FoodDiaryServiceModel> Foods { get; set; } = null!;
+        public ServingServiceModel Serving { get; set; } = null!;
     }
 }

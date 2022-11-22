@@ -19,6 +19,6 @@ namespace FitnessDiary.Core.Models.Food
         public double MaxPage => Math.Ceiling((double)TotalFoods / FoodsPerPage);
 
         public  int FoodsPerPage  = 2;
-        public IEnumerable<FoodQueryModel> Foods { get; set; }
+        public IEnumerable<FoodQueryModel> Foods { get; set; } = null!;
     }
 }

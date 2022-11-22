@@ -8,7 +8,7 @@ namespace FitnessDiary.Core.Models.Recepie
 {
     public class RecipeListingViewModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;
         public int ServingsSize { get; set; }
         public int Unit { get; set; }

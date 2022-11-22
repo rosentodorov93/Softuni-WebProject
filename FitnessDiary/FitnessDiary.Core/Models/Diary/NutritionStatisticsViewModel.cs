@@ -2,8 +2,8 @@
 {
     public class NutritionStatisticsViewModel
     {
-        public NutritionServiceModel CurrentNutrition { get; set; }
-        public NutritionServiceModel RequiredNutrition { get; set; }
+        public NutritionServiceModel CurrentNutrition { get; set; } = null!;
+        public NutritionServiceModel RequiredNutrition { get; set; } = null!;
 
     }
 }

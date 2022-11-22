@@ -14,8 +14,8 @@ namespace FitnessDiary.Core.Contracts
         Task AddFood(FoodViewModel model);
         Task AddToCollectionAsync(string? userId, string foodId);
         Task<MinePageViewModel> GetAllById(string? userId,
-            string type = null,
-            string searchTerm = null,
+            string? type = null,
+            string? searchTerm = null,
             FoodSorting sorting = FoodSorting.PerName,
             int currentPage = 1,
             int foodsPerPage = int.MaxValue);

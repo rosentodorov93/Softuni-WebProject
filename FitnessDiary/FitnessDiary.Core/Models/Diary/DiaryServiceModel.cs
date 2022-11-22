@@ -9,6 +9,6 @@ namespace FitnessDiary.Core.Models.Diary
     public class DiaryServiceModel
     {
         public DiaryDayServiceModel CurrentDay { get; set; } = null!;
-        public IList<DiaryDayServiceModel> DiaryDays { get; set; }
+        public IList<DiaryDayServiceModel> DiaryDays { get; set; } = null!;
     }
 }

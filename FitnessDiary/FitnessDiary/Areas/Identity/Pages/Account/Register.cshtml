@@ -64,11 +64,11 @@
                         <span asp-validation-for="Input.Gender" class="text-danger"></span>
                     </div>
                     <div class="form-group col-6">
-                        <label asp-for="Input.ActivityLevel" class="form-label">Activity Level</label>
-                        <select asp-for="Input.ActivityLevel" class="form-control">
+                        <label asp-for="Input.ActivityLevelId" class="form-label">Activity Level</label>
+                        <select asp-for="Input.ActivityLevelId" class="form-control">
                             @foreach (var al in this.Model.ActivityLevels)
                             {
-                                <option value="@al.Value">@al.Type</option>
+                                <option value="@al.Id">@al.Type</option>
                             }
                         </select>
        

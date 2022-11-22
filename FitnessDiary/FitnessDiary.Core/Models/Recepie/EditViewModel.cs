@@ -8,7 +8,7 @@ namespace FitnessDiary.Core.Models.Recepie
 {
     public class EditViewModel : CreateViewModel
     {
-        public string Id { get; set; }
-        public List<IngredientDetailsViewModel> Ingredients { get; set; }
+        public string Id { get; set; } = null!;
+        public List<IngredientDetailsViewModel> Ingredients { get; set; } = null!;
     }
 }

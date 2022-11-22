@@ -51,7 +51,7 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(e => e.Sets)
                 .FirstOrDefaultAsync();
 
-            var currentDay = user.Diary.OrderBy(d => d.Id).Last();
+            var currentDay = user?.Diary.OrderBy(d => d.Id).Last();
 
             var workout = new Workout()
             {

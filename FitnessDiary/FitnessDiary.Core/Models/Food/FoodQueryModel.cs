@@ -8,6 +8,6 @@ namespace FitnessDiary.Core.Models.Food
 {
     public class FoodQueryModel: FoodViewModel
     {
-        public string Id { get; set; }
+        public string Id { get; set; } = null!;
     }
 }

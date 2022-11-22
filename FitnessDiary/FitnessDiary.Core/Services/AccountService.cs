@@ -30,7 +30,7 @@ namespace FitnessDiary.Core.Services
                 targetCalories = 655.1 + (9.563 * user.Weight) + (1.850 * user.Height) - (4.676 * user.Age);
             }
 
-            targetCalories *= user.ActivityLevel;
+            targetCalories *= user.ActivityLevel.Value;
 
             if (user.FitnessGoal == FitnessGoalType.GainWeight)
             {

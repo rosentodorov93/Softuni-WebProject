@@ -8,8 +8,8 @@ namespace FitnessDiary.Core.Models.Workout
 {
     public class ExerciseViewModel
     {
-        public string Name { get; set; }
-        public string BodyPart { get; set; }
+        public string Name { get; set; } = null!;
+        public string BodyPart { get; set; } = null!;
         public int SetCount { get; set; }
     }
 }

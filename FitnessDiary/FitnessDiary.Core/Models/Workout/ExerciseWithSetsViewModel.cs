@@ -2,9 +2,9 @@
 {
     public class ExerciseWithSetsViewModel
     {
-        public string Id { get; set; }
-        public string Name { get; set; }
-        public string BodyPart { get; set; }
-        public List<SetViewModel> Sets { get; set; }
-    }
+        public string Id { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public string BodyPart { get; set; } = null!;
+        public List<SetViewModel> Sets { get; set; } = null!;
+    } 
 }

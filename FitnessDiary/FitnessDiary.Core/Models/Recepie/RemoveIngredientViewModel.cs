@@ -8,8 +8,8 @@ namespace FitnessDiary.Core.Models.Recepie
 {
     public class RemoveIngredientViewModel
     {
-        public IEnumerable<IngredientDetailsViewModel> Ingredients { get; set; }
-        public string Recipeid { get; set; }
+        public IEnumerable<IngredientDetailsViewModel> Ingredients { get; set; } = null!;
+        public string Recipeid { get; set; } = null!;
         public int IngredientToRemove { get; set; }
     }
 }

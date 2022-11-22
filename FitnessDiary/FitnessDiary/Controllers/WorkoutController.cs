@@ -1,6 +1,5 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Workout;
-using FitnessDiary.Core.Models.Workout;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -15,7 +14,7 @@ namespace FitnessDiary.Controllers
             workoutService = _workoutService;
         }
 
-        public async Task<IActionResult> CreateTamplate()
+        public  IActionResult CreateTamplate()
         {
             var model = new CreateWorkoutViewModel();
             return View(model);

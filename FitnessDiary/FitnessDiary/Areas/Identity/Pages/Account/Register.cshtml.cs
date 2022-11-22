@@ -115,7 +115,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             public double Weight { get; set; }
 
             [Required]
-            public double ActivityLevel { get; set; }
+            public int ActivityLevelId { get; set; }
 
             [Required]
             public int FitnessGoal { get; set; }
@@ -145,7 +145,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                     Age = Input.Age,
                     Height = Input.Height,
                     Weight = Input.Weight,
-                    ActivityLevel = Input.ActivityLevel,
+                    ActivityLevelId = Input.ActivityLevelId,
                     FitnessGoal = (FitnessGoalType)Input.FitnessGoal,
                     TargetNutrients = new NutritionData(),
                     Diary = new List<DiaryDay>()
