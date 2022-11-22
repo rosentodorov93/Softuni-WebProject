@@ -1,12 +1,7 @@
 ﻿using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Infrastructure.Data.Enums;
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -28,11 +23,7 @@ namespace FitnessDiary.Infrastructure.Data
         [ForeignKey(nameof(NutrtionId))]
         public NutritionData Nutrition { get; set; } = null!;
         public double CaloriesPerServing { get; set; }
-        public bool isFinished { get; set; } = false;
-
-        [Required]
-        [MaxLength(450)]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;

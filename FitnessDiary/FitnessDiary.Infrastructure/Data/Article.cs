@@ -14,19 +14,22 @@ namespace FitnessDiary.Infrastructure.Data
 
         [Required]
         [MaxLength(50)]
-        public string Title { get; set; }
+        public string Title { get; set; } = null!;
 
         [Required]
         public DateTime Date { get; set; }
 
+        [MaxLength(450)]
+        public string? ImageUrl { get; set; } 
+
         [Required]
         [MaxLength(30)]
-        public string Author { get; set; }
+        public string Author { get; set; } = null!;
 
         [Required]
-        public string Category { get; set; }
+        public string Category { get; set; } = null!;
 
         [Required]
-        public string Content { get; set; }
+        public string Content { get; set; } = null!;
     }
 }

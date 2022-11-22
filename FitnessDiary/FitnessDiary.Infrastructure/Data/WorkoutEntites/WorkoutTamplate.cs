@@ -20,12 +20,12 @@ namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 
         [MaxLength(250)]
         public string? Description { get; set; }
-        public IList<ExerciseTamplate> Exercises { get; set; }
+        public IList<ExerciseTamplate> Exercises { get; set; } = null!;
 
         [Required]
-        public string UserId { get; set; }
+        public string UserId { get; set; } = null!;
 
         [ForeignKey(nameof(UserId))]
-        public ApplicationUser User { get; set; }
+        public ApplicationUser User { get; set; } = null!;
     }
 }

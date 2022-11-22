@@ -1,4 +1,5 @@
 ﻿using FitnessDiary.Infrastructure.Data.Account;
+using FitnessDiary.Infrastructure.Data.Configuration;
 using FitnessDiary.Infrastructure.Data.WorkoutEntites;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -12,7 +13,8 @@ namespace FitnessDiary.Infrastructure.Data
         {
         }
         public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
-        public DbSet<Food> Foods { get; set; } = null!;
+        public DbSet<NutritionData> Foods { get; set; } = null!;
+        public DbSet<Recipe> Recipes { get; set; } = null!;
         public DbSet<Ingredient> Ingredients { get; set; } = null!;
         public DbSet<NutritionData> Nutritions { get; set; } = null!;
         public DbSet<Serving> Servings { get; set; } = null!;
@@ -26,31 +28,13 @@ namespace FitnessDiary.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-        
-            builder.Entity<ActivityLevel>()
-                .HasData(new ActivityLevel()
-                {
-                    Id = 1,
-                    Type = "Light ",
-                    Value = 1.375
-                },
-                new ActivityLevel()
-                {
-                    Id = 2,
-                    Type = "Moderate ",
-                    Value = 1.55
-                }, new ActivityLevel()
-                {
-                    Id = 3,
-                    Type = "Very Active",
-                    Value = 1.725
-                },
-                new ActivityLevel()
-                {
-                    Id = 4,
-                    Type = "Extra Active",
-                    Value = 1.9
-                });
+
+            builder.ApplyConfiguration(new ActivityLevelConfiguration());
+            builder.ApplyConfiguration(new RolesConfiguration());
+            builder.ApplyConfiguration(new NutritionConfiguration());
+            builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new UserRolesConfiguration());
+            builder.ApplyConfiguration(new FoodsConfiguration());
 
             base.OnModelCreating(builder);
         }

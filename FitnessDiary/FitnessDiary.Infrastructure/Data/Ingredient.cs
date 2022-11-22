@@ -12,11 +12,12 @@ namespace FitnessDiary.Infrastructure.Data
     {
         [Key]
         public int Id { get; set; }
+
         [Required]
-        public string FoodId { get; set; }
+        public string FoodId { get; set; } = null!;
 
         [ForeignKey(nameof(FoodId))]
-        public Food Food { get; set; }
+        public Food Food { get; set; } = null!;
         public double Amount { get; set; }
 
     }

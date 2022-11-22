@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20221110121017_RecipeTableAddedWithStringId")]
-    partial class RecipeTableAddedWithStringId
+    [Migration("20221122180843_SeedAdminRoleToAdminUser")]
+    partial class SeedAdminRoleToAdminUser
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,8 +32,8 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
 
-                    b.Property<double>("ActivityLevel")
-                        .HasColumnType("float");
+                    b.Property<int>("ActivityLevelId")
+                        .HasColumnType("int");
 
                     b.Property<int>("Age")
                         .HasColumnType("int");
@@ -114,6 +114,8 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ActivityLevelId");
+
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
 
@@ -125,6 +127,62 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasIndex("NutritionId");
 
                     b.ToTable("AspNetUsers", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "fc8c8e1e-b196-41e4-a733-7adcd4509634",
+                            AccessFailedCount = 0,
+                            ActivityLevelId = 1,
+                            Age = 29,
+                            CarbsPercent = 50,
+                            ConcurrencyStamp = "0fa20fb4-c83a-4eaa-95f1-5bf19460e9e9",
+                            Email = "guest@mail.com",
+                            EmailConfirmed = false,
+                            FatsPercent = 30,
+                            FitnessGoal = 3,
+                            FullName = "Pesho Petrov",
+                            Gender = 1,
+                            Height = 178,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "guest@mail.com",
+                            NormalizedUserName = "guest",
+                            NutritionId = 1,
+                            PasswordHash = "AQAAAAEAACcQAAAAEGSmEfPedj+VtGT90jdWakl6lNzCLWdK6k3lPi/ikQhQwFWyuBhhXkDx/p0clFghPg==",
+                            PhoneNumberConfirmed = false,
+                            ProteinPercent = 20,
+                            SecurityStamp = "2b7b93ed-141b-46ee-96e5-237daa2e7821",
+                            TwoFactorEnabled = false,
+                            UserName = "guest",
+                            Weight = 80.0
+                        },
+                        new
+                        {
+                            Id = "a685f0cf-6d50-49b1-99cb-dbb987c7f62e",
+                            AccessFailedCount = 0,
+                            ActivityLevelId = 3,
+                            Age = 30,
+                            CarbsPercent = 50,
+                            ConcurrencyStamp = "769d3aae-79cc-443f-868a-f50c712ad40d",
+                            Email = "admin@mail.com",
+                            EmailConfirmed = false,
+                            FatsPercent = 30,
+                            FitnessGoal = 2,
+                            FullName = "Admin",
+                            Gender = 1,
+                            Height = 185,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "admin@mail.com",
+                            NormalizedUserName = "admin",
+                            NutritionId = 2,
+                            PasswordHash = "AQAAAAEAACcQAAAAEFnm1VzI1VO62U4pOqov+Yc9rmt717oXaNhG6ONXI2c8u/Eu7JOztgyZsa06IwKcfQ==",
+                            PhoneNumberConfirmed = false,
+                            ProteinPercent = 20,
+                            SecurityStamp = "d01abba8-8219-42a0-a989-723e2d32928d",
+                            TwoFactorEnabled = false,
+                            UserName = "admin",
+                            Weight = 85.0
+                        });
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.ActivityLevel", b =>
@@ -174,6 +232,46 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         });
                 });
 
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Article", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Author")
+                        .IsRequired()
+                        .HasMaxLength(30)
+                        .HasColumnType("nvarchar(30)");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("ImageUrl")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("nvarchar(50)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("Articles");
+                });
+
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
                 {
                     b.Property<int>("Id")
@@ -191,11 +289,16 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Property<int>("NutritionId")
                         .HasColumnType("int");
 
+                    b.Property<string>("WorkoutId")
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("NutritionId");
+
+                    b.HasIndex("WorkoutId");
 
                     b.ToTable("DiaryDays");
                 });
@@ -203,9 +306,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Food", b =>
                 {
                     b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ApplicationUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("MeassureUnits")
@@ -225,13 +325,43 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .HasMaxLength(30)
                         .HasColumnType("nvarchar(30)");
 
-                    b.HasKey("Id");
+                    b.Property<string>("UserId")
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasKey("Id");
 
                     b.HasIndex("NutritionId");
 
-                    b.ToTable("Foods");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Food");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "00c51d79-b0a2-44c4-9dfd-cc197f24c3e8",
+                            MeassureUnits = 2,
+                            Name = "Egg Size M",
+                            NutritionId = 3,
+                            Type = "Protein"
+                        },
+                        new
+                        {
+                            Id = "8070aa93-ea4c-477e-972b-aa3370f2d701",
+                            MeassureUnits = 2,
+                            Name = "Banana",
+                            NutritionId = 4,
+                            Type = "Fruit"
+                        },
+                        new
+                        {
+                            Id = "7bbc16e1-faa6-46ad-90ba-3dc038105ea2",
+                            MeassureUnits = 1,
+                            Name = "Potato",
+                            NutritionId = 5,
+                            Type = "Vegetables"
+                        });
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Ingredient", b =>
@@ -283,7 +413,49 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Nutritions");
+                    b.ToTable("NutritionData");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Calories = 2500.0,
+                            Carbohydrates = 245.0,
+                            Fats = 45.0,
+                            Proteins = 105.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Calories = 3500.0,
+                            Carbohydrates = 275.0,
+                            Fats = 65.0,
+                            Proteins = 145.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Calories = 66.0,
+                            Carbohydrates = 0.29999999999999999,
+                            Fats = 4.5999999999999996,
+                            Proteins = 6.4000000000000004
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Calories = 89.0,
+                            Carbohydrates = 23.0,
+                            Fats = 0.29999999999999999,
+                            Proteins = 1.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Calories = 77.0,
+                            Carbohydrates = 17.0,
+                            Fats = 0.10000000000000001,
+                            Proteins = 2.0
+                        });
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Recipe", b =>
@@ -310,11 +482,7 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.Property<string>("UserId")
                         .IsRequired()
-                        .HasMaxLength(450)
                         .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("isFinished")
-                        .HasColumnType("bit");
 
                     b.HasKey("Id");
 
@@ -322,7 +490,7 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Recipe");
+                    b.ToTable("Recipes");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Serving", b =>
@@ -359,6 +527,124 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.ToTable("Servings");
                 });
 
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Exercise", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BodyPart")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<string>("WorkoutId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkoutId");
+
+                    b.ToTable("Exercises");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.ExerciseTamplate", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("BodyPart")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(70)
+                        .HasColumnType("nvarchar(70)");
+
+                    b.Property<int>("SetCount")
+                        .HasColumnType("int");
+
+                    b.Property<string>("WorkoutTamplateId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("WorkoutTamplateId");
+
+                    b.ToTable("ExerciseTamplates");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Set", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ExerciseId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<double>("Load")
+                        .HasColumnType("float");
+
+                    b.Property<int>("Reps")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ExerciseId");
+
+                    b.ToTable("Sets");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Workout", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Workouts");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.WorkoutTamplate", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Description")
+                        .HasMaxLength(250)
+                        .HasColumnType("nvarchar(250)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("nvarchar(80)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("WorkoutTamplates");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -384,6 +670,22 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .HasFilter("[NormalizedName] IS NOT NULL");
 
                     b.ToTable("AspNetRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "cd1439f9-201b-42ac-96d2-5f13fd35ad5a",
+                            ConcurrencyStamp = "0d1b21f4-ad82-4365-83e4-889624bd0626",
+                            Name = "Admin",
+                            NormalizedName = "ADMIN"
+                        },
+                        new
+                        {
+                            Id = "930c94ba-f945-473c-bb6b-6b1298a44b85",
+                            ConcurrencyStamp = "5107fd53-7c15-4130-b226-5c60b0cf308f",
+                            Name = "Moderator",
+                            NormalizedName = "MODERATOR"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -473,6 +775,13 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasIndex("RoleId");
 
                     b.ToTable("AspNetUserRoles", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            UserId = "a685f0cf-6d50-49b1-99cb-dbb987c7f62e",
+                            RoleId = "cd1439f9-201b-42ac-96d2-5f13fd35ad5a"
+                        });
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
@@ -498,13 +807,28 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>
                 {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.ActivityLevel", "ActivityLevel")
+                        .WithMany()
+                        .HasForeignKey("ActivityLevelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("FitnessDiary.Infrastructure.Data.NutritionData", "TargetNutrients")
                         .WithMany()
                         .HasForeignKey("NutritionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("ActivityLevel");
+
                     b.Navigation("TargetNutrients");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Article", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", null)
+                        .WithMany("Articles")
+                        .HasForeignKey("ApplicationUserId");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
@@ -519,22 +843,30 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FitnessDiary.Infrastructure.Data.WorkoutEntites.Workout", "Workout")
+                        .WithMany()
+                        .HasForeignKey("WorkoutId");
+
                     b.Navigation("Nutrition");
+
+                    b.Navigation("Workout");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Food", b =>
                 {
-                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", null)
-                        .WithMany("Foods")
-                        .HasForeignKey("ApplicationUserId");
-
                     b.HasOne("FitnessDiary.Infrastructure.Data.NutritionData", "Nutrition")
                         .WithMany()
                         .HasForeignKey("NutritionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", "User")
+                        .WithMany("Foods")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Nutrition");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Ingredient", b =>
@@ -590,6 +922,42 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.Navigation("Nutrition");
                 });
 
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Exercise", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.WorkoutEntites.Workout", null)
+                        .WithMany("Exercises")
+                        .HasForeignKey("WorkoutId");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.ExerciseTamplate", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.WorkoutEntites.WorkoutTamplate", null)
+                        .WithMany("Exercises")
+                        .HasForeignKey("WorkoutTamplateId");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Set", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.WorkoutEntites.Exercise", "Exercise")
+                        .WithMany("Sets")
+                        .HasForeignKey("ExerciseId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Exercise");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.WorkoutTamplate", b =>
+                {
+                    b.HasOne("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", "User")
+                        .WithMany("WorkoutTamplates")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -643,11 +1011,15 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>
                 {
+                    b.Navigation("Articles");
+
                     b.Navigation("Diary");
 
                     b.Navigation("Foods");
 
                     b.Navigation("Recipes");
+
+                    b.Navigation("WorkoutTamplates");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
@@ -658,6 +1030,21 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Recipe", b =>
                 {
                     b.Navigation("Ingredients");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Exercise", b =>
+                {
+                    b.Navigation("Sets");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.Workout", b =>
+                {
+                    b.Navigation("Exercises");
+                });
+
+            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.WorkoutEntites.WorkoutTamplate", b =>
+                {
+                    b.Navigation("Exercises");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,7 +8,7 @@ namespace FitnessDiary.Infrastructure.Data.Enums
 {
     public enum MeassureUnitType
     {
-        Per100grams = 1,
-        PerItem = 2
+        CaloriesPer100grams = 1,
+        CaloriesPerItem = 2
     }
 }

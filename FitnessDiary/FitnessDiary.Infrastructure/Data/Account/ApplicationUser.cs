@@ -25,7 +25,9 @@ namespace FitnessDiary.Infrastructure.Data.Account
         [StringLength(7)]
         public Gender Gender { get; set; }
 
-        public double ActivityLevel { get; set; }
+        [Required]
+        public int ActivityLevelId { get; set; }
+        public ActivityLevel ActivityLevel { get; set; } = null!;
 
         [Required]
         public FitnessGoalType FitnessGoal { get; set; }
