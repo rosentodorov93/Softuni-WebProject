@@ -34,6 +34,7 @@ namespace FitnessDiary.Infrastructure.Data
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser? User { get; set; }
+        public bool IsActive { get; set; } = true;
 
     }
 }
