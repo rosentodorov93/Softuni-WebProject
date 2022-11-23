@@ -10,15 +10,22 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IFoodService
     {
-        Task<IEnumerable<FoodQueryModel>> GetAllAsync();
-        Task AddFood(FoodViewModel model);
-        Task AddToCollectionAsync(string? userId, string foodId);
-        Task<MinePageViewModel> GetAllById(string? userId,
-            string? type = null,
+        Task<FoodsQueryModel> GetAllAsync(
+            string? userId = null,
+            string? category = null, 
             string? searchTerm = null,
             FoodSorting sorting = FoodSorting.PerName,
             int currentPage = 1,
-            int foodsPerPage = int.MaxValue);
+            int housesPerPage = 1
+            );
+        Task AddFood(FoodViewModel model, string userId);
+        Task AddToCollectionAsync(string? userId, string foodId);
+        ////Task<MinePageViewModel> GetAllById(string? userId,
+        //    string? type = null,
+        //    string? searchTerm = null,
+        //    FoodSorting sorting = FoodSorting.PerName,
+        //    int currentPage = 1,
+        //    int foodsPerPage = 1);
         Task<IEnumerable<string>> getAllTypesAsync();
        
     }

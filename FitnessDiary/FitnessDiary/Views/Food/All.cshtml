@@ -1,5 +1,5 @@
 ﻿@using FitnessDiary.Infrastructure.Data.Enums
-@model IEnumerable<FoodQueryModel>
+@model AllFoodsQueryModel
 @{
     ViewBag.Title = "All foods";
 }
@@ -8,19 +8,70 @@
 
 <hr />
 
-<div class="card">
-    <div class="card-header">
-        <h3 class="card-title">My Foods</h3>
-        <div class="card-tools">
-            <div class="input-group input-group-sm" style="width: 150px;">
-                <input type="text" name="table_search" class="form-control float-right" placeholder="Search">
-                <div class="input-group-append">
-                    <button type="submit" class="btn btn-default">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
+<form method="get">
+    <div class="row">
+        <div class="form-group col-md-4">
+            <div class="form-group">
+                <label asp-for="Type"></label>
+                <select asp-for="Type" class="form-control">
+                    <option value="">All</option>
+
+                    @foreach (var type in Model.Types)
+                    {
+                        <option value="@type">@type</option>
+                    }
+                </select>
             </div>
         </div>
+
+        <div class="form-group col-md-4">
+            <label asp-for="SearchTerm"></label>
+            <input asp-for="SearchTerm" class="form-control" placeholder="BMW 640D, etc...">
+        </div>
+
+        <div class="form-group col-md-4">
+            <div class="form-group">
+                <label asp-for="Sorting"></label>
+                <select asp-for="Sorting" class="form-control">
+                    <option value="0" selected>Name</option>
+                    <option value="1">Type</option>
+                    <option value="2">Calories</option>
+                </select>
+            </div>
+        </div>
+    </div>
+</form>
+
+<div class="row mb-5">
+    <div class="col-md-6">
+        <a class="btn btn-primary @(Model.CurrentPage == 1 ? "disabled" : string.Empty)"
+           asp-controller="Food"
+           asp-action="All"
+           asp-route-currentPage="@Model.PreviousPage"
+           asp-route-brand="@Model.Type"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-sorting="@((int)Model.Sorting)"><<</a>
+    </div>
+    
+    @{
+        var shouldButtonBeDisabled = Model.CurrentPage == Model.MaxPage ||
+                                     !Model.Foods.Any();
+    }
+
+    <div class="col-md-6">
+        <a class="btn btn-primary float-sm-right @(shouldButtonBeDisabled ? "disabled" : string.Empty)" style="margin-top: 10px"
+           asp-controller="Food"
+           asp-action="All"
+           asp-route-currentPage="@(Model.CurrentPage + 1)"
+           asp-route-brand="@Model.Type"
+           asp-route-searchTerm="@Model.SearchTerm"
+           asp-route-sorting="@((int)Model.Sorting)">>></a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h3 class="card-title">My Foods real</h3>
     </div>
 
     <div class="card-body table-responsive p-0">
@@ -34,11 +85,10 @@
                     <th>Carbs</th>
                     <th>Proteins</th>
                     <th>Fats</th>
-                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var food in Model)
+                @foreach (var food in Model.Foods)
                 {
                     <tr>
                         <td>@food.Type</td>
@@ -48,11 +98,6 @@
                         <td>@food.Carbohydtrates</td>
                         <td>@food.Proteins</td>
                         <td>@food.Fats</td>
-                        <td>
-                            <form class="input-group-sm" asp-route-foodId="@food.Id" asp-controller="Food" asp-action="AddToCollection" method="post">
-                                <input type="submit" value="Add to My Foods" class="fs-6 btn btn-success mb-3 p-2" />
-                            </form>
-                        </td>
                     </tr>
                 }
             </tbody>

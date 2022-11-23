@@ -97,7 +97,7 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("Index", "Diary");
         }
-        public async Task<IActionResult> Statistics()
+        public IActionResult Statistics()
         {
 
             return View();

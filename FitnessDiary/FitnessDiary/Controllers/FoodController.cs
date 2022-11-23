@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
+using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -13,14 +14,24 @@ namespace FitnessDiary.Controllers
         {
             service = _service;
         }
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
-            var foods = await service.GetAllAsync();
+            var result = await service.GetAllAsync(
+                null,
+                query.Type, 
+                query.SearchTerm, 
+                query.Sorting, 
+                query.CurrentPage, 
+                AllFoodsQueryModel.FoodsPerPage);
 
-            return View(foods);
+            query.TotalFoods = result.TotalFoodsCount;
+            query.Types = await service.getAllTypesAsync();
+            query.Foods = result.Foods;
+
+            return View(query);
         }
 
-        public async Task<IActionResult> Add()
+        public async Task<IActionResult> AddToMine()
         {
             var model = new FoodViewModel();
 
@@ -28,14 +39,16 @@ namespace FitnessDiary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(FoodViewModel model)
+        public async Task<IActionResult> AddToMine(FoodViewModel model)
         {
+            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            await service.AddFood(model);
+            await service.AddFood(model, userId);
 
             return RedirectToAction("All", "Food");
         }
@@ -43,13 +56,17 @@ namespace FitnessDiary.Controllers
         {
             var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
 
-            var foodsResult = await service.GetAllById(userId, query.Type, query.SearchTerm, query.Sorting, query.CurrentPage);
+            var result = await service.GetAllAsync(
+                userId,
+                query.Type,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
+                AllFoodsQueryModel.FoodsPerPage);
 
-            var foodTypes = await service.getAllTypesAsync();
-
-            query.Types = foodTypes;
-            query.TotalFoods = foodsResult.TotalFoods;
-            query.Foods = foodsResult.Foods;
+            query.TotalFoods = result.TotalFoodsCount;
+            query.Types = await service.getAllTypesAsync();
+            query.Foods = result.Foods;
 
             return View(query);
         }

@@ -42,7 +42,7 @@ namespace FitnessDiary.Controllers
             var model = new AddIngredientViewModel()
             {
                 RecepieId = id,
-                Foods = await foodService.GetAllAsync()
+                //Foods = await foodService.GetAllAsync()
             };
 
             return View(model);
