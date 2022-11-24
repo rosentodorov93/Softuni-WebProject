@@ -44,31 +44,38 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task AddToCollectionAsync(string? userId, string foodId)
+        public async Task DeleteAsync(string id)
         {
-            var user = await repo.All<ApplicationUser>()
-                .Where(u => u.Id == userId)
-                .Include(u => u.Foods)
-                .ThenInclude(f => f.Nutrition)
-                .FirstOrDefaultAsync();
+            var food = await LoadFood(id);
 
-            if (user == null)
+            if (food != null)
             {
-                throw new ArgumentException("Invalid user ID");
-            }
-
-            var food = await repo.All<Food>().FirstOrDefaultAsync(f => f.Id == foodId);
-
-            if (food == null)
-            {
-                throw new ArgumentException("Invalid Movie ID");
-            }
-
-            if (!user.Foods.Any(f => f.Id == foodId))
-            {
-                user.Foods.Add(food);
+                food.IsActive = false;
                 await repo.SaveChangesAsync();
             }
+        }
+
+        public async Task EditAsync(string Id, FoodViewModel model)
+        {
+            var food = await LoadFood(Id);
+
+            if (food != null)
+            {
+                food.Name = model.Name;
+                food.Type = model.Type;
+                food.MeassureUnits = (MeassureUnitType)model.MeassureUnit;
+                food.Nutrition.Calories = model.Calories;
+                food.Nutrition.Carbohydrates = model.Carbohydtrates;
+                food.Nutrition.Proteins = model.Proteins;
+                food.Nutrition.Fats = model.Fats;
+
+                await repo.SaveChangesAsync();
+            }
+        }
+
+        public async Task<bool> ExistsByIdAsync(string id)
+        {
+            return await repo.AllReadonly<Food>().Where(f => f.IsActive).AnyAsync(f => f.Id == id);
         }
 
         public async Task<FoodsQueryModel> GetAllAsync(string? userId = null,
@@ -184,6 +191,29 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<string>> getAllTypesAsync()
             => await repo.All<Food>().Select(f => f.Type).Distinct().ToListAsync();
 
+        public async Task<FoodViewModel> GetByIdAsync(string id)
+        {
+            var food = await LoadFood(id);
 
+            return new FoodViewModel()
+            {
+                Name = food.Name,
+                Type = food.Type,
+                MeassureUnit = (int)food.MeassureUnits,
+                Calories = food.Nutrition.Calories,
+                Carbohydtrates = food.Nutrition.Carbohydrates,
+                Proteins = food.Nutrition.Proteins,
+                Fats = food.Nutrition.Fats
+            };
+        }
+
+        private async Task<Food> LoadFood(string id)
+        {
+            return await repo.All<Food>()
+                .Include(f => f.Nutrition)
+                .Where(f => f.IsActive)
+                .Where(f => f.Id == id)
+                .FirstOrDefaultAsync();
+        }
     }
 }

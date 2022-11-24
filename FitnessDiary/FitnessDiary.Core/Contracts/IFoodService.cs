@@ -19,7 +19,6 @@ namespace FitnessDiary.Core.Contracts
             int housesPerPage = 1
             );
         Task AddFood(FoodViewModel model, string userId);
-        Task AddToCollectionAsync(string? userId, string foodId);
         ////Task<MinePageViewModel> GetAllById(string? userId,
         //    string? type = null,
         //    string? searchTerm = null,
@@ -27,6 +26,9 @@ namespace FitnessDiary.Core.Contracts
         //    int currentPage = 1,
         //    int foodsPerPage = 1);
         Task<IEnumerable<string>> getAllTypesAsync();
-       
+        Task<bool> ExistsByIdAsync(string id);
+        Task<FoodViewModel> GetByIdAsync(string id);
+        Task EditAsync(string Id, FoodViewModel model);
+        Task DeleteAsync(string id);
     }
 }

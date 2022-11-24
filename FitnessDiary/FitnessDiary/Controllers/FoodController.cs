@@ -1,11 +1,13 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
+    [Authorize]
     public class FoodController : Controller
     {
         private readonly IFoodService service;
@@ -71,13 +73,45 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        [HttpPost]
-        public async Task<IActionResult> AddToCollection(string foodId)
+        
+        public async Task<IActionResult> Edit(string Id)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
-            await service.AddToCollectionAsync(userId, foodId);
+            if ((await service.ExistsByIdAsync(Id) == false))
+            {
+                return RedirectToAction("Mine");
+            }
+            var food = await service.GetByIdAsync(Id);
 
-            return RedirectToAction("Mine", "Food");
+            return View(food);
+        }
+        [HttpPost]
+        public async Task<IActionResult> Edit(string Id, FoodViewModel model)
+        {
+            if ((await service.ExistsByIdAsync(Id)) == false)
+            {
+                ModelState.AddModelError("", "Food does not exist");
+
+                return View(model);
+            }
+
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await service.EditAsync(Id, model);
+
+            return RedirectToAction("Mine");
+        }
+        [HttpPost]
+        public async Task<IActionResult> Delete([FromBody]string Id)
+        {
+            if ((await service.ExistsByIdAsync(Id)))
+            {
+                await service.DeleteAsync(Id);
+            }
+
+            return Json("success");
         }
 
     }

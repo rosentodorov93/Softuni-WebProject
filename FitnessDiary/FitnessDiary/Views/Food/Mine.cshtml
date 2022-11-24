@@ -52,10 +52,10 @@
            asp-route-searchTerm="@Model.SearchTerm"
            asp-route-sorting="@((int)Model.Sorting)"><<</a>
     </div>
-    
+
     @{
         var shouldButtonBeDisabled = Model.CurrentPage == Model.MaxPage ||
-                                     !Model.Foods.Any();
+        !Model.Foods.Any();
     }
 
     <div class="col-md-6">
@@ -85,6 +85,7 @@
                     <th>Carbs</th>
                     <th>Proteins</th>
                     <th>Fats</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,6 +99,10 @@
                         <td>@food.Carbohydtrates</td>
                         <td>@food.Proteins</td>
                         <td>@food.Fats</td>
+                        <td>
+                            <a asp-controller="Food" asp-action="Edit" asp-route-id="@food.Id">Edit</a>
+                            <a onclick='DeleteFood(&quot;@food.Id&quot;);'>Delete</a>
+                        </td>
                     </tr>
                 }
             </tbody>
@@ -105,3 +110,23 @@
     </div>
     <a asp-controller="Food" asp-action="AddToMine" class="btn btn-primary">Add My Food</a>
 </div>
+
+@section Scripts{
+    <script>
+        function DeleteFood(id) {
+            let isConfirmed = confirm('Are you sure you want to delete this item ?');
+            if (isConfirmed) {
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: "POST",
+                    url: "https://localhost:7043/Food/Delete",
+                    data: JSON.stringify(id),
+                    success: function(result) {
+                        window.location = "https://localhost:7043/Food/Mine";
+                    }
+                });
+            }
+        };
+    </script>
+}
