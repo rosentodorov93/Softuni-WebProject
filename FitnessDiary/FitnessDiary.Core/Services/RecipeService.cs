@@ -1,15 +1,8 @@
 ﻿using FitnessDiary.Core.Contracts;
-using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Core.Models.Recepie;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Common;
-using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Services
 {
@@ -22,22 +15,55 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task<string> AddAsync(CreateViewModel model)
+        public async Task AddAsync(CreateRecipeModel model)
         {
+            var ingredients = new List<Ingredient>();
+
+            double calories = 0;
+            double carbs = 0;
+            double proteins = 0;
+            double fats = 0;
+
+            foreach (var item in model.Ingredients)
+            {
+                var food = await repo.AllReadonly<Food>().Include(f => f.Nutrition).Where(f => f.IsActive).FirstOrDefaultAsync(f => f.Id == item.FoodId);
+
+                if (food != null)
+                {
+                    var ingredient = new Ingredient()
+                    {
+                        FoodId = food.Id,
+                        Amount = item.Amount,
+                    };
+
+                    ingredients.Add(ingredient);
+
+                    calories += (food.Nutrition.Calories * item.Amount) / model.ServingsSize;
+                    carbs += (food.Nutrition.Carbohydrates * item.Amount) / model.ServingsSize;
+                    proteins += (food.Nutrition.Proteins * item.Amount) / model.ServingsSize;
+                    fats += (food.Nutrition.Fats * item.Amount) / model.ServingsSize;
+                }
+            }
+
             var recipe = new Recipe()
             {
                 Name = model.Name,
                 ServingsSize = model.ServingsSize,
-                Unit = (MeassureUnitType)model.Unit,
-                Nutrition = new NutritionData(),
-                //UserId = model.UserId,
+                UserId = model.UserId,
+                Ingredients = ingredients,
+                CaloriesPerServing = 1000,
+                Nutrition = new NutritionData()
+                {
+                    Calories = calories,
+                    Carbohydrates = carbs,
+                    Proteins = proteins,
+                    Fats = fats
+                },
             };
 
             await repo.AddAsync<Recipe>(recipe);
             await repo.SaveChangesAsync();
 
-            var result = await repo.GetLatest<Recipe>();
-            return result.Id;
         }
 
         public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recepieId)
@@ -86,7 +112,6 @@ namespace FitnessDiary.Core.Services
 
             recipe.Name = model.Name;
             recipe.ServingsSize = model.ServingsSize;
-            recipe.Unit = (MeassureUnitType)model.Unit;
             recipe.Nutrition.Calories = 0;
             recipe.Nutrition.Carbohydrates = 0;
             recipe.Nutrition.Proteins = 0;
@@ -96,10 +121,6 @@ namespace FitnessDiary.Core.Services
             {
                 var newIngredientAmount = model.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault().Amount;
                 ingredient.Amount = newIngredientAmount;
-                ingredient.Food.Nutrition.Calories = ingredient.Food.Nutrition.Calories * newIngredientAmount;
-                ingredient.Food.Nutrition.Carbohydrates = ingredient.Food.Nutrition.Carbohydrates * newIngredientAmount;
-                ingredient.Food.Nutrition.Proteins = ingredient.Food.Nutrition.Proteins * newIngredientAmount;
-                ingredient.Food.Nutrition.Fats = ingredient.Food.Nutrition.Fats * newIngredientAmount;
             }
 
             CalculateNutrition(recipe);
@@ -114,7 +135,6 @@ namespace FitnessDiary.Core.Services
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,
                 Fats = recipe.Nutrition.Fats,
-                Unit = (int)recipe.Unit,
                 CaloriesPerPortion = recipe.CaloriesPerServing,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
                 {
@@ -125,14 +145,14 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        private async void CalculateNutrition(Recipe recipe)
+        private  void CalculateNutrition(Recipe recipe)
         {
             foreach (var ingredient in recipe.Ingredients)
             {
-                recipe.Nutrition.Calories += ingredient.Food.Nutrition.Calories / recipe.ServingsSize;
-                recipe.Nutrition.Carbohydrates += ingredient.Food.Nutrition.Carbohydrates / recipe.ServingsSize;
-                recipe.Nutrition.Proteins += ingredient.Food.Nutrition.Proteins / recipe.ServingsSize;
-                recipe.Nutrition.Fats += ingredient.Food.Nutrition.Fats / recipe.ServingsSize;
+                recipe.Nutrition.Calories += (ingredient.Food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Carbohydrates += (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount )/ recipe.ServingsSize;
+                recipe.Nutrition.Proteins += (ingredient.Food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Fats += (ingredient.Food.Nutrition.Fats * ingredient.Amount )/ recipe.ServingsSize;
             }
             recipe.CaloriesPerServing = recipe.Nutrition.Calories / recipe.ServingsSize;
         }
@@ -152,7 +172,6 @@ namespace FitnessDiary.Core.Services
                 Id = r.Id,
                 Name = r.Name,
                 ServingsSize = r.ServingsSize,
-                Unit = (int)r.Unit,
                 TotalCalories = r.Nutrition.Calories,
                 CaloriesPerPortion = r.CaloriesPerServing
             });
@@ -176,7 +195,6 @@ namespace FitnessDiary.Core.Services
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,
                 Fats = recipe.Nutrition.Fats,
-                Unit = (int)recipe.Unit,
                 CaloriesPerPortion = recipe.CaloriesPerServing,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
                 {

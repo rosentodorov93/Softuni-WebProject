@@ -19,6 +19,8 @@ namespace FitnessDiary.Core.Contracts
             int housesPerPage = 1
             );
         Task AddFood(FoodViewModel model, string userId);
+        Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync();
+
         ////Task<MinePageViewModel> GetAllById(string? userId,
         //    string? type = null,
         //    string? searchTerm = null,

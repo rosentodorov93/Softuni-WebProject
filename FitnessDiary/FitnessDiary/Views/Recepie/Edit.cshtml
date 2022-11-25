@@ -16,15 +16,6 @@
                 <input id="name" asp-for="@Model.Name" class="form-control" aria-required="true" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
-
-            <div class="mb-3">
-                <label asp-for="@Model.Unit" class="form-label">Genre</label>
-                <select asp-for="@Model.Unit" class="form-control">
-                    <option value="1">per 100gs</option>
-                    <option value="2">per item</option>
-                </select>
-                <span asp-validation-for="Unit" class="text-danger"></span>
-            </div>
             <div class="mb-3">
                 <label asp-for="@Model.ServingsSize" class="form-label">ServingSize</label>
                 <input id="servings" asp-for="@Model.ServingsSize" class="form-control" value="@Model.ServingsSize" />

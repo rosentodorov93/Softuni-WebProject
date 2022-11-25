@@ -6,12 +6,11 @@ using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Models.Recepie
 {
-    public class RecipeListingViewModel
+    public class CreateRecipeModel
     {
-        public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;
         public int ServingsSize { get; set; }
-        public double TotalCalories { get; set; }
-        public double CaloriesPerPortion { get; set; }
+        public string UserId { get; set; } = null!;
+        public List<IngredientViewModel> Ingredients { get; set; }
     }
 }

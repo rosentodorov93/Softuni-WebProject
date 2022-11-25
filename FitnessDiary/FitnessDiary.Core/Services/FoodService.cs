@@ -2,15 +2,9 @@
 using FitnessDiary.Core.Models.Enums;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Infrastructure.Data;
-using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Infrastructure.Data.Common;
 using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Services
 {
@@ -205,6 +199,23 @@ namespace FitnessDiary.Core.Services
                 Proteins = food.Nutrition.Proteins,
                 Fats = food.Nutrition.Fats
             };
+        }
+
+        public async Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync()
+        {
+            var foods = await repo.All<Food>().Where(f => f.IsActive).Include(f => f.Nutrition).ToListAsync();
+
+            return foods.Select(f => new FoodServiceModel()
+            {
+                Id = f.Id,
+                Name = f.Name,
+                Type = f.Type,
+                MeassureUnit = (int)f.MeassureUnits,
+                Calories= f.Nutrition.Calories,
+                Carbohydtrates= f.Nutrition.Carbohydrates,
+                Proteins = f.Nutrition.Proteins,
+                Fats = f.Nutrition.Fats
+            });
         }
 
         private async Task<Food> LoadFood(string id)

@@ -15,7 +15,6 @@ namespace FitnessDiary.Infrastructure.Data
         public string Name { get; set; } = null!;
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public int ServingsSize { get; set; }
-        public MeassureUnitType Unit { get; set; }
 
         [Required]
         public int NutrtionId { get; set; }

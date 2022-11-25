@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Models.Recepie
 {
-    public class EditViewModel : CreateViewModel
+    public class EditViewModel : AddRecipeViewModel
     {
         public string Id { get; set; } = null!;
         public List<IngredientDetailsViewModel> Ingredients { get; set; } = null!;

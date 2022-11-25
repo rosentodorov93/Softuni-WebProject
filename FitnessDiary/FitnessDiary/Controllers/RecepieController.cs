@@ -17,24 +17,26 @@ namespace FitnessDiary.Controllers
             recepieService = _recipeService;
         }
 
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
-            var model = new CreateViewModel();
-            ViewBag.UserId = this.User.FindFirst(ClaimTypes.NameIdentifier).Value;
+            var model = new AddRecipeViewModel();
+            model.Foods = await foodService.LoadIngedientsAsync();
+            model.UserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+
             return View(model);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Add(CreateViewModel model)
+        public async Task<IActionResult> Add([FromBody] CreateRecipeModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            var resultId = await recepieService.AddAsync(model);
+            await  recepieService.AddAsync(model);
 
-            return RedirectToAction($"Details", "Recepie", new { id = resultId });
+            return Ok();
         }
 
         public async Task<IActionResult> AddIngredient(string id)
@@ -42,7 +44,7 @@ namespace FitnessDiary.Controllers
             var model = new AddIngredientViewModel()
             {
                 RecepieId = id,
-                //Foods = await foodService.GetAllAsync()
+                Foods = await foodService.LoadIngedientsAsync()
             };
 
             return View(model);
@@ -90,7 +92,6 @@ namespace FitnessDiary.Controllers
                 Id = recipe.Id,
                 Name = recipe.Name,
                 ServingsSize = recipe.ServingsSize,
-                Unit = recipe.Unit,
                 Ingredients = recipe.Ingredients
             };
 
