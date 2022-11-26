@@ -15,6 +15,7 @@ namespace FitnessDiary.Infrastructure.Data
         public string Name { get; set; } = null!;
         public List<Ingredient> Ingredients { get; set; } = new List<Ingredient>();
         public int ServingsSize { get; set; }
+        public string? ImageUrl { get; set; }
 
         [Required]
         public int NutrtionId { get; set; }
@@ -26,5 +27,6 @@ namespace FitnessDiary.Infrastructure.Data
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
+        public bool IsActive { get; set; } = true;
     }
 }
