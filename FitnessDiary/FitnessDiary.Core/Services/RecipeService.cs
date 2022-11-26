@@ -50,6 +50,7 @@ namespace FitnessDiary.Core.Services
                 Name = model.Name,
                 ServingsSize = model.ServingsSize,
                 UserId = model.UserId,
+                ImageUrl = model.ImageUrl,
                 Ingredients = ingredients,
                 CaloriesPerServing = calories / model.ServingsSize,
                 Nutrition = new NutritionData()
@@ -113,6 +114,7 @@ namespace FitnessDiary.Core.Services
         public async Task<DetailsViewModel> EditAsync(EditViewModel model)
         {
             var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
                  .Where(r => r.Id == model.Id)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
@@ -148,6 +150,7 @@ namespace FitnessDiary.Core.Services
                 Id = recipe.Id,
                 Name = recipe.Name,
                 ServingsSize = recipe.ServingsSize,
+                ImageUrl = recipe.ImageUrl,
                 TotalCalories = recipe.Nutrition.Calories,
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,
@@ -177,6 +180,7 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId)
         {
             var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
                  .Where(r => r.UserId == userId)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
@@ -189,6 +193,7 @@ namespace FitnessDiary.Core.Services
                 Id = r.Id,
                 Name = r.Name,
                 ServingsSize = r.ServingsSize,
+                ImageUrl = r.ImageUrl,
                 TotalCalories = r.Nutrition.Calories,
                 CaloriesPerPortion = r.CaloriesPerServing
             });
@@ -197,6 +202,7 @@ namespace FitnessDiary.Core.Services
         public async Task<DetailsViewModel> GetByIdAsync(string id)
         {
             var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
                  .Where(r => r.Id == id)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
@@ -208,6 +214,7 @@ namespace FitnessDiary.Core.Services
                 Id = recipe.Id,
                 Name = recipe.Name,
                 ServingsSize = recipe.ServingsSize,
+                ImageUrl=recipe.ImageUrl,
                 TotalCalories = recipe.Nutrition.Calories,
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,
@@ -225,6 +232,7 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id)
         {
             var recipe = await repo.All<Recipe>()
+                .Where(r => r.IsActive)
                 .Where(r => r.Id == id)
                 .Include(r => r.Nutrition)
                 .Include(r => r.Ingredients)
@@ -248,6 +256,7 @@ namespace FitnessDiary.Core.Services
         public async Task RemoveIngredient(string recipeid, int ingredientToRemove)
         {
             var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
                  .Where(r => r.Id == recipeid)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
@@ -281,7 +290,21 @@ namespace FitnessDiary.Core.Services
 
         public async Task<bool> ExistsByIdAsync(string id)
         {
-            return await repo.AllReadonly<Recipe>().AnyAsync(r => r.Id == id);
+            return await repo.AllReadonly<Recipe>().Where(r => r.IsActive).AnyAsync(r => r.Id == id);
+        }
+
+        public async Task DeleteAsync(string id)
+        {
+            var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
+                 .FirstOrDefaultAsync(f => f.Id == id);
+
+            if (recipe != null)
+            {
+                recipe.IsActive = false;
+
+                await repo.SaveChangesAsync();
+            }
         }
     }
 }

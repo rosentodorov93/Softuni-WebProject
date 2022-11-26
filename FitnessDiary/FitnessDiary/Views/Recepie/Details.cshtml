@@ -10,6 +10,7 @@
         <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
+    <img class="card-img-top" src="@Model.ImageUrl" alt="Card image cap">
     <div class="card-body">
         <p>Servings @Model.ServingsSize</p>
         <h3>Ingredients:</h3>
@@ -31,7 +32,7 @@
             <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>
             <a asp-controller="Recepie" asp-action="RemoveIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Remove ingredients</a>
             <a asp-controller="Recepie" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
-            <a asp-controller="Recepie" asp-action="FinishRecipie" asp-route-id="@Model.Id" class="btn btn-primary">Finilize Recipe</a>
+            <a onclick='DeleteRecipe(&quot;@Model.Id&quot;);' class="btn btn-primary">Delete Recipe</a>
         </div>
     </div>
     <!-- /.card-body -->
@@ -41,3 +42,22 @@
     <!-- /.card-footer -->
 </div>
 <!-- /.card -->
+@section Scripts{
+    <script>
+        function DeleteRecipe(id) {
+            let isConfirmed = confirm('Are you sure you want to delete this item ?');
+            if (isConfirmed) {
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: "POST",
+                    url: "https://localhost:7043/Recepie/Delete",
+                    data: JSON.stringify(id),
+                    success: function(result) {
+                        window.location = "https://localhost:7043/Recepie/Mine";
+                    }
+                });
+            }
+        };
+    </script>
+}

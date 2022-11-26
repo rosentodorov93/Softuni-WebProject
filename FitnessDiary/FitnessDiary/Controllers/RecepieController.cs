@@ -167,5 +167,15 @@ namespace FitnessDiary.Controllers
 
             return View(recipes);
         }
+        public async Task<IActionResult> Delete([FromBody]string id)
+        {
+            if ((await recepieService.ExistsByIdAsync(id))== false)
+            {
+                return RedirectToAction("Mine");
+            }
+
+            await recepieService.DeleteAsync(id);
+            return Json("success");
+        }
     }
 }

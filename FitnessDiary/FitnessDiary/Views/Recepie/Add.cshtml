@@ -31,6 +31,13 @@
                         <input asp-for="ServingsSize" type="text" id="servings" name="description" class="form-control" />
                         <span asp-validation-for="ServingsSize" class="text-danger"></span>
                     </div>
+                    <label asp-for="ImageUrl" class="control-label col-md-2">
+                        Image Url
+                    </label>
+                    <div class="col-md-4">
+                        <input asp-for="ImageUrl" type="text" id="image" name="image" class="form-control" />
+                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -156,6 +163,7 @@
             var data = {
                 Name: $("#name").val(),
                 ServingsSize: $("#servings").val(),
+                ImageUrl: $("#image").val(),
                 UserId: $("#userId").val(),
                 Ingredients: ingredientsArr
             };

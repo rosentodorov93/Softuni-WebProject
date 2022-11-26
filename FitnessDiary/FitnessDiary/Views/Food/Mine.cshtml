@@ -101,7 +101,7 @@
                         <td>@food.Fats</td>
                         <td>
                             <a asp-controller="Food" asp-action="Edit" asp-route-id="@food.Id">Edit</a>
-                            <a onclick='DeleteFood(&quot;@food.Id&quot;);'>Delete</a>
+                            <a onclick='DeleteFood(&quot;@food.Id&quot;);' class="btn btn-primary">Delete</a>
                         </td>
                     </tr>
                 }
