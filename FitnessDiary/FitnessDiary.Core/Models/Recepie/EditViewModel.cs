@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace FitnessDiary.Core.Models.Recepie
+﻿namespace FitnessDiary.Core.Models.Recepie
 {
-    public class EditViewModel : AddRecipeViewModel
+    public class EditViewModel
     {
         public string Id { get; set; } = null!;
+        public string Name { get; set; } = null!;
+        public int ServingsSize { get; set; }
         public List<IngredientDetailsViewModel> Ingredients { get; set; } = null!;
     }
 }

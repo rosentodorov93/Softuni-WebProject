@@ -18,5 +18,6 @@ namespace FitnessDiary.Core.Contracts
         Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id);
         Task RemoveIngredient(string recipeid, int ingredientToRemove);
         Task<DetailsViewModel> EditAsync(EditViewModel model);
+        Task<bool> ExistsByIdAsync(string id);
     }
 }

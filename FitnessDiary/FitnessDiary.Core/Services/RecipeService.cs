@@ -51,7 +51,7 @@ namespace FitnessDiary.Core.Services
                 ServingsSize = model.ServingsSize,
                 UserId = model.UserId,
                 Ingredients = ingredients,
-                CaloriesPerServing = 1000,
+                CaloriesPerServing = calories / model.ServingsSize,
                 Nutrition = new NutritionData()
                 {
                     Calories = calories,
@@ -73,6 +73,11 @@ namespace FitnessDiary.Core.Services
                 .Include(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
+            if (food == null)
+            {
+                throw new ArgumentException("Ingredient is incorrect");
+            }
+
             var recipe = await repo.All<Recipe>()
                 .Where(r => r.Id == recepieId)
                 .Include(r => r.Nutrition)
@@ -80,6 +85,11 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(i => i.Food)
                 .ThenInclude(f => f.Nutrition)
                 .FirstOrDefaultAsync();
+
+            if (recipe == null)
+            {
+                throw new ArgumentException("Invalid recipe");
+            }
 
             recipe?.Ingredients.Add(new Ingredient()
             {
@@ -110,22 +120,29 @@ namespace FitnessDiary.Core.Services
                  .ThenInclude(f => f.Nutrition)
                  .FirstOrDefaultAsync();
 
-            recipe.Name = model.Name;
-            recipe.ServingsSize = model.ServingsSize;
-            recipe.Nutrition.Calories = 0;
-            recipe.Nutrition.Carbohydrates = 0;
-            recipe.Nutrition.Proteins = 0;
-            recipe.Nutrition.Fats = 0;
-
-            foreach (var ingredient in recipe.Ingredients)
+            if (recipe != null)
             {
-                var newIngredientAmount = model.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault().Amount;
-                ingredient.Amount = newIngredientAmount;
+                recipe.Name = model.Name;
+                recipe.ServingsSize = model.ServingsSize;
+                recipe.Nutrition.Calories = 0;
+                recipe.Nutrition.Carbohydrates = 0;
+                recipe.Nutrition.Proteins = 0;
+                recipe.Nutrition.Fats = 0;
+
+                foreach (var ingredient in recipe.Ingredients)
+                {
+                    var newIngredientAmount = model.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault().Amount;
+                    if (newIngredientAmount != null)
+                    {
+                        ingredient.Amount = newIngredientAmount;
+                    }
+
+                }
+
+                CalculateNutrition(recipe);
+
+                await repo.SaveChangesAsync();
             }
-
-            CalculateNutrition(recipe);
-
-            await repo.SaveChangesAsync();
             return new DetailsViewModel()
             {
                 Id = recipe.Id,
@@ -145,14 +162,14 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        private  void CalculateNutrition(Recipe recipe)
+        private void CalculateNutrition(Recipe recipe)
         {
             foreach (var ingredient in recipe.Ingredients)
             {
                 recipe.Nutrition.Calories += (ingredient.Food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
-                recipe.Nutrition.Carbohydrates += (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount )/ recipe.ServingsSize;
+                recipe.Nutrition.Carbohydrates += (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount) / recipe.ServingsSize;
                 recipe.Nutrition.Proteins += (ingredient.Food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
-                recipe.Nutrition.Fats += (ingredient.Food.Nutrition.Fats * ingredient.Amount )/ recipe.ServingsSize;
+                recipe.Nutrition.Fats += (ingredient.Food.Nutrition.Fats * ingredient.Amount) / recipe.ServingsSize;
             }
             recipe.CaloriesPerServing = recipe.Nutrition.Calories / recipe.ServingsSize;
         }
@@ -160,7 +177,7 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId)
         {
             var recipe = await repo.All<Recipe>()
-                 //.Where(r => r.UserId == userId)
+                 .Where(r => r.UserId == userId)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
                  .ThenInclude(i => i.Food)
@@ -215,6 +232,11 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
+            if (recipe == null)
+            {
+                throw new ArgumentException("Invalid Recipe Id");
+            }
+
             return recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
             {
                 Id = i.Id,
@@ -225,7 +247,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task RemoveIngredient(string recipeid, int ingredientToRemove)
         {
-            var recipie = await repo.All<Recipe>()
+            var recipe = await repo.All<Recipe>()
                  .Where(r => r.Id == recipeid)
                  .Include(r => r.Nutrition)
                  .Include(r => r.Ingredients)
@@ -233,18 +255,33 @@ namespace FitnessDiary.Core.Services
                  .ThenInclude(f => f.Nutrition)
                  .FirstOrDefaultAsync();
 
-            var ingredient = recipie.Ingredients.FirstOrDefault(i => i.Id == ingredientToRemove);
+            if (recipe == null)
+            {
+                throw new ArgumentException("Invalid Recipe Id");
+            }
 
-            recipie.Nutrition.Calories -= (ingredient.Food.Nutrition.Calories * ingredient.Amount) / recipie.ServingsSize;
-            recipie.Nutrition.Carbohydrates -= (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount) / recipie.ServingsSize;
-            recipie.Nutrition.Proteins -= (ingredient.Food.Nutrition.Proteins * ingredient.Amount) / recipie.ServingsSize;
-            recipie.Nutrition.Fats -= (ingredient.Food.Nutrition.Fats * ingredient.Amount) / recipie.ServingsSize;
-            recipie.CaloriesPerServing = recipie.Nutrition.Calories;
+            var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredientToRemove);
 
-            recipie.Ingredients.Remove(ingredient);
+            if (ingredient == null)
+            {
+                throw new ArgumentException("Invalid Ingredient");
+            }
+
+            recipe.Nutrition.Calories -= (ingredient.Food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Carbohydrates -= (ingredient.Food.Nutrition.Carbohydrates * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Proteins -= (ingredient.Food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
+            recipe.Nutrition.Fats -= (ingredient.Food.Nutrition.Fats * ingredient.Amount) / recipe.ServingsSize;
+            recipe.CaloriesPerServing = recipe.Nutrition.Calories;
+
+            recipe.Ingredients.Remove(ingredient);
 
             await repo.SaveChangesAsync();
 
+        }
+
+        public async Task<bool> ExistsByIdAsync(string id)
+        {
+            return await repo.AllReadonly<Recipe>().AnyAsync(r => r.Id == id);
         }
     }
 }
