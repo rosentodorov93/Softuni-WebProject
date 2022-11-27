@@ -13,7 +13,7 @@ namespace FitnessDiary.Infrastructure.Data
         {
         }
         public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
-        public DbSet<NutritionData> Foods { get; set; } = null!;
+        public DbSet<Food> Foods { get; set; } = null!;
         public DbSet<Recipe> Recipes { get; set; } = null!;
         public DbSet<Ingredient> Ingredients { get; set; } = null!;
         public DbSet<NutritionData> Nutritions { get; set; } = null!;

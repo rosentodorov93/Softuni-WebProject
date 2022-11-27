@@ -5,9 +5,11 @@ VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessDiary", "FitnessDiary\FitnessDiary.csproj", "{1F917963-68FB-45D3-9A44-FC4B2B33B9C3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessDiary.Core", "FitnessDiary.Core\FitnessDiary.Core.csproj", "{C339872D-9125-4779-997E-1338991A0983}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessDiary.Core", "FitnessDiary.Core\FitnessDiary.Core.csproj", "{C339872D-9125-4779-997E-1338991A0983}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnessDiary.Infrastructure", "FitnessDiary.Infrastructure\FitnessDiary.Infrastructure.csproj", "{81B2A4B5-1CD4-4B80-9EC2-440D68C5C5AB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FitnessDiary.Infrastructure", "FitnessDiary.Infrastructure\FitnessDiary.Infrastructure.csproj", "{81B2A4B5-1CD4-4B80-9EC2-440D68C5C5AB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FitnesDiary.Tests", "FitnesDiary.Tests\FitnesDiary.Tests.csproj", "{E3BE9AD7-A83F-44CA-9CF0-D43BCAC93D26}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{81B2A4B5-1CD4-4B80-9EC2-440D68C5C5AB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{81B2A4B5-1CD4-4B80-9EC2-440D68C5C5AB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{81B2A4B5-1CD4-4B80-9EC2-440D68C5C5AB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3BE9AD7-A83F-44CA-9CF0-D43BCAC93D26}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3BE9AD7-A83F-44CA-9CF0-D43BCAC93D26}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3BE9AD7-A83F-44CA-9CF0-D43BCAC93D26}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3BE9AD7-A83F-44CA-9CF0-D43BCAC93D26}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

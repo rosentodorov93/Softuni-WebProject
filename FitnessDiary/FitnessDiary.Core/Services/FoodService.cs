@@ -187,7 +187,11 @@ namespace FitnessDiary.Core.Services
 
         public async Task<FoodViewModel> GetByIdAsync(string id)
         {
-            var food = await LoadFood(id);
+            var food = await repo.All<Food>()
+                .Include(f => f.Nutrition)
+                .Where(f => f.IsActive)
+                .Where(f => f.Id == id)
+                .FirstOrDefaultAsync(f => f.Id == id);
 
             return new FoodViewModel()
             {
@@ -222,8 +226,8 @@ namespace FitnessDiary.Core.Services
         {
             return await repo.All<Food>()
                 .Include(f => f.Nutrition)
-                .Where(f => f.IsActive)
                 .Where(f => f.Id == id)
+                .Where(f => f.IsActive)
                 .FirstOrDefaultAsync();
         }
     }
