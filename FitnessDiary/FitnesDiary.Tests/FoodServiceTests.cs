@@ -196,6 +196,76 @@ namespace FitnesDiary.Tests
             Assert.AreEqual(resultAfterDelete.Count(), 3);
 
         }
+        [Test]
+        public async Task GetAllAsyncShouldReturnFoodsWithNoUserWhenUserIdIsNull()
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync();
+
+            Assert.AreEqual(result.TotalFoodsCount, 3);
+        }
+        [Test]
+        public async Task GetAllAsyncShouldReturnFoodsWithUserWhenUserIdIsValid()
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync("user");
+
+            Assert.AreEqual(result.TotalFoodsCount, 4);
+        }
+        [Test]
+        [TestCase("p")]
+        public async Task GetAllAsyncShouldReturnCorrectFoodWithUserAndSearchParams(string search)
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync("user", null, search);
+
+            Assert.AreEqual(result.TotalFoodsCount, 3);
+        }
+        [Test]
+        [TestCase("Fruit")]
+        [TestCase("Vegetable")]
+        [TestCase("Grains")]
+        public async Task GetAllAsyncShouldReturnCorrectFoodWithUserAndTypeParam(string type)
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync("user", type, null);
+
+            Assert.AreEqual(result.TotalFoodsCount, 1);
+        }
+        [Test]
+        [TestCase("ba")]
+        [TestCase("eg")]
+        [TestCase("po")]
+        public async Task GetAllAsyncShouldReturnCorrectFoodWithNoUserAndSearchParam(string search)
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync(null, null, search);
+
+            Assert.AreEqual(result.TotalFoodsCount, 1);
+        }
+        [Test]
+        [TestCase("dada")]
+        [TestCase("test")]
+        [TestCase("invalid")]
+        public async Task GetAllAsyncShouldReturnNotReturnresultWithIncorectSarch(string search)
+        {
+            LoadData();
+            LoadMineFoods();
+
+            var result = await this.foodService.GetAllAsync(null, null, search);
+
+            Assert.AreEqual(result.TotalFoodsCount, 0);
+        }
         private void LoadData()
         {
             Clear();
@@ -274,6 +344,95 @@ namespace FitnesDiary.Tests
                 context.Foods.Remove(food);
             }
 
+            context.SaveChanges();
+        }
+
+        private void LoadMineFoods()
+        {
+            
+            var foods = new List<Food>()
+            {
+                new Food()
+                {
+                    Id = "my1",
+                    Name = "Rise",
+                    MeassureUnits = MeassureUnitType.CaloriesPerItem,
+                    Type = "Grains",
+                    NutritionId = 6,
+                    IsActive = true,
+                    UserId = "user"
+                },
+                new Food()
+                {
+                    Id = "my2",
+                    Name = "Peach",
+                    MeassureUnits = MeassureUnitType.CaloriesPerItem,
+                    Type = "Fruit",
+                    NutritionId = 7,
+                    IsActive = true,
+                    UserId = "user"
+
+                },
+                new Food()
+                {
+                    Id = "my3",
+                    Name = "Peanuts",
+                    MeassureUnits = MeassureUnitType.CaloriesPer100grams,
+                    Type = "Nuts",
+                    NutritionId = 8,
+                    IsActive = true,
+                    UserId = "user"
+                },
+                new Food()
+                {
+                    Id = "my4",
+                    Name = "Potatoes",
+                    MeassureUnits = MeassureUnitType.CaloriesPerItem,
+                    Type = "Vegetable",
+                    NutritionId = 9,
+                    IsActive = true,
+                    UserId = "user"
+                },
+            };
+            var nutritions = new List<NutritionData>()
+           {
+
+               new NutritionData()
+                    {
+                        Id = 6,
+                        Calories = 66,
+                        Carbohydrates = 0.3,
+                        Proteins = 6.4,
+                        Fats = 4.6
+                    },
+               new NutritionData()
+                    {
+                        Id = 7,
+                        Calories = 89,
+                        Carbohydrates = 23,
+                        Proteins = 1,
+                        Fats = 0.3
+                    },
+                new NutritionData()
+                    {
+                        Id = 8,
+                        Calories = 77,
+                        Carbohydrates = 17,
+                        Proteins = 2,
+                        Fats = 0.1
+                    },
+                new NutritionData()
+                    {
+                        Id = 9,
+                        Calories = 77,
+                        Carbohydrates = 17,
+                        Proteins = 2,
+                        Fats = 0.1
+                    }
+            };
+
+            context.Nutritions.AddRange(nutritions);
+            context.Foods.AddRange(foods);
             context.SaveChanges();
         }
     }
