@@ -16,8 +16,8 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
 {
     public class RegisterModel : PageModel
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IAccountService _service;
 
 
@@ -25,8 +25,8 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
 
 
         public RegisterModel(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<IdentityUser> userManager,
+            SignInManager<IdentityUser> signInManager,
             IAccountService accountService,
             ILogger<RegisterModel> logger)
         {
@@ -136,10 +136,17 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser()
+                
+                var user = new IdentityUser()
                 {
-                    UserName = Input.Username,
                     Email = Input.Email,
+                    UserName = Input.Username
+                };
+                
+                var result = await _userManager.CreateAsync(user, Input.Password);
+
+                var applicationUser = new ApplicationUser()
+                {
                     FullName = Input.FullName,
                     Gender = (Gender)Input.Gender,
                     Age = Input.Age,
@@ -148,17 +155,15 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                     ActivityLevelId = Input.ActivityLevelId,
                     FitnessGoal = (FitnessGoalType)Input.FitnessGoal,
                     TargetNutrients = new NutritionData(),
-                    Diary = new List<DiaryDay>()
+                    Diary = new List<DiaryDay>(),
+                    User = user
                 };
-
-                var target = _service.CalculateTargetNutrientsAsync(user);
-
-                user.TargetNutrients.Calories = target.Calories;
-                user.TargetNutrients.Carbohydrates = target.Carbs;
-                user.TargetNutrients.Proteins = target.Protein;
-                user.TargetNutrients.Fats = target.Fats;
-
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                var target = await _service.CalculateTargetNutrientsAsync(applicationUser);
+                applicationUser.TargetNutrients.Calories = target.Calories;
+                applicationUser.TargetNutrients.Carbohydrates = target.Carbs;
+                applicationUser.TargetNutrients.Proteins = target.Protein;
+                applicationUser.TargetNutrients.Fats = target.Fats;
+                await _service.AddApplicationUser(applicationUser);
 
                 if (result.Succeeded)
                 {

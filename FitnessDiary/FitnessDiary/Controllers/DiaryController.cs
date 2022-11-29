@@ -18,10 +18,10 @@ namespace FitnessDiary.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var applicationUserId = await accountService.GetByIdAsync(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
-            var diaryDay = await diaryService.GetByIdAsync(userId);
-            var requiredNutrition = await accountService.GetUserTargetNutritionAsync(userId);
+            var diaryDay = await diaryService.GetByIdAsync(applicationUserId);
+            var requiredNutrition = await accountService.GetUserTargetNutritionAsync(applicationUserId);
 
             var model = new IdexViewQueryModel()
             {

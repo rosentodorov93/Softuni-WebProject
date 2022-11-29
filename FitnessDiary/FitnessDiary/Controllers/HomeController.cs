@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Models;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,6 +16,7 @@ namespace FitnessDiary.Controllers
 
         public IActionResult Index()
         {
+            
             return View();
         }
 
