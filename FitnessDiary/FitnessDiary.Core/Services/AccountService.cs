@@ -17,7 +17,13 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public NutritionServiceModel CalculateTargetNutrientsAsync(ApplicationUser user)
+        public async Task AddApplicationUser(ApplicationUser applicationUser)
+        {
+            await repo.AddAsync(applicationUser);
+            await repo.SaveChangesAsync();
+        }
+
+        public async Task<NutritionServiceModel> CalculateTargetNutrientsAsync(ApplicationUser user)
         {
             double targetCalories = 0;
 
@@ -29,8 +35,8 @@ namespace FitnessDiary.Core.Services
             {
                 targetCalories = 655.1 + (9.563 * user.Weight) + (1.850 * user.Height) - (4.676 * user.Age);
             }
-
-            targetCalories *= user.ActivityLevel.Value;
+            var activityLevelValue = await repo.AllReadonly<ActivityLevel>().FirstOrDefaultAsync(a => a.Id == user.ActivityLevelId);
+            targetCalories *= activityLevelValue.Value;
 
             if (user.FitnessGoal == FitnessGoalType.GainWeight)
             {
@@ -56,6 +62,13 @@ namespace FitnessDiary.Core.Services
 
         public async Task<IEnumerable<ActivityLevel>> GetActivityLevels()
             => await repo.All<ActivityLevel>().ToListAsync();
+
+        public async Task<string> GetByIdAsync(string id)
+        {
+            var appUser =  await repo.AllReadonly<ApplicationUser>().FirstOrDefaultAsync(a => a.UserId == id);
+
+            return appUser.Id;
+        }
 
         public async Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId)
         {

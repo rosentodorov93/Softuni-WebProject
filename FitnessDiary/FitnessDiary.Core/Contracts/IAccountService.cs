@@ -12,7 +12,9 @@ namespace FitnessDiary.Core.Contracts
     public interface IAccountService
     {
         Task<IEnumerable<ActivityLevel>> GetActivityLevels();
-        NutritionServiceModel CalculateTargetNutrientsAsync(ApplicationUser user);
+        Task<NutritionServiceModel> CalculateTargetNutrientsAsync(ApplicationUser user);
         Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId);
+        Task AddApplicationUser(ApplicationUser applicationUser);
+        Task<string> GetByIdAsync(string id);
     }
 }
