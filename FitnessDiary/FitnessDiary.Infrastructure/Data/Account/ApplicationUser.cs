@@ -6,8 +6,10 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace FitnessDiary.Infrastructure.Data.Account
 {
-    public class ApplicationUser: IdentityUser
+    public class ApplicationUser
     {
+        [Key]
+        public string Id { get; set; } = Guid.NewGuid().ToString();
         [Required]
         [StringLength(80)]
         public string FullName { get; set; } = null!;
@@ -45,6 +47,12 @@ namespace FitnessDiary.Infrastructure.Data.Account
         public IList<Recipe> Recipes { get; set; } = new List<Recipe>();
         public IList<Article> Articles { get; set; } = new List<Article>();
         public IList<WorkoutTamplate> WorkoutTamplates { get; set; } = new List<WorkoutTamplate>();
+
+        [Required]
+        public string UserId { get; set; }
+
+        [ForeignKey(nameof(UserId))]
+        public IdentityUser User { get; set; } = null!;
 
     }
 }

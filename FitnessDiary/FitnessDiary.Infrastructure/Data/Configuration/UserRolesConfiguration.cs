@@ -15,8 +15,8 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
         {
             builder.HasData(new IdentityUserRole<string>()
             {
-                UserId = "a685f0cf-6d50-49b1-99cb-dbb987c7f62e",
-                RoleId = "cd1439f9-201b-42ac-96d2-5f13fd35ad5a"
+                UserId = "2aa628cc-ef0a-47fe-b7ce-05981113826b",
+                RoleId = "cd1439f9-201b-42ac-96d2-5f13fd35ad5a",
             });
         }
     }

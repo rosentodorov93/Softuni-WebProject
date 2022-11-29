@@ -6,9 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace FitnessDiary.Infrastructure.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+        public ApplicationDbContext(DbContextOptions options)
             : base(options)
         {
         }
@@ -32,6 +32,7 @@ namespace FitnessDiary.Infrastructure.Data
             builder.ApplyConfiguration(new ActivityLevelConfiguration());
             builder.ApplyConfiguration(new RolesConfiguration());
             builder.ApplyConfiguration(new NutritionConfiguration());
+            builder.ApplyConfiguration(new IdentityUserConfiguration());
             builder.ApplyConfiguration(new ApplicationUserConfiguration());
             builder.ApplyConfiguration(new UserRolesConfiguration());
             builder.ApplyConfiguration(new FoodsConfiguration());

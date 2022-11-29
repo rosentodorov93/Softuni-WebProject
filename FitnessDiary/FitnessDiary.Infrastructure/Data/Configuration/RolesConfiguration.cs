@@ -22,13 +22,7 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
                     Name = "Admin",
                     NormalizedName = "ADMIN"
                 },
-                     new IdentityRole()
-                {
-                    Id = "930c94ba-f945-473c-bb6b-6b1298a44b85",
-                    ConcurrencyStamp = "5107fd53-7c15-4130-b226-5c60b0cf308f",
-                    Name = "Moderator",
-                    NormalizedName = "MODERATOR"
-                },
+                     
             };
 
             return roles;
