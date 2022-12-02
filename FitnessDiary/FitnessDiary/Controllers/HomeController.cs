@@ -2,6 +2,7 @@
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
@@ -16,6 +17,10 @@ namespace FitnessDiary.Controllers
 
         public IActionResult Index()
         {
+            if (this.User.IsInRole(AdminRoleName))
+            {
+                return RedirectToAction("Index", "Home", new { area = AdministrationAreaName });
+            }
             
             return View();
         }
