@@ -17,9 +17,13 @@
         <div>
             @Html.Raw(@Model.Content);
         </div>
-        <div class="row">
-            <a asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Article</a>
-        </div>
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="row">
+                <a asp-area="Administration" asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Article</a>
+                <a asp-area="Administration" asp-controller="Article" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete Article</a>
+            </div>
+        }
     </div>
     <!-- /.card-body -->
     <div class="card-footer">

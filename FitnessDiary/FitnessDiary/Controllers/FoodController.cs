@@ -4,17 +4,20 @@ using FitnessDiary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
-    [Authorize]
+    [Authorize(Roles = "User, Admin")]
     public class FoodController : Controller
     {
         private readonly IFoodService service;
+        private readonly IAccountService accountService;
 
-        public FoodController(IFoodService _service)
+        public FoodController(IFoodService _service, IAccountService _accountService)
         {
             service = _service;
+            accountService = _accountService;
         }
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
@@ -33,7 +36,7 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        public async Task<IActionResult> AddToMine()
+        public async Task<IActionResult> Add()
         {
             var model = new FoodViewModel();
 
@@ -41,9 +44,9 @@ namespace FitnessDiary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddToMine(FoodViewModel model)
+        public async Task<IActionResult> Add(FoodViewModel model)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             if (!ModelState.IsValid)
             {

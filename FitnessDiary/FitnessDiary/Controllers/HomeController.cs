@@ -17,10 +17,10 @@ namespace FitnessDiary.Controllers
 
         public IActionResult Index()
         {
-            if (this.User.IsInRole(AdminRoleName))
-            {
-                return RedirectToAction("Index", "Home", new { area = AdministrationAreaName });
-            }
+            //if (this.User.IsInRole(AdminRoleName))
+            //{
+            //    return RedirectToAction("Index", "Home", new { area = AdministrationAreaName });
+            //}
             
             return View();
         }

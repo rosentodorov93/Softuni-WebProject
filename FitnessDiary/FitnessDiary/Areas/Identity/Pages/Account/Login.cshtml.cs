@@ -2,20 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 #nullable disable
 
-using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.Extensions.Logging;
-using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Core.Constants;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Areas.Identity.Pages.Account
 {
@@ -23,11 +16,13 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly UserManager<IdentityUser> _userManager;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, UserManager<IdentityUser> userManager)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -121,7 +116,13 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User logged in.");
                     TempData[MessageConstant.SuccessMessage] = $"User {Input.Username} successfully loged in!";
-                    return RedirectToAction("Index", "Home");
+                    var user = await _userManager.FindByNameAsync(Input.Username);
+
+                    if (user != null && await _userManager.IsInRoleAsync(user, AdminRoleName))
+                    {
+                        return RedirectToAction("Index", "Home", new { Area = AdministrationAreaName });
+                    }
+                    return RedirectToAction("Index", "Home", new {Area = ""});
                 }
                 if (result.RequiresTwoFactor)
                 {

@@ -1,11 +1,7 @@
-﻿using FitnessDiary.Core.Models.Diary;
+﻿using FitnessDiary.Core.Models.Account;
+using FitnessDiary.Core.Models.Diary;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Account;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnessDiary.Core.Contracts
 {
@@ -13,8 +9,9 @@ namespace FitnessDiary.Core.Contracts
     {
         Task<IEnumerable<ActivityLevel>> GetActivityLevels();
         Task<NutritionServiceModel> CalculateTargetNutrientsAsync(ApplicationUser user);
+        Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync();
         Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId);
         Task AddApplicationUser(ApplicationUser applicationUser);
-        Task<string> GetByIdAsync(string id);
+        string? GetById(string id);
     }
 }
