@@ -64,24 +64,63 @@ namespace FitnessDiary.Core.Services
             };
         }
 
+        public async Task CreateUserAsync(CreateUserViewModel model)
+        {
+            var username = $"{model.FirstName.Substring(0, 1)}.{model.LastName}";
+            var user = new IdentityUser()
+            {
+                Email = model.Email,
+                UserName = username
+            };
+
+            
+
+            var result = await userManager.CreateAsync(user, model.Password);
+
+            if (result.Succeeded)
+            {
+                await userManager.AddToRoleAsync(user, model.RoleName);
+                var administrationUser = new AdministrationUser()
+                {
+                    FirstName = model.FirstName,
+                    LastName = model.LastName,
+                    User = user,
+                };
+                await repo.AddAsync(administrationUser);
+                await repo.SaveChangesAsync();
+            }
+        }
+
         public async Task<IEnumerable<ActivityLevel>> GetActivityLevels()
             => await repo.All<ActivityLevel>().ToListAsync();
 
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
         {
-           
-            var users = await this.repo.All<IdentityUser>().Select(u => new AllUsersViewModel()
+            var users = new List<AllUsersViewModel>();
+            var appUsers = await this.repo.All<ApplicationUser>().Select(u => new AllUsersViewModel()
             {
-                Id = u.Id,
-                Username = u.UserName,
-                Email = u.Email,
+                Id = u.User.Id,
+                Username = u.User.UserName,
+                Email = u.User.Email,
+                AccountType = "Application",
             }).ToListAsync();
+
+            var adminUsers = await this.repo.All<AdministrationUser>().Select(u => new AllUsersViewModel()
+            {
+                Id = u.User.Id,
+                Username = u.User.UserName,
+                Email = u.User.Email,
+                AccountType = "Administration",
+            }).ToListAsync();
+
+            users.AddRange(appUsers);
+            users.AddRange(adminUsers);
 
             foreach (var user in users)
             {
                 var roles = await userManager.GetRolesAsync(repo.All<IdentityUser>().First(u => u.Id == user.Id));
 
-                user.Roles = String.Join(", ", roles);
+                user.Role = String.Join(", ", roles);
             }
       
             return users;

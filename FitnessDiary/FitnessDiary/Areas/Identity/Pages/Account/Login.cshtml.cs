@@ -115,7 +115,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
-                    TempData[MessageConstant.SuccessMessage] = $"User {Input.Username} successfully loged in!";
+                    
                     var user = await _userManager.FindByNameAsync(Input.Username);
 
                     if (user != null && await _userManager.IsInRoleAsync(user, AdminRoleName))

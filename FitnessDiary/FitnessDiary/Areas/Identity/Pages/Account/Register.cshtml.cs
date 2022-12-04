@@ -145,6 +145,8 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                 
                 var result = await _userManager.CreateAsync(user, Input.Password);
 
+                await _userManager.AddToRoleAsync(user, "User");
+
                 var applicationUser = new ApplicationUser()
                 {
                     FullName = Input.FullName,

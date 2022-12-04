@@ -3,15 +3,18 @@
 }
 
 <div class="mt-4 p-5 bg-light text-center">
-    <h2 class="display-4">Hello, Admin!</h2>
+    <h2 class="display-4">Hello</h2>
     <p class="lead mb-1 mt-3">
-        This is your administrator area - you can <b>read</b>, <b>create</b>,
-        <b>delete</b> and <b>edit</b> articles and food databse.
-        
+        This is the administration area - you can <b>read</b>, <b>create</b>,
+        <b>delete</b> and <b>edit</b> articles and food database.
+
     </p>
-    <p class="lead mt-1">
-        You can also see <b>all users ,articles</b> and <b>all foods</b> in the system.
+    @if (User.IsInRole("Admin"))
+    {
+        <p class="lead mt-1">
+        You can also see <b>all users </b> and <b>create new administration users</b> in the system.
     </p>
+    }
     <hr class="my-4">
     <a asp-area="" asp-controller="Food" asp-action="All"
        class="btn btn-primary btn-lg">All Foods</a>
@@ -19,10 +22,13 @@
        class="btn btn-primary btn-lg">Add Food in database</a>
     <a asp-area="" asp-controller="Article" asp-action="All"
        class="btn btn-primary btn-lg">All Articles</a>
-        <a asp-area="Administration" asp-controller="Article" asp-action="Add"
+    <a asp-area="Administration" asp-controller="Article" asp-action="Add"
        class="btn btn-primary btn-lg">Add Article</a>
-    <a asp-area="Administration" asp-controller="User" asp-action="All"
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-area="Administration" asp-controller="User" asp-action="All"
        class="btn btn-primary btn-lg">All Users</a>
-       <a asp-area="Administration" asp-controller="User" asp-action="Add"
-       class="btn btn-primary btn-lg">Create User</a>
+        <a asp-area="Administration" asp-controller="User" asp-action="Create"
+       class="btn btn-primary btn-lg">Create Administration User</a>
+    }
 </div>

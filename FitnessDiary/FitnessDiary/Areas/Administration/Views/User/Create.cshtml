@@ -1,0 +1,39 @@
+﻿
+@model CreateUserViewModel
+
+@{
+    ViewBag.Title = "Create Administration User";
+}
+
+<h3>@ViewBag.Title</h3>
+
+<form asp-area="Administration" asp-controller="User" asp-action="Create" method="post">
+    <div class="mb-3">
+        <label asp-for="FirstName">FirstName</label>
+        <input asp-for="FirstName" type="text" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="LastName">LastName</label>
+        <input asp-for="LastName" type="text" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Email">Email</label>
+        <input asp-for="Email" type="text" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Password">Password</label>
+        <input asp-for="Password" type="password" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RoleName">Role</label>
+        <select asp-for="RoleName">
+            @foreach (var role in Model.Roles)
+            {
+                <option value="@role">@role</option>
+            }
+        </select>
+    </div>
+
+    <input type="submit" value="Create" />
+</form>

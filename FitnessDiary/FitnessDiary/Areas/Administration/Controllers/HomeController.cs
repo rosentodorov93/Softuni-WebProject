@@ -2,7 +2,7 @@
 
 namespace FitnessDiary.Areas.Administration.Controllers
 {
-    public class HomeController : AdminController
+    public class HomeController : AdministrationController
     {
         public IActionResult Index()
         {

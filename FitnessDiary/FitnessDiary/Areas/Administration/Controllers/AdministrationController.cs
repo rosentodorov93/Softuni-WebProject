@@ -5,8 +5,8 @@ using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 namespace FitnessDiary.Areas.Administration.Controllers
 {
     [Area(AdministrationAreaName)]
-    [Authorize(Roles = AdminRoleName)]
-    public class AdminController : Controller
+    [Authorize(Roles = "Moderator, Admin")]
+    public class AdministrationController : Controller
     {
         
     }

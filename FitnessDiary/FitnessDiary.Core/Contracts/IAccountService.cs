@@ -13,5 +13,6 @@ namespace FitnessDiary.Core.Contracts
         Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId);
         Task AddApplicationUser(ApplicationUser applicationUser);
         string? GetById(string id);
+        Task CreateUserAsync(CreateUserViewModel model);
     }
 }

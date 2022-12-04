@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace FitnessDiary.Areas.Administration.Controllers
 {
-    public class ArticleController : AdminController
+    public class ArticleController : AdministrationController
     {
         private readonly IArticleService articleService;
 
