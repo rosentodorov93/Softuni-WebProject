@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221204102949_AddedModeratorRole")]
+    partial class AddedModeratorRole
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -21,48 +23,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
-
-            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.AdministrationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasMaxLength(80)
-                        .HasColumnType("nvarchar(80)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AdministrationUsers");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "0c68b5c9-40f7-44de-b03b-0afe35157e35",
-                            FirstName = "Admin",
-                            LastName = "Adminov",
-                            UserId = "cf28b02f-bcd9-4464-9100-6343cc8ca939"
-                        },
-                        new
-                        {
-                            Id = "066f7491-cf3e-481a-9afd-9a4e8e276a50",
-                            FirstName = "Moderator",
-                            LastName = "Moderatorov",
-                            UserId = "02b52032-ec58-496e-b58e-0533479ff27d"
-                        });
-                });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>
                 {
@@ -118,6 +78,24 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ApplicationUsers");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = "fc8c8e1e-b196-41e4-a733-7adcd4509634",
+                            ActivityLevelId = 1,
+                            Age = 29,
+                            CarbsPercent = 50,
+                            FatsPercent = 30,
+                            FitnessGoal = 3,
+                            FullName = "Pesho Petrov",
+                            Gender = 1,
+                            Height = 178,
+                            NutritionId = 1,
+                            ProteinPercent = 20,
+                            UserId = "22f4a16f-9f78-4823-a2f4-50bf48eed431",
+                            Weight = 80.0
+                        });
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.ActivityLevel", b =>
@@ -731,35 +709,35 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "cf28b02f-bcd9-4464-9100-6343cc8ca939",
+                            Id = "22f4a16f-9f78-4823-a2f4-50bf48eed431",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a0b9f73-86c0-4935-89fd-ee8f1619184a",
+                            ConcurrencyStamp = "1d42a64c-df53-4777-b37b-ced3c5534517",
+                            Email = "guest@mail.bg",
+                            EmailConfirmed = false,
+                            LockoutEnabled = false,
+                            NormalizedEmail = "GUEST@MAIL.BG",
+                            NormalizedUserName = "GUEST",
+                            PasswordHash = "AQAAAAEAACcQAAAAECGrJ24s7dnXNbF+A/q/Na27sCxWC6PZGPa+pW3KXqOh1PvVos7ziS4djyU8J/cV/Q==",
+                            PhoneNumberConfirmed = false,
+                            SecurityStamp = "1c83a7f1-180d-496e-ab70-0f3463255490",
+                            TwoFactorEnabled = false,
+                            UserName = "guest"
+                        },
+                        new
+                        {
+                            Id = "2aa628cc-ef0a-47fe-b7ce-05981113826b",
+                            AccessFailedCount = 0,
+                            ConcurrencyStamp = "dae7f615-6fda-4be7-a360-2fa5116d4c1f",
                             Email = "admin@mail.bg",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.BG",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAEK9RX06LE1JZ99MdmrHxEp3rUGjqEBpkTPzvyGkO+SKmHh/SYZWEPs+80CfNg+Mr7Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEE5bEcD/ky6uXMfhRjqioz4/NJ/cRo8D//BA0A2oW8xFGZj+SrAlwJHTEyjWq42aYQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "adada2c0-e76f-471e-acb0-b366906c6d29",
+                            SecurityStamp = "61a8a683-2dcf-442c-b33d-a6343e41c71c",
                             TwoFactorEnabled = false,
                             UserName = "admin"
-                        },
-                        new
-                        {
-                            Id = "02b52032-ec58-496e-b58e-0533479ff27d",
-                            AccessFailedCount = 0,
-                            ConcurrencyStamp = "abdfce6e-4c94-4024-a1eb-ac6a485e1d9b",
-                            Email = "moderator@mail.bg",
-                            EmailConfirmed = false,
-                            LockoutEnabled = false,
-                            NormalizedEmail = "MODERATOR@MAIL.BG",
-                            NormalizedUserName = "MODERATOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEP/dlWH2sHs0+ZE3WgvBq+PXApaE77kYMSQxqgynmsbZ6LWZp2RNfb7530SWGgA/wg==",
-                            PhoneNumberConfirmed = false,
-                            SecurityStamp = "573b6a51-bb79-4487-b4bf-9f14100eba01",
-                            TwoFactorEnabled = false,
-                            UserName = "moderator"
                         });
                 });
 
@@ -829,13 +807,13 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "cf28b02f-bcd9-4464-9100-6343cc8ca939",
+                            UserId = "2aa628cc-ef0a-47fe-b7ce-05981113826b",
                             RoleId = "cd1439f9-201b-42ac-96d2-5f13fd35ad5a"
                         },
                         new
                         {
-                            UserId = "02b52032-ec58-496e-b58e-0533479ff27d",
-                            RoleId = "6a651666-0353-4a96-b3eb-d6b78010b6ba"
+                            UserId = "9d6a8aea-aae9-44d4-ae4c-89f1236a96c4",
+                            RoleId = "312a798827de4362920a10e2a2b12e0c"
                         });
                 });
 
@@ -858,17 +836,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.AdministrationUser", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.Account.ApplicationUser", b =>

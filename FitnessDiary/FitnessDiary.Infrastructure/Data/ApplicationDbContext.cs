@@ -14,6 +14,7 @@ namespace FitnessDiary.Infrastructure.Data
         }
         public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
         public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
+        public DbSet<AdministrationUser> AdministrationUsers { get; set; } = null!;
         public DbSet<Food> Foods { get; set; } = null!;
         public DbSet<Recipe> Recipes { get; set; } = null!;
         public DbSet<Ingredient> Ingredients { get; set; } = null!;
@@ -34,7 +35,7 @@ namespace FitnessDiary.Infrastructure.Data
             builder.ApplyConfiguration(new RolesConfiguration());
             builder.ApplyConfiguration(new NutritionConfiguration());
             builder.ApplyConfiguration(new IdentityUserConfiguration());
-            builder.ApplyConfiguration(new ApplicationUserConfiguration());
+            builder.ApplyConfiguration(new AdministrationUserConfiguration());
             builder.ApplyConfiguration(new UserRolesConfiguration());
             builder.ApplyConfiguration(new FoodsConfiguration());
 

@@ -13,39 +13,39 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
     {
         public void Configure(EntityTypeBuilder<IdentityUser> builder)
         {
-            builder.HasData(CreateIdentityUsers());
+            builder.HasData(CreateUsers());
         }
 
-        private List<IdentityUser> CreateIdentityUsers()
+        private List<IdentityUser> CreateUsers()
         {
             var users = new List<IdentityUser>();
             var hasher = new PasswordHasher<IdentityUser>();
 
-            var guest = new IdentityUser()
+            var user = new IdentityUser()
             {
-                Id = "22f4a16f-9f78-4823-a2f4-50bf48eed431",
-                Email = "guest@mail.bg",
-                UserName = "guest",
-                NormalizedEmail = "GUEST@MAIL.BG",
-                NormalizedUserName = "GUEST"
-            };
-
-            guest.PasswordHash = hasher.HashPassword(guest, "guest123");
-
-            users.Add(guest);
-
-            var admin = new IdentityUser()
-            {
-                Id = "2aa628cc-ef0a-47fe-b7ce-05981113826b",
-                Email = "admin@mail.bg",
+                Id = "cf28b02f-bcd9-4464-9100-6343cc8ca939",
                 UserName = "admin",
-                NormalizedEmail = "ADMIN@MAIL.BG",
-                NormalizedUserName = "ADMIN"
+                NormalizedUserName = "ADMIN",
+                Email = "admin@mail.bg",
+                NormalizedEmail = "ADMIN@MAIL.BG"
             };
 
-            admin.PasswordHash = hasher.HashPassword(admin, "admin123");
+            user.PasswordHash = hasher.HashPassword(user, "admin123");
 
-            users.Add(admin);
+            users.Add(user);
+
+            var user2 = new IdentityUser()
+            {
+                Id = "02b52032-ec58-496e-b58e-0533479ff27d",
+                UserName = "moderator",
+                NormalizedUserName = "MODERATOR",
+                Email = "moderator@mail.bg",
+                NormalizedEmail = "MODERATOR@MAIL.BG"
+            };
+
+            user2.PasswordHash = hasher.HashPassword(user2, "mod123");
+
+            users.Add(user2);
 
             return users;
         }
