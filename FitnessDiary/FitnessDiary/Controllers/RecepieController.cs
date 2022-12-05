@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Core.Models.Recepie;
 using Microsoft.AspNetCore.Mvc;
@@ -36,13 +37,18 @@ namespace FitnessDiary.Controllers
                 return View(model);
             }
 
-            await  recepieService.AddAsync(model);
+            await recepieService.AddAsync(model);
 
             return Json("success");
         }
 
         public async Task<IActionResult> AddIngredient(string id)
         {
+            if ((await recepieService.ExistsByIdAsync(id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
+                return RedirectToAction(nameof(Mine));
+            }
             var model = new AddIngredientViewModel()
             {
                 RecepieId = id,
@@ -53,28 +59,26 @@ namespace FitnessDiary.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> AddIngredient(AddIngredientViewModel model)
+        public async Task<IActionResult> AddIngredient(AddIngredientInputModel model)
         {
+            if ((await recepieService.ExistsByIdAsync(model.RecepieId)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
+                return RedirectToAction(nameof(Mine));
+            }
+            if ((await foodService.ExistsByIdAsync(model.Ingredient.FoodId)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid ingredient Id";
+                return RedirectToAction(nameof(Mine));
+            }
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Mine");
             }
 
-            try
-            {
-                var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
-                return RedirectToAction("Details", "Recepie", new { id = recipe.Id });
-            }
-            catch (ArgumentException ae)
-            {
-                ModelState.AddModelError("", ae.Message);
-                return View(model.RecepieId);
-            }
-            catch (Exception )
-            {
-                ModelState.AddModelError("", "Something went wrong!");
-                return View(model.RecepieId);
-            }
+            var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
+            return RedirectToAction("Details", "Recepie", new { id = recipe.Id });
+
         }
 
         [HttpGet]
@@ -82,6 +86,7 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
                 return RedirectToAction("Mine");
             }
             var ingredients = await recepieService.GetIngredientsAsync(id);
@@ -95,8 +100,13 @@ namespace FitnessDiary.Controllers
             return View(model);
         }
         [HttpPost]
-        public async Task<IActionResult> RemoveIngredient(RemoveIngredientViewModel model)
+        public async Task<IActionResult> RemoveIngredient(RemoveIngredientInputModel model)
         {
+            if ((await recepieService.ExistsByIdAsync(model.Recipeid)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
+                return RedirectToAction(nameof(Mine));
+            }
             if (!ModelState.IsValid)
             {
                 return RedirectToAction("Mine");
@@ -107,9 +117,9 @@ namespace FitnessDiary.Controllers
 
                 return RedirectToAction("Details", "Recepie", new { id = model.Recipeid });
             }
-            catch (Exception)
+            catch (ArgumentException e)
             {
-                ModelState.AddModelError("", "Something went wrong!");
+                TempData[MessageConstant.ErrorMessage] = e.Message;
                 return RedirectToAction("Mine");
             }
         }
@@ -117,6 +127,7 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
                 return RedirectToAction("Mine");
             }
             var recipe = await recepieService.GetByIdAsync(id);
@@ -124,13 +135,20 @@ namespace FitnessDiary.Controllers
         }
         public async Task<IActionResult> Edit(string id)
         {
+            if ((await recepieService.ExistsByIdAsync(id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
+                return RedirectToAction("Mine");
+            }
+
             var recipe = await recepieService.GetByIdAsync(id);
             var model = new EditViewModel()
             {
                 Id = recipe.Id,
                 Name = recipe.Name,
                 ServingsSize = recipe.ServingsSize,
-                Ingredients = recipe.Ingredients
+                Ingredients = recipe.Ingredients,
+                ImageUrl = recipe.ImageUrl,
             };
 
             return View(model);
@@ -157,7 +175,7 @@ namespace FitnessDiary.Controllers
             catch (Exception)
             {
 
-                ModelState.AddModelError("", "Unexpected Error");
+                TempData[MessageConstant.ErrorMessage] = "Unexpected Error"; ;
                 return View(model.Id);
             }
         }
@@ -169,9 +187,9 @@ namespace FitnessDiary.Controllers
 
             return View(recipes);
         }
-        public async Task<IActionResult> Delete([FromBody]string id)
+        public async Task<IActionResult> Delete([FromBody] string id)
         {
-            if ((await recepieService.ExistsByIdAsync(id))== false)
+            if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
                 return RedirectToAction("Mine");
             }

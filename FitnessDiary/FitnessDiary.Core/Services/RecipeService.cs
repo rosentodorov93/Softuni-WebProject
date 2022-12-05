@@ -74,11 +74,6 @@ namespace FitnessDiary.Core.Services
                 .Include(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            if (food == null)
-            {
-                throw new ArgumentException("Ingredient is incorrect");
-            }
-
             var recipe = await repo.All<Recipe>()
                 .Where(r => r.Id == recepieId)
                 .Include(r => r.Nutrition)
@@ -86,11 +81,6 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(i => i.Food)
                 .ThenInclude(f => f.Nutrition)
                 .FirstOrDefaultAsync();
-
-            if (recipe == null)
-            {
-                throw new ArgumentException("Invalid recipe");
-            }
 
             recipe?.Ingredients.Add(new Ingredient()
             {
@@ -264,10 +254,6 @@ namespace FitnessDiary.Core.Services
                  .ThenInclude(f => f.Nutrition)
                  .FirstOrDefaultAsync();
 
-            if (recipe == null)
-            {
-                throw new ArgumentException("Invalid Recipe Id");
-            }
 
             var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredientToRemove);
 
