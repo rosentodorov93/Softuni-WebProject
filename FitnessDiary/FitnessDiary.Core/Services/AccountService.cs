@@ -73,8 +73,6 @@ namespace FitnessDiary.Core.Services
                 UserName = username
             };
 
-            
-
             var result = await userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)

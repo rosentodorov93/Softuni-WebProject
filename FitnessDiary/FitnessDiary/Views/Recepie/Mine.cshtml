@@ -24,7 +24,8 @@
                     <p>Total Calories @recipe.TotalCalories</p>
                     <p>Calorie per Serving @recipe.CaloriesPerPortion</p>
                     
-                    <a asp-controller="Recepie" asp-action="Details" asp-route-id="@recipe.Id">Add more ingredients</a>
+                    <a asp-controller="Recepie" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">Recipe Details</a>
+                    <a class="btn btn-primary" onclick="AddRecipeServing(&quot;@recipe.Id&quot;)">Add to Diary</a>
                 </div>
                 <!-- /.card-body -->
                 <div class="card-footer">
@@ -37,3 +38,81 @@
     }
 </div>
 
+<div class="modal fade" id="servingModal">
+    <div class="modal-dialog modal-lg" style=" width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add To Diary</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <h5 style="color:#ff6347">Serving Details</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Choose Serving Category
+                        </label>
+                        <div class="col-md-4">
+                            <select class="form-select" id="category">
+
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Snack">Snack</option>
+
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Amount
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="amount" class="form-control" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="addServing" type="submit" class="btn btn-danger">Add Serving</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function AddRecipeServing(id) {
+            $("#servingModal").modal();
+
+            $('#addServing').click(function(e) {
+            e.preventDefault();
+            let idParam = id;
+            let category = $('#category').find(":selected").val();
+            let amount = $('#amount').val();
+
+            let data = {
+                Id: idParam,
+                Category: category,
+                Amount: amount
+            };
+
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                method: 'POST',
+                url: "/Diary/AddRecipeServing",
+                data: JSON.stringify(data),
+                success: function(result) {
+                    window.location = "https://localhost:7043/Diary/Index";
+                }
+            });
+        })
+        };
+        
+    </script>
+}

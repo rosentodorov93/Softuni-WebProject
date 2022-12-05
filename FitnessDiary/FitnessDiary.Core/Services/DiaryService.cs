@@ -19,7 +19,7 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddFromDatabaseAsync(string userId, string id, double amount, string category)
+        public async Task AddFoodServingAsync(string userId, string id, double amount, string category)
         {
             var food = await repo.All<Food>()
                 .Where(f => f.Id == id)
@@ -47,7 +47,7 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task AddRecipeAsync(string userId, string id, double amount, string category)
+        public async Task AddRecipeServingAsync(string userId, string id, double amount, string category)
         {
             var recipe = await repo.All<Recipe>()
                 .Where(r => r.Id == id)

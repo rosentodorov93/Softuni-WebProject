@@ -8,7 +8,7 @@ using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
-    [Authorize(Roles = "User, Admin")]
+  
     public class FoodController : Controller
     {
         private readonly IFoodService service;
@@ -19,6 +19,7 @@ namespace FitnessDiary.Controllers
             service = _service;
             accountService = _accountService;
         }
+        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
             var result = await service.GetAllAsync(
@@ -36,6 +37,7 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
+        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> Add()
         {
             var model = new FoodViewModel();
@@ -57,9 +59,11 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("All", "Food");
         }
+
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> Mine([FromQuery] MinePageViewModel query)
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var result = await service.GetAllAsync(
                 userId,
@@ -76,7 +80,7 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        
+        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> Edit(string Id)
         {
             if ((await service.ExistsByIdAsync(Id) == false))
@@ -116,6 +120,5 @@ namespace FitnessDiary.Controllers
 
             return Json("success");
         }
-
     }
 }

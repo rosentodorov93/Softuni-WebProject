@@ -52,10 +52,10 @@
            asp-route-searchTerm="@Model.SearchTerm"
            asp-route-sorting="@((int)Model.Sorting)"><<</a>
     </div>
-    
+
     @{
         var shouldButtonBeDisabled = Model.CurrentPage == Model.MaxPage ||
-                                     !Model.Foods.Any();
+        !Model.Foods.Any();
     }
 
     <div class="col-md-6">
@@ -85,6 +85,7 @@
                     <th>Carbs</th>
                     <th>Proteins</th>
                     <th>Fats</th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -98,6 +99,7 @@
                         <td>@food.Carbohydtrates</td>
                         <td>@food.Proteins</td>
                         <td>@food.Fats</td>
+                        <td><button class="btn btn-primary" onclick="AddToDiary(&quot;@food.Id&quot;)">Add to Diary</button></td>
                     </tr>
                 }
             </tbody>
@@ -105,3 +107,82 @@
     </div>
 
 </div>
+
+<div class="modal fade" id="servingModal">
+    <div class="modal-dialog modal-lg" style=" width: 900px !important;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4>Add To Diary</h4>
+            </div>
+
+            <div class="modal-body">
+
+                <h5 style="color:#ff6347">Serving Details</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <div class="form-group">
+                        <label class="control-label col-md-2">
+                            Choose Serving Category
+                        </label>
+                        <div class="col-md-4">
+                            <select class="form-select" id="category">
+
+                                <option value="Breakfast">Breakfast</option>
+                                <option value="Lunch">Lunch</option>
+                                <option value="Dinner">Dinner</option>
+                                <option value="Snack">Snack</option>
+
+                            </select>
+                        </div>
+                        <label class="control-label col-md-2">
+                            Amount
+                        </label>
+                        <div class="col-md-4">
+                            <input type="text" id="amount" class="form-control" />
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button id="addServing" type="submit" class="btn btn-danger">Add Serving</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        function AddToDiary(id) {
+            $("#servingModal").modal();
+
+            $('#addServing').click(function(e) {
+            e.preventDefault();
+            let idParam = id;
+            let category = $('#category').find(":selected").val();
+            let amount = $('#amount').val();
+
+            let data = {
+                Id: idParam,
+                Category: category,
+                Amount: amount
+            };
+
+            $.ajax({
+                contentType: 'application/json; charset=utf-8',
+                dataType: 'json',
+                method: 'POST',
+                url: "/Diary/AddFoodServing",
+                data: JSON.stringify(data),
+                success: function(result) {
+                    window.location = "https://localhost:7043/Diary/Index";
+                }
+            });
+        })
+        };
+        
+    </script>
+}

@@ -10,18 +10,20 @@ namespace FitnessDiary.Controllers
     {
         private readonly IFoodService foodService;
         private readonly IRecipeService recepieService;
+        private readonly IAccountService accountService;
 
-        public RecepieController(IFoodService _foodService, IRecipeService _recipeService)
+        public RecepieController(IFoodService _foodService, IRecipeService _recipeService, IAccountService _accountService)
         {
             foodService = _foodService;
             recepieService = _recipeService;
+            accountService = _accountService;
         }
 
         public async Task<IActionResult> Add()
         {
             var model = new AddRecipeViewModel();
             model.Foods = await foodService.LoadIngedientsAsync();
-            model.UserId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            model.UserId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             return View(model);
         }
@@ -36,7 +38,7 @@ namespace FitnessDiary.Controllers
 
             await  recepieService.AddAsync(model);
 
-            return Ok();
+            return Json("success");
         }
 
         public async Task<IActionResult> AddIngredient(string id)
@@ -161,7 +163,7 @@ namespace FitnessDiary.Controllers
         }
         public async Task<IActionResult> Mine()
         {
-            var userId = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier)?.Value;
+            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             var recipes = await recepieService.GetAllById(userId);
 

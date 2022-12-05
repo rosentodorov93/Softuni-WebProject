@@ -135,8 +135,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
-            {
-                
+            {                
                 var user = new IdentityUser()
                 {
                     Email = Input.Email,
@@ -171,10 +170,8 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    return RedirectToAction("Index", "Home");
-
                     //await _signInManager.SignInAsync(user, isPersistent: false);
-                    //return LocalRedirect(returnUrl);
+                    return RedirectToPage("/Account/Login", new { area = "Identity" });
 
                 }
                 foreach (var error in result.Errors)

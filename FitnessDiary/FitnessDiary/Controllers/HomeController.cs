@@ -21,7 +21,7 @@ namespace FitnessDiary.Controllers
             //{
             //    return RedirectToAction("Index", "Home", new { area = AdministrationAreaName });
             //}
-            
+            var user = this.User;
             return View();
         }
 

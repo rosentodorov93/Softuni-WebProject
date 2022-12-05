@@ -40,55 +40,14 @@ namespace FitnessDiary.Controllers
             return View(model);
 
         }
-        public async Task<IActionResult> AddFromDatabase()
-        {
-            var model = new AddServingViewModel()
-            {
-                Foods = await diaryService.GetFoodsFromDbAsync(),
-                Serving = new ServingServiceModel()
-            };
-
-
-            return View(model);
-        }
+      
         [HttpPost]
-        public async Task<IActionResult> AddFromDatabase(AddServingViewModel model)
+        public async Task<IActionResult> AddRecipeServing([FromBody] ServingServiceModel model)
         {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await diaryService.AddFromDatabaseAsync(userId, model.Serving.Id, model.Serving.Amount, model.Serving.Category);
+            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await diaryService.AddRecipeServingAsync(userId, model.Id, model.Amount, model.Category);
 
-            return RedirectToAction("Index", "Diary");
-        }
-        public async Task<IActionResult> AddFromMine()
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = new AddServingViewModel()
-            {
-                Foods = await diaryService.GetMineFoodsFromDbAsync(userId),
-                Serving = new ServingServiceModel()
-            };
-
-            return View(model);
-        }
-        public async Task<IActionResult> AddRecipe()
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var model = new AddServingViewModel()
-            {
-                Foods = await diaryService.GetRecipesFromDbAsync(userId),
-                Serving = new ServingServiceModel()
-            };
-
-
-            return View(model);
-        }
-        [HttpPost]
-        public async Task<IActionResult> AddRecipe(AddServingViewModel model)
-        {
-            var userId = this.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            await diaryService.AddRecipeAsync(userId, model.Serving.Id, model.Serving.Amount, model.Serving.Category);
-
-            return RedirectToAction("Index", "Diary");
+            return Json("success");
         }
         public async Task<IActionResult> RemoveServing(int Id)
         {
@@ -103,5 +62,13 @@ namespace FitnessDiary.Controllers
             return View();
         }
 
+        [HttpPost]
+        public async Task<IActionResult> AddFoodServing([FromBody] ServingServiceModel model)
+        {
+            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await diaryService.AddFoodServingAsync(userId, model.Id, model.Amount, model.Category);
+
+            return Json("success");
+        }
     }
 }
