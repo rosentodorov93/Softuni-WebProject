@@ -14,5 +14,6 @@ namespace FitnessDiary.Core.Contracts
         Task AddApplicationUser(ApplicationUser applicationUser);
         string? GetById(string id);
         Task CreateUserAsync(CreateUserViewModel model);
+        Task<bool> ExistsById(string? userId);
     }
 }

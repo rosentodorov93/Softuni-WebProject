@@ -12,5 +12,6 @@ namespace FitnessDiary.Core.Contracts
         Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id);
         Task EditTamplateAsync(EditTamplateViewModel model);
         Task AddToDiaryAsync(AddToDiaryViewModel model, string userId);
+        Task<bool> TamplateExistsByIdAsync(string id);
     }
 }

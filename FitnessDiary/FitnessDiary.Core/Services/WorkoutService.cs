@@ -24,10 +24,6 @@ namespace FitnessDiary.Core.Services
                 .Include(t => t.Exercises)
                 .FirstOrDefaultAsync();
 
-            if (workout == null)
-            {
-                throw new ArgumentException("Workout is invalid");
-            }
 
             var exercise = new ExerciseTamplate()
             {
@@ -190,9 +186,19 @@ namespace FitnessDiary.Core.Services
 
             var exercise = tamplate.Exercises.FirstOrDefault(e => e.Id == exerciseId);
 
-            tamplate.Exercises.Remove(exercise);
+            if (exercise != null)
+            {
+                tamplate.Exercises.Remove(exercise);
 
-            await repo.SaveChangesAsync();
+                await repo.SaveChangesAsync();
+            }
+
+            
+        }
+
+        public async Task<bool> TamplateExistsByIdAsync(string id)
+        {
+            return await repo.AllReadonly<WorkoutTamplate>().AnyAsync(t => t.Id == id);
         }
 
         private List<SetViewModel> CreateSets(int setCount)

@@ -89,6 +89,11 @@ namespace FitnessDiary.Core.Services
             }
         }
 
+        public Task<bool> ExistsById(string? userId)
+        {
+            return repo.AllReadonly<ApplicationUser>().AnyAsync(u => u.Id == userId);
+        }
+
         public async Task<IEnumerable<ActivityLevel>> GetActivityLevels()
             => await repo.All<ActivityLevel>().ToListAsync();
 
