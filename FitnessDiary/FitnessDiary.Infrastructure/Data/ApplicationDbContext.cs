@@ -8,9 +8,21 @@ namespace FitnessDiary.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext
     {
-        public ApplicationDbContext(DbContextOptions options)
+        private bool shouldSeedDb;
+        public ApplicationDbContext(DbContextOptions options, bool seed = true)
             : base(options)
         {
+            this.shouldSeedDb = seed;
+            if (this.Database.IsRelational())
+            {
+                this.Database.Migrate();
+            }
+            else
+            {
+                this.Database.EnsureCreated();
+            }
+
+            this.shouldSeedDb = shouldSeedDb;
         }
         public DbSet<ActivityLevel> ActivityLevels { get; set; } = null!;
         public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
@@ -30,14 +42,16 @@ namespace FitnessDiary.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-
-            builder.ApplyConfiguration(new ActivityLevelConfiguration());
-            builder.ApplyConfiguration(new RolesConfiguration());
-            builder.ApplyConfiguration(new NutritionConfiguration());
-            builder.ApplyConfiguration(new IdentityUserConfiguration());
-            builder.ApplyConfiguration(new AdministrationUserConfiguration());
-            builder.ApplyConfiguration(new UserRolesConfiguration());
-            builder.ApplyConfiguration(new FoodsConfiguration());
+            if (shouldSeedDb)
+            {
+                builder.ApplyConfiguration(new ActivityLevelConfiguration());
+                builder.ApplyConfiguration(new RolesConfiguration());
+                builder.ApplyConfiguration(new NutritionConfiguration());
+                builder.ApplyConfiguration(new IdentityUserConfiguration());
+                builder.ApplyConfiguration(new AdministrationUserConfiguration());
+                builder.ApplyConfiguration(new UserRolesConfiguration());
+                builder.ApplyConfiguration(new FoodsConfiguration());
+            }
 
             base.OnModelCreating(builder);
         }

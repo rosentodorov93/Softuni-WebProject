@@ -15,7 +15,7 @@ namespace FitnesDiary.Tests
         private IRepository repo;
         private IFoodService foodService;
         [SetUp]
-        public  void Setup()
+        public void Setup()
         {
             this.optionsBuilder = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseInMemoryDatabase(databaseName: "FoodsInMemoryDb");

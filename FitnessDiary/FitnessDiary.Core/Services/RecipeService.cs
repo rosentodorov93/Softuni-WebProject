@@ -82,19 +82,22 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            recipe?.Ingredients.Add(new Ingredient()
+            if (!recipe.Ingredients.Any(i => i.FoodId == food.Id))
             {
-                FoodId = food.Id,
-                Food = food,
-                Amount = ingredient.Amount,
-            });
+                recipe?.Ingredients.Add(new Ingredient()
+                {
+                    FoodId = food.Id,
+                    Food = food,
+                    Amount = ingredient.Amount,
+                });
 
-            recipe.Nutrition.Calories += (food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
-            recipe.Nutrition.Carbohydrates += (food.Nutrition.Carbohydrates * ingredient.Amount) / recipe.ServingsSize;
-            recipe.Nutrition.Proteins += (food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
-            recipe.Nutrition.Fats += (food.Nutrition.Fats * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Calories += (food.Nutrition.Calories * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Carbohydrates += (food.Nutrition.Carbohydrates * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Proteins += (food.Nutrition.Proteins * ingredient.Amount) / recipe.ServingsSize;
+                recipe.Nutrition.Fats += (food.Nutrition.Fats * ingredient.Amount) / recipe.ServingsSize;
 
-            await repo.SaveChangesAsync();
+                await repo.SaveChangesAsync();
+            }
 
             var result = await GetByIdAsync(recepieId);
 
@@ -112,29 +115,34 @@ namespace FitnessDiary.Core.Services
                  .ThenInclude(f => f.Nutrition)
                  .FirstOrDefaultAsync();
 
-            if (recipe != null)
+            if (recipe == null)
             {
-                recipe.Name = model.Name;
-                recipe.ServingsSize = model.ServingsSize;
-                recipe.Nutrition.Calories = 0;
-                recipe.Nutrition.Carbohydrates = 0;
-                recipe.Nutrition.Proteins = 0;
-                recipe.Nutrition.Fats = 0;
+                throw new ArgumentException("Invalid recipe Id");
+            }
 
-                foreach (var ingredient in recipe.Ingredients)
+
+            recipe.Name = model.Name;
+            recipe.ServingsSize = model.ServingsSize;
+            recipe.ImageUrl = model.ImageUrl;
+            recipe.Nutrition.Calories = 0;
+            recipe.Nutrition.Carbohydrates = 0;
+            recipe.Nutrition.Proteins = 0;
+            recipe.Nutrition.Fats = 0;
+
+            foreach (var ingredient in recipe.Ingredients)
+            {
+                var newIngredientAmount = model.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault().Amount;
+                if (newIngredientAmount != null)
                 {
-                    var newIngredientAmount = model.Ingredients.Where(i => i.Id == ingredient.Id).FirstOrDefault().Amount;
-                    if (newIngredientAmount != null)
-                    {
-                        ingredient.Amount = newIngredientAmount;
-                    }
-
+                    ingredient.Amount = newIngredientAmount;
                 }
 
-                CalculateNutrition(recipe);
-
-                await repo.SaveChangesAsync();
             }
+
+            CalculateNutrition(recipe);
+
+            await repo.SaveChangesAsync();
+
             return new DetailsViewModel()
             {
                 Id = recipe.Id,
@@ -167,7 +175,7 @@ namespace FitnessDiary.Core.Services
             recipe.CaloriesPerServing = recipe.Nutrition.Calories / recipe.ServingsSize;
         }
 
-        public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId)
+        public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string userId)
         {
             var recipe = await repo.All<Recipe>()
                  .Where(r => r.IsActive)
@@ -204,7 +212,7 @@ namespace FitnessDiary.Core.Services
                 Id = recipe.Id,
                 Name = recipe.Name,
                 ServingsSize = recipe.ServingsSize,
-                ImageUrl=recipe.ImageUrl,
+                ImageUrl = recipe.ImageUrl,
                 TotalCalories = recipe.Nutrition.Calories,
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,

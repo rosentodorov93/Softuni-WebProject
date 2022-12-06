@@ -14,7 +14,7 @@ namespace FitnessDiary.Core.Contracts
         Task AddAsync(CreateRecipeModel model);
         Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recepieId);
         Task<DetailsViewModel> GetByIdAsync(string id);
-        Task<IEnumerable<RecipeListingViewModel>> GetAllById(string? userId);
+        Task<IEnumerable<RecipeListingViewModel>> GetAllById(string userId);
         Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id);
         Task RemoveIngredient(string recipeid, int ingredientToRemove);
         Task<DetailsViewModel> EditAsync(EditViewModel model);

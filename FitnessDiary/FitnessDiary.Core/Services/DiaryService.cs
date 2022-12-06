@@ -159,43 +159,6 @@ namespace FitnessDiary.Core.Services
             return null;
         }
 
-        public async Task<List<FoodDiaryServiceModel>> GetFoodsFromDbAsync()
-        {
-            return await repo.All<Food>().Select(x => new FoodDiaryServiceModel()
-            {
-                Id = x.Id,
-                Name = x.Name,
-            }).ToListAsync();
-        }
-
-        public async Task<List<FoodDiaryServiceModel>> GetMineFoodsFromDbAsync(string userId)
-        {
-            var user = await repo.All<ApplicationUser>()
-                .Where(u => u.Id == userId)
-                .Include(u => u.Foods)
-                .FirstOrDefaultAsync();
-            //validate
-            return user.Foods.Select(x => new FoodDiaryServiceModel()
-            {
-                Id = x.Id,
-                Name = x.Name,
-            }).ToList();
-        }
-
-        public async Task<List<FoodDiaryServiceModel>> GetRecipesFromDbAsync(string userId)
-        {
-            var user = await repo.All<ApplicationUser>()
-               .Where(u => u.Id == userId)
-               .Include(u => u.Recipes)
-               .FirstOrDefaultAsync();
-            //validate
-            return user.Recipes.Select(r => new FoodDiaryServiceModel()
-            {
-                Name = r.Name,
-                Id = r.Id,
-            }).ToList();
-        }
-
         public async Task RemoveServingAsync(string userId, int id)
         {
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
