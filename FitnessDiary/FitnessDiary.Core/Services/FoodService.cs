@@ -17,7 +17,7 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddFood(FoodViewModel model, string userId)
+        public async Task AddFood(FoodViewModel model, string? userId)
         {
             var food = new Food()
             {
@@ -52,7 +52,7 @@ namespace FitnessDiary.Core.Services
         public async Task EditAsync(string Id, FoodViewModel model)
         {
             var food = await LoadFood(Id);
-
+            
             if (food != null)
             {
                 food.Name = model.Name;
@@ -183,7 +183,7 @@ namespace FitnessDiary.Core.Services
         //}
 
         public async Task<IEnumerable<string>> getAllTypesAsync()
-            => await repo.All<Food>().Select(f => f.Type).Distinct().ToListAsync();
+            => await repo.All<Food>().Where(f => f.IsActive).Select(f => f.Type).Distinct().ToListAsync();
 
         public async Task<FoodViewModel> GetByIdAsync(string id)
         {
@@ -203,6 +203,17 @@ namespace FitnessDiary.Core.Services
                 Proteins = food.Nutrition.Proteins,
                 Fats = food.Nutrition.Fats
             };
+        }
+
+        public async Task<bool> IsFoodPrivate(string id)
+        {
+            var food = await repo.AllReadonly<Food>().FirstOrDefaultAsync(f => f.Id == id);
+
+            if (food.UserId == null)
+            {
+                return true;
+            }
+            return false;
         }
 
         public async Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync()

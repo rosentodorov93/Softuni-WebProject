@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Authorization;
@@ -94,10 +95,31 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string Id, FoodViewModel model)
         {
+            
             if ((await service.ExistsByIdAsync(Id)) == false)
             {
                 ModelState.AddModelError("", "Food does not exist");
 
+                return View(model);
+            }
+            var appUserId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var foodIsPrivate = await service.IsFoodPrivate(Id);
+
+            if (appUserId != null && foodIsPrivate == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "You cant edit public food databse";
+                return View(model);
+            }
+
+            if (appUserId == null && this.User.IsInRole("Admin") && foodIsPrivate)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Admin can only edit public foods";
+                return View(model);
+            }
+
+            if (appUserId == null && this.User.IsInRole("Moderator") && foodIsPrivate)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Moderator can only edit public foods";
                 return View(model);
             }
 

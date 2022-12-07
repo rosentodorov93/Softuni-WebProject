@@ -18,7 +18,7 @@ namespace FitnessDiary.Core.Contracts
             int currentPage = 1,
             int housesPerPage = 1
             );
-        Task AddFood(FoodViewModel model, string userId);
+        Task AddFood(FoodViewModel model, string? userId);
         Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync();
 
         ////Task<MinePageViewModel> GetAllById(string? userId,
@@ -32,5 +32,6 @@ namespace FitnessDiary.Core.Contracts
         Task<FoodViewModel> GetByIdAsync(string id);
         Task EditAsync(string Id, FoodViewModel model);
         Task DeleteAsync(string id);
+        Task<bool> IsFoodPrivate(string id);
     }
 }
