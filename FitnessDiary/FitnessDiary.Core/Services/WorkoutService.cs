@@ -29,7 +29,7 @@ namespace FitnessDiary.Core.Services
             {
                 Name = model.ExerciseName,
                 BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), model.BodyPart),
-                SetCount = int.Parse(model.SetCount),
+                SetCount = model.SetCount,
             };
 
             workout.Exercises.Add(exercise);
@@ -162,7 +162,6 @@ namespace FitnessDiary.Core.Services
 
             var result = new AddToDiaryViewModel()
             {
-                Id = tamplate.Id,
                 Name = tamplate.Name,
                 Description = tamplate.Description,
                 Exercises = tamplate.Exercises.Select(e => new ExerciseWithSetsViewModel()

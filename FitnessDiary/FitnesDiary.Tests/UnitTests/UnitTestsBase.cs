@@ -49,6 +49,14 @@ namespace FitnesDiary.Tests.UnitTests
                     Proteins = 14,
                     Fats = 4
                },
+                new NutritionData()
+               {
+                    Id = 4,
+                    Calories = 0,
+                    Carbohydrates = 0,
+                    Proteins = 0,
+                    Fats = 0
+               },
             };
 
             this.data.Nutritions.AddRange(nutritions);
@@ -106,6 +114,16 @@ namespace FitnesDiary.Tests.UnitTests
                 Id = "AppUserId",
 
             };
+
+            var diaryDay = new DiaryDay()
+            {
+                DateTime = DateTime.Now.Date,
+                Id = 1,
+                NutritionId = 4,
+            };
+
+            this.data.DiaryDays.Add(diaryDay);
+            appUser.Diary.Add(diaryDay);
 
             this.AppUser = appUser;
 
@@ -165,6 +183,45 @@ namespace FitnesDiary.Tests.UnitTests
 
             this.TestRecipe = recipes[0];
             this.data.Recipes.AddRange(recipes);
+
+            var exercises = new List<ExerciseTamplate>()
+            {
+                new ExerciseTamplate()
+                {
+                     Id = "firstExercise",
+                     Name = "Bench Press",
+                     BodyPart = FitnessDiary.Infrastructure.Data.Enums.BodyPartType.Chest,
+                     SetCount = 3
+                },
+                new ExerciseTamplate()
+                {
+                     Id = "secondExercise",
+                     Name = "Shoulder Press",
+                     BodyPart = FitnessDiary.Infrastructure.Data.Enums.BodyPartType.Sholders,
+                     SetCount = 3
+                },
+                new ExerciseTamplate()
+                {
+                     Id = "thirdExercise",
+                     Name = "Skull Crushers",
+                     BodyPart = FitnessDiary.Infrastructure.Data.Enums.BodyPartType.Tricep,
+                     SetCount = 3
+                }
+            };
+
+            this.data.ExerciseTamplates.AddRange(exercises);
+
+            var tamplate = new WorkoutTamplate()
+            {
+                Id = "tamplateId",
+                Name = "Upper body Workout",
+                Description = "Chest, Shoulders, Triceps",
+                User = this.AppUser,
+                Exercises = exercises
+            };
+
+            this.TestTamplate = tamplate;
+            this.data.WorkoutTamplates.Add(tamplate);
 
             this.data.SaveChanges();
         }

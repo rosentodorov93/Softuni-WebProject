@@ -112,7 +112,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetAllById_ShouldReturnCorrectRecipes()
         {
-            var userRecipesCount = this.AppUser.Recipes.Count();
+            var userRecipesCount = this.AppUser.Recipes.Where(r => r.IsActive).Count();
             var recipesNames = this.AppUser.Recipes.Select(r => r.Name).ToList();
 
             var result = await recipeService.GetAllById(AppUser.Id);
@@ -193,6 +193,44 @@ namespace FitnesDiary.Tests.UnitTests
 
             Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.EditAsync(editModel));
 
+        }
+        [Test]
+        public async Task GetBiIdAsync_ShouldThrowErrorWithInvalidId()
+        {
+            Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.GetByIdAsync("invalidId"));
+        }
+        [Test]
+        public async Task GetBiIdAsync_ShouldReturnCorrectRecipe()
+        {
+            var result = await recipeService.GetByIdAsync(this.TestRecipe.Id);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Name.Equals(this.TestRecipe.Name));
+            Assert.That(result.ServingsSize.Equals(this.TestRecipe.ServingsSize));
+            Assert.That(result.ImageUrl.Equals(this.TestRecipe.ImageUrl));
+        }
+        [Test]
+        public async Task ExistsByIdAsync_ShouldReturnTrueWithValidId()
+        {
+            var result = await recipeService.ExistsByIdAsync(this.TestRecipe.Id);
+
+            Assert.IsTrue(result);
+        }
+        [Test]
+        public async Task ExistsByIdAsync_ShouldReturnFalseWithInvalidId()
+        {
+            var result = await recipeService.ExistsByIdAsync("invalid");
+
+            Assert.IsFalse(result);
+        }
+        [Test]
+        public async Task DeleteAsync_ShouldDeleteCorrectly()
+        {
+            var recipeToDelete = repo.All<Recipe>().FirstOrDefault(r => r.Name == "Lasagnia");
+
+            await recipeService.DeleteAsync(recipeToDelete.Id);
+
+            Assert.IsFalse(recipeToDelete.IsActive);
         }
     }
 }

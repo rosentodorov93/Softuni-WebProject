@@ -207,6 +207,11 @@ namespace FitnessDiary.Core.Services
                  .ThenInclude(i => i.Food)
                  .FirstOrDefaultAsync();
 
+            if (recipe == null)
+            {
+                throw new ArgumentException("Invalid recipe Id");
+            }
+
             return new DetailsViewModel()
             {
                 Id = recipe.Id,

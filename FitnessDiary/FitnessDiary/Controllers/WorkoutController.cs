@@ -29,6 +29,7 @@ namespace FitnessDiary.Controllers
             if (userId == null)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
+                return RedirectToAction(nameof(MineTamlates));
             }
             if (!ModelState.IsValid)
             {
@@ -135,7 +136,7 @@ namespace FitnessDiary.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("AddToDiary", "Workout", new { Id = model.Id });
+                return RedirectToAction(nameof(MineTamlates));
             }
 
             await workoutService.AddToDiaryAsync(model, userId);

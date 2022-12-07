@@ -140,7 +140,6 @@ namespace FitnessDiary.Core.Services
             {
                 return new AddToDiaryViewModel()
                 {
-                    Id = workout.Id,
                     Name = workout.Name,
                     Description = workout.Description,
                     Exercises = workout.Exercises.Select(e => new ExerciseWithSetsViewModel()
