@@ -19,8 +19,8 @@ namespace FitnessDiary.Infrastructure.Data
         [Required]
         public DateTime Date { get; set; }
 
-        [MaxLength(450)]
-        public string? ImageUrl { get; set; } 
+        [Required]
+        public string ImageUrl { get; set; } = null!;
 
         [Required]
         [MaxLength(30)]
@@ -31,5 +31,6 @@ namespace FitnessDiary.Infrastructure.Data
 
         [Required]
         public string Content { get; set; } = null!;
+        public bool IsActive { get; set; } = true;
     }
 }

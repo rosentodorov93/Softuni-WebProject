@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221208131808_IsActiveAddedToArticle")]
+    partial class IsActiveAddedToArticle
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -193,7 +195,8 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
 
                     b.Property<string>("ImageUrl")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(450)
+                        .HasColumnType("nvarchar(450)");
 
                     b.Property<bool>("IsActive")
                         .HasColumnType("bit");
@@ -736,15 +739,15 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         {
                             Id = "cf28b02f-bcd9-4464-9100-6343cc8ca939",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "e0264ded-1df2-48c2-8742-d0cf0d1da30f",
+                            ConcurrencyStamp = "dcb83c21-beb7-446b-9557-5c88618a8c04",
                             Email = "admin@mail.bg",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.BG",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENe9y5oCVzpDEmT4m77s7WX1hNrF4Zf0rmNIqu0RiFJ8gq+bkKG1emZj9VDHYFnyYg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAELT/KmNL9aO4+Y+I/oHQS8Ihps9wHECc45MfprjiQhyUIHQkBDSFe5M+Hm1uD7+9jg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "4dcc2d14-98dd-4118-8299-6790bc8ce25b",
+                            SecurityStamp = "00d89607-5aba-44c5-9fb1-e9f77cdc12ad",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -752,15 +755,15 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         {
                             Id = "02b52032-ec58-496e-b58e-0533479ff27d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0828f358-c481-47c4-a4c3-1fac8493886e",
+                            ConcurrencyStamp = "7e8912fc-c9d6-46a9-94ce-47f03b302e0b",
                             Email = "moderator@mail.bg",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MODERATOR@MAIL.BG",
                             NormalizedUserName = "MODERATOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEDlJlM1fxMAVQIRPEB9tO+Gh8CjobS0UI9jbnZmxjynLQP75Au6+wyNHdVOmV25T1Q==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBqccnJYtpqG4jf3bFiD6p4TRyoJywOSSr871TYil5dBqRhkoDH2lUghU66Zia7dfg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f8cb22dc-3206-450b-8b69-918b78ea7846",
+                            SecurityStamp = "7e827fb9-250d-43ae-943a-d5f4fbe13aa5",
                             TwoFactorEnabled = false,
                             UserName = "moderator"
                         });
