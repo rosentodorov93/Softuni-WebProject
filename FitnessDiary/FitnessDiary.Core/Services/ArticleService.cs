@@ -20,6 +20,7 @@ namespace FitnessDiary.Core.Services
             var article = new Article()
             {
                 Title = model.Title,
+                ImageUrl = model.ImageUrl,
                 Author = model.Author,
                 Date = DateTime.UtcNow.Date,
                 Category = model.Category,
@@ -54,6 +55,7 @@ namespace FitnessDiary.Core.Services
             {
                 Id = a.Id,
                 Title = a.Title,
+                ImageUrl = a.ImageUrl,
                 Category = a.Category,
                 Author = a.Author,
                 Date = a.Date
@@ -68,11 +70,31 @@ namespace FitnessDiary.Core.Services
             {
                 Id = article.Id,
                 Author = article.Author,
+                ImageUrl = article.ImageUrl,
                 Category = article.Category,
                 Content = article.Content,
                 Date = article.Date,
                 Title = article.Title
             };
+        }
+
+        public async Task<IEnumerable<ListingViewModel>> GetLatestAsync()
+        {
+            var latestArticles = await repo.AllReadonly<Article>()
+                .Where(a => a.IsActive)
+                .OrderByDescending(a => a.Date)
+                .Take(3)
+                .ToListAsync();
+
+            return latestArticles.Select(a => new ListingViewModel()
+            {
+                Id = a.Id,
+                Author = a.Author,
+                Title = a.Title,
+                ImageUrl = a.ImageUrl,
+                Category = a.Category,
+                Date = a.Date
+            });
         }
     }
 }

@@ -1,17 +1,7 @@
-﻿@model AddToDiaryViewModel
-
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="row">
-            <h2 class="panel-title pull-left" style="margin-left:10px;">
-                <strong>Add Workout to Diary</strong>
-            </h2>
-        </div>
-    </div>
+﻿@model WorkoutViewModel
 
 
-
-    <form asp-controller="Workout" asp-action="AddToDiary" method="post">
+<form asp-controller="Workout" asp-action="AddToDiary" method="post">
         <div>
             <h5 style="color:#ff6347">Workout</h5>
             <hr />
@@ -59,4 +49,3 @@
             <button type="submit" class="btn btn-primary">Add to Diary </button>
         </div>
     </form>
-</div>

@@ -2,11 +2,8 @@
 using FitnessDiary.Core.Models.Workout;
 using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using FitnessDiary.Infrastructure.Data.WorkoutEntites;
+using Microsoft.EntityFrameworkCore;
 
 namespace FitnesDiary.Tests.UnitTests
 {
@@ -175,14 +172,14 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.That(result.Exercises.Count.Equals(this.TestTamplate.Exercises.Count));
         }
         [Test]
-        public async Task ExistsById_ShouldReturnTrueWithValidId()
+        public async Task TamlateExistsById_ShouldReturnTrueWithValidId()
         {
             var result = await workoutService.TamplateExistsByIdAsync(this.TestTamplate.Id);
 
             Assert.IsTrue(result);
         }
         [Test]
-        public async Task ExistsById_ShouldReturnFalseWithInvalidId()
+        public async Task TamplateExistsById_ShouldReturnFalseWithInvalidId()
         {
             var result = await workoutService.TamplateExistsByIdAsync("Invalid");
 
@@ -200,6 +197,76 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.IsNotNull(workout);
             Assert.That(workout.Name.Equals(model.Name));
             Assert.That(workout.Description.Equals(model.Description));
+        }
+        [Test]
+        public async Task WorkoutExistsById_ShouldReturnTrueWithValidId()
+        {
+            var workoutId = repo.AllReadonly<Workout>().First().Id;
+            var result = await workoutService.WorkoutExistsByIdAsync(workoutId);
+
+            Assert.IsTrue(result);
+        }
+        [Test]
+        public async Task WorkoutExistsById_ShouldReturnFalseWithInvalidId()
+        {
+            var result = await workoutService.WorkoutExistsByIdAsync("Invalid");
+
+            Assert.IsFalse(result);
+        }
+        [Test]
+        public async Task EditWorkoutAsync_ShouldEditCorrectly()
+        {
+            var workoutBeforeEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+            var model = new WorkoutViewModel()
+            {
+                Id = workoutBeforeEdit.Id,
+                Name = workoutBeforeEdit.Name,
+                Description = workoutBeforeEdit.Description,
+                Exercises = workoutBeforeEdit.Exercises.Select(e => new ExerciseWithSetsViewModel()
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    BodyPart = e.BodyPart.ToString(),
+                    Sets = e.Sets.Select(s => new SetViewModel()
+                    {
+                        Load = 1,
+                        Reps = 1
+                    }).ToList()
+                }).ToList()
+            };
+
+            await workoutService.EditWorkoutAsync(model);
+            var workoutAfterEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+
+            Assert.IsTrue(workoutAfterEdit.Exercises[0].Sets.All(s => s.Reps == 1 && s.Load == 1));
+
+        }
+        [Test]
+        public async Task EditWorkoutAsync_ShouldNotEditWithInvalidId()
+        {
+            var workoutBeforeEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+            var model = new WorkoutViewModel()
+            {
+                Id = "Invalid",
+                Name = workoutBeforeEdit.Name,
+                Description = workoutBeforeEdit.Description,
+                Exercises = workoutBeforeEdit.Exercises.Select(e => new ExerciseWithSetsViewModel()
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    BodyPart = e.BodyPart.ToString(),
+                    Sets = e.Sets.Select(s => new SetViewModel()
+                    {
+                        Load = 2,
+                        Reps = 2
+                    }).ToList()
+                }).ToList()
+            };
+
+            await workoutService.EditWorkoutAsync(model);
+            var workoutAfterEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+
+            Assert.IsTrue(workoutAfterEdit.Exercises[0].Sets.All(s => s.Reps == 1 && s.Load == 1));
         }
     }
 }

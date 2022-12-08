@@ -34,7 +34,8 @@ namespace FitnessDiary.Controllers
                 {
                     CurrentNutrition = diaryDay.Nutrition,
                     RequiredNutrition = requiredNutrition
-                }
+                },
+                Workout = diaryDay.Workout
             };
 
             return View(model);

@@ -107,8 +107,6 @@ namespace FitnessDiary.Core.Services
             List<ServingViewModel> dinnerServings = GetServings(currentDay, ServingCategory.Dinner);
             List<ServingViewModel> snackServings = GetServings(currentDay, ServingCategory.Snack);
 
-            
-
             CalculateDayNutrition(currentDay);
              
             await repo.SaveChangesAsync();
@@ -133,13 +131,14 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        private AddToDiaryViewModel LoadWorkout(Workout workout)
+        private WorkoutViewModel LoadWorkout(Workout workout)
         {
 
             if (workout != null)
             {
-                return new AddToDiaryViewModel()
+                return new WorkoutViewModel()
                 {
+                    Id = workout.Id,
                     Name = workout.Name,
                     Description = workout.Description,
                     Exercises = workout.Exercises.Select(e => new ExerciseWithSetsViewModel()

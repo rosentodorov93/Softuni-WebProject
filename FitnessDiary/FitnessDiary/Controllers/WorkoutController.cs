@@ -80,6 +80,30 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("MineTamlates");
         }
+        public async Task<IActionResult> EditWorkout(string Id)
+        {
+            if ((await workoutService.WorkoutExistsByIdAsync(Id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid workout Id";
+                return RedirectToAction(nameof(MineTamlates));
+            }
+
+            var model = await workoutService.GetWorkoutByIdAsync(Id);
+
+            return View(model);
+        }
+        [HttpPost]
+        public async Task<IActionResult> EditWorkout(WorkoutViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return RedirectToAction("Index", "Diary");
+            }
+
+            await workoutService.EditWorkoutAsync(model);
+
+            return RedirectToAction("Index", "Diary");
+        }
         [HttpPost]
         public async Task<IActionResult> AddExerciseToTamplate([FromBody] AddExerciseModel model)
         {

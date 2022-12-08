@@ -1,8 +1,40 @@
-﻿@{
+﻿@model IEnumerable<ListingViewModel>
+@{
     ViewData["Title"] = "Home Page";
+    bool first = true;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div id="homeArticles" class="carousel slide" data-bs-ride="carousel width=75%">
+
+    <div class="carousel-inner">
+        @foreach (var article in Model)
+        {
+            <div class="carousel-item @(first ? "active" : string.Empty)">
+
+                <div class="card">
+                    <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top d-block w-100" style="height:367px">
+                    <div class="card-body">
+                        <h5 class="card-title">@article.Title</h5>
+                        <p class="card-text text-center">Category: @article.Category</p>
+                        <p class="card-text text-center">Author: @article.Author</p>
+                        <p class="card-text text-center">Date: @article.Date</p>
+                        <div class="carousel-caption d-none d-md-block">
+                            <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary">Read More</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            first = false;
+        }
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#homeArticles" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#homeArticles" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
 </div>
+<div class="mb-5"></div>

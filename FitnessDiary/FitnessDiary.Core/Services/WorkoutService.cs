@@ -111,6 +111,35 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
+        public async Task EditWorkoutAsync(WorkoutViewModel model)
+        {
+            var workout = await repo.All<Workout>()
+                .Where(w => w.Id == model.Id)
+                .Include(w => w.Exercises)
+                .ThenInclude(e => e.Sets)
+                .FirstOrDefaultAsync();
+
+            if (workout != null)
+            {
+                for (int i = 0; i < model.Exercises.Count; i++)
+                {
+                    var workoutExercise = workout.Exercises[i];
+                    var modelExercise = model.Exercises[i];
+
+                    for (int j = 0; j < modelExercise.Sets.Count; j++)
+                    {
+                        var workoutSet = workoutExercise.Sets[j];
+                        var modelSet = modelExercise.Sets[j];
+
+                        workoutSet.Reps = modelSet.Reps;
+                        workoutSet.Load = modelSet.Load;
+                    }
+                }
+
+                await repo.SaveChangesAsync();
+            }
+        }
+
         public async Task<IEnumerable<ListingTamplateViewModel>> GetMineTamplatesAsync(string userId)
         {
             return await repo.All<WorkoutTamplate>()
@@ -176,6 +205,34 @@ namespace FitnessDiary.Core.Services
             return result;
         }
 
+        public async Task<WorkoutViewModel> GetWorkoutByIdAsync(string id)
+        {
+            var workout = await repo.All<Workout>()
+                .Where(w => w.Id == id)
+                .Include(w => w.Exercises)
+                .ThenInclude(e => e.Sets)
+                .FirstOrDefaultAsync();
+
+            return new WorkoutViewModel()
+            {
+                Id = workout.Id,
+                Name = workout.Name,
+                Description = workout.Description,
+                Exercises = workout.Exercises.Select(e => new ExerciseWithSetsViewModel()
+                {
+                    Id = e.Id,
+                    Name = e.Name,
+                    BodyPart = e.BodyPart.ToString(),
+                    Sets = e.Sets.Select(s => new SetViewModel()
+                    {
+                        Reps = s.Reps,
+                        Load = s.Load
+                    }).ToList()
+                }).ToList()
+            };
+
+        }
+
         public async Task RemoveExerciseAsync(string exerciseId, string tamplateId)
         {
             var tamplate = await repo.All<WorkoutTamplate>()
@@ -198,6 +255,11 @@ namespace FitnessDiary.Core.Services
         public async Task<bool> TamplateExistsByIdAsync(string id)
         {
             return await repo.AllReadonly<WorkoutTamplate>().AnyAsync(t => t.Id == id);
+        }
+
+        public async Task<bool> WorkoutExistsByIdAsync(string id)
+        {
+            return await repo.AllReadonly<Workout>().AnyAsync(t => t.Id == id);
         }
 
         private List<SetViewModel> CreateSets(int setCount)

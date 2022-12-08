@@ -9,9 +9,12 @@ namespace FitnessDiary.Core.Contracts
         Task<EditTamplateViewModel> GetTamplateById(string id);
         Task AddExerciseToTamplateAsync(AddExerciseModel model);
         Task RemoveExerciseAsync(string exerciseId, string tamplateId);
-        Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id);
+        Task<WorkoutViewModel> GetWorkoutByIdAsync(string id);
         Task EditTamplateAsync(EditTamplateViewModel model);
         Task AddToDiaryAsync(AddToDiaryViewModel model, string userId);
         Task<bool> TamplateExistsByIdAsync(string id);
+        Task<bool> WorkoutExistsByIdAsync(string id);
+        Task EditWorkoutAsync(WorkoutViewModel model);
+        Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id);
     }
 }

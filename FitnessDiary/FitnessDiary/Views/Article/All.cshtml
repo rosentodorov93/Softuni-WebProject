@@ -5,26 +5,18 @@
     {
         foreach (var article in Model)
         {
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">@article.Title</h3>
-                    <!-- /.card-tools -->
-                </div>
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <p>@article.Category</p>
-                    <p>@article.Author</p>
-                    <p>@article.Date</p>
 
-                    <a asp-area="" asp-controller="Article" asp-action="Details" asp-route-id="@article.Id">Read More</a>
+            <div class="card">
+                <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top">
+                <div class="card-body">
+                    <h5 class="card-title">@article.Title</h5>
+                    <p class="card-text">Category: @article.Category</p>
+                    <p class="card-text">Author: @article.Author</p>
+                    <p class="card-text">Date: @article.Date</p>
+
+                    <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-success btn-sm">Read More</a>
                 </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    The footer of the card
-                </div>
-                <!-- /.card-footer -->
             </div>
-            <!-- /.card -->
         }
     }
 </div>

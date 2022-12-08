@@ -1,9 +1,13 @@
 ﻿@model AddViewModel;
 
 <form asp-controller="Article" asp-action="Add" method="post">
-    <div>
+    <div class="item-group">
         <label asp-for="Title">Title</label>
         <input asp-for="@Model.Title"/>
+    </div>
+    <div>
+        <label asp-for="ImageUrl">ImageUrl</label>
+        <input asp-for="@Model.ImageUrl"/>
     </div>
     <div>
         <label asp-for="Author">Author</label>

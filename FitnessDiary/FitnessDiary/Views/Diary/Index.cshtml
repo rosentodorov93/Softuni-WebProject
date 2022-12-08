@@ -68,14 +68,14 @@
     }
 </ul>
 <div class="dropdown">
-  <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-    Add Food
-  </button>
-  <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-    <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromDatabase">From Database</a>
-    <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromMine">From My Foods</a>
-    <a class="dropdown-item" asp-controller="Diary" asp-action="AddRecipe">Add My Recipe</a>
-  </div>
+    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        Add Food
+    </button>
+    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+        <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromDatabase">From Database</a>
+        <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromMine">From My Foods</a>
+        <a class="dropdown-item" asp-controller="Diary" asp-action="AddRecipe">Add My Recipe</a>
+    </div>
 </div>
 <table class="table table-hover text-nowrap">
     <thead>
@@ -105,4 +105,37 @@
         </tr>
     </tbody>
 </table>
+<div>
+    @if (Model.Workout == null)
+    {
+        <p>You don't have workout for today yet!</p>
+        <a asp-controller="Workout" asp-action="MineTamplates">Add workout</a>
+    }
+    else
+    {
+        <p>Workout Name: @Model.Workout.Name</p>
+        <p>Workout Description: @Model.Workout.Name</p>
+        <p>Exercises: @Model.Workout.Exercises.Count</p>
+        <ul>
+            @foreach (var exercise in @Model.Workout.Exercises)
+            {
+                <li>
+                    <p>Exercise: @exercise.Name</p>
+                    <p>BodyPart: @exercise.BodyPart</p>
+                    <p>Sets: @exercise.Sets.Count</p>
+                    <ol>
+                        @foreach (var set in exercise.Sets)
+                        {
+                            <li>
+                                <p>Reps: @set.Reps Load: @set.Load</p>
+                            </li>
+                        }
+                    </ol>
+                </li>
+            }
+        </ul>
+
+        <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout.Id">Change Workout Data</a>
+    }
+</div>
 

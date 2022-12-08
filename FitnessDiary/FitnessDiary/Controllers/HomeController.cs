@@ -1,4 +1,5 @@
 ﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
@@ -9,20 +10,18 @@ namespace FitnessDiary.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+        private readonly IArticleService articleService;
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, IArticleService _articleService)
         {
             _logger = logger;
+            articleService = _articleService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            //if (this.User.IsInRole(AdminRoleName))
-            //{
-            //    return RedirectToAction("Index", "Home", new { area = AdministrationAreaName });
-            //}
-            var user = this.User;
-            return View();
+            var latestArticles = await articleService.GetLatestAsync();
+            return View(latestArticles);
         }
 
         public IActionResult Privacy()
