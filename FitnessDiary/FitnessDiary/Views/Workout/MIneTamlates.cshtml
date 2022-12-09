@@ -7,23 +7,32 @@
 <div class="row">
     @foreach (var sheet in Model)
     {
-        <div class="card" style="width: 18rem;">
-            <div class="card-body">
-                <h5 class="card-title">Name: @sheet.Name</h5>
-                <p class="card-text">Description: @sheet.Description</p>
+        <div class="col-sm-3">
+            <div class="card card-primary" >
+            <div class="card-header">
+                <h3 class="card-title"> @sheet.Name</h3>
             </div>
-            <h5>Exercises</h5>
-            <ul class="list-group list-group-flush">
-                @foreach (var exercise in @sheet.Exercises)
+            <div class="card-body">
+                @if (!string.IsNullOrWhiteSpace(sheet.Description))
                 {
-                    <li class="list-group-item">@exercise.Name - @exercise.BodyPart - Sets:@exercise.SetCount</li>
+                    <p class="card-text"><b>Description:</b> @sheet.Description</p>
                 }
-            </ul>
-            <div class="card-body">
-                <a asp-controller="Workout" asp-action="EditTamplate" asp-route-id="@sheet.Id" class="card-link">Edit</a>
-                <a asp-controller="Workout" asp-action="DeleteSheet" asp-route-id="@sheet.Id" class="card-link">Delete</a>
-                <a asp-controller="Workout" asp-action="AddToDiary" asp-route-id="@sheet.Id" class="card-link">Add to Diary</a>
+                <p><b>Exercises:</b></p>
+                <p><b>Name/Body Part/Sets Count</b></p>
+                <ol class="list-group list-group-flush">
+                    @foreach (var exercise in @sheet.Exercises)
+                    {
+                        <li class="list-group-item">@exercise.Name - @exercise.BodyPart - Sets:@exercise.SetCount</li>
+                    }
+                </ol>
+                
             </div>
+            <div class="mb-3 card-body">
+                    <a asp-controller="Workout" asp-action="EditTamplate" asp-route-id="@sheet.Id" class="btn btn-primary">Edit</a>
+                    <a asp-controller="Workout" asp-action="DeleteSheet" asp-route-id="@sheet.Id" class="btn btn-primary">Delete</a>
+                    <a asp-controller="Workout" asp-action="AddToDiary" asp-route-id="@sheet.Id" class="btn btn-primary">Add to Diary</a>
+                </div>
+        </div>
         </div>
     }
 </div>

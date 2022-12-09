@@ -4,31 +4,34 @@
     ViewBag.Title = "Recipe Details";
 }
 
-<div class="card card-info">
+<h3 class="text-center mb-5">@ViewBag.Title</h3>
+
+<div class="d-flex justify-content-center">
+    <div class="card card-info">
     <div class="card-header">
         <h3 class="card-title">@Model.Name Details</h3>
         <!-- /.card-tools -->
     </div>
     <!-- /.card-header -->
-    <img class="card-img-top" src="@Model.ImageUrl" alt="Card image cap">
+    <img class="rounded mx-auto d-block" src="@Model.ImageUrl" alt="Card image cap" width="400" height="400">
     <div class="card-body">
-        <p>Servings @Model.ServingsSize</p>
-        <h3>Ingredients:</h3>
+        <h3><b>Servings:</b> @Model.ServingsSize</h3>
+        <h3><b>Ingredients:</b></h3>
         <ul>
             @foreach (var item in @Model.Ingredients)
             {
-                <li>@item.Name - @item.Amount</li>
+                <li>Name: @item.Name - Amount: @item.Amount</li>
             }
         </ul>
-        <h3>Nutrition:</h3>
+        <h3><b>Nutrition:</b></h3>
         <ul>
-            <li>Total Calories: @Model.TotalCalories</li>
-            <li>Calories per serving: @Model.CaloriesPerPortion</li>
-            <li>Per Serving Carbs: @Model.Carbs</li>
-            <li>Per Serving Proteins: @Model.Protein</li>
-            <li>Per Serving Fats: @Model.Fats</li>
+            <li><b>Total Calories:</b> @Model.TotalCalories</li>
+            <li><b>Calories per serving:</b> @Model.CaloriesPerPortion</li>
+            <li><b>Per Serving Carbs:</b> @Model.Carbs</li>
+            <li><b>Per Serving Proteins:</b> @Model.Protein</li>
+            <li><b>Per Serving Fats:</b> @Model.Fats</li>
         </ul>
-        <div class="row">
+        <div >
             <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>
             <a asp-controller="Recepie" asp-action="RemoveIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Remove ingredients</a>
             <a asp-controller="Recepie" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
@@ -42,6 +45,7 @@
     <!-- /.card-footer -->
 </div>
 <!-- /.card -->
+</div>
 @section Scripts{
     <script>
         function DeleteRecipe(id) {

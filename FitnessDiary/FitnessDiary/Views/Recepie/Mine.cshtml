@@ -4,36 +4,32 @@
     ViewBag.Title = "My Recipes";
 }
 
-<h1>@ViewBag.Title</h1>
+<h3 class="text-center">@ViewBag.Title</h3>
 
-<div class="row">
+<div class="row mt-5">
     @if (Model.Any())
     {
         foreach (var recipe in Model)
         {
-            <div class="card card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">@recipe.Name</h3>
-                    <!-- /.card-tools -->
+            <div class="col-3">
+                <div class="card card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title">@recipe.Name</h3>
+                        <!-- /.card-tools -->
+                    </div>
+                    <img class="rounded mx-auto d-block" src="@recipe.ImageUrl" alt="Card image cap" style="width:75%" height="200">
+                    <!-- /.card-header -->
+                    <div class="card-body">
+                        <p><b>Servings:</b> @recipe.ServingsSize</p>
+                        <p><b>Calorie per Serving:</b> @recipe.CaloriesPerPortion</p>
+
+                        <a asp-controller="Recepie" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">Recipe Details</a>
+                        <a class="btn btn-primary" onclick="AddRecipeServing(&quot;@recipe.Id&quot;)">Add to Diary</a>
+                    </div>
+
                 </div>
-                <img class="card-img-top" style="width: 18rem;"
-             src="@recipe.ImageUrl" alt="No image">
-                <!-- /.card-header -->
-                <div class="card-body">
-                    <p>Servings @recipe.ServingsSize</p>
-                    <p>Total Calories @recipe.TotalCalories</p>
-                    <p>Calorie per Serving @recipe.CaloriesPerPortion</p>
-                    
-                    <a asp-controller="Recepie" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">Recipe Details</a>
-                    <a class="btn btn-primary" onclick="AddRecipeServing(&quot;@recipe.Id&quot;)">Add to Diary</a>
-                </div>
-                <!-- /.card-body -->
-                <div class="card-footer">
-                    The footer of the card
-                </div>
-                <!-- /.card-footer -->
+
             </div>
-            <!-- /.card -->
         }
     }
 </div>
@@ -75,7 +71,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="close">Close</button>
                     <button id="addServing" type="submit" class="btn btn-danger">Add Serving</button>
                 </div>
 
@@ -87,32 +83,35 @@
 @section Scripts{
     <script>
         function AddRecipeServing(id) {
-            $("#servingModal").modal();
+            $("#servingModal").modal('show');
 
             $('#addServing').click(function(e) {
-            e.preventDefault();
-            let idParam = id;
-            let category = $('#category').find(":selected").val();
-            let amount = $('#amount').val();
+                e.preventDefault();
+                let idParam = id;
+                let category = $('#category').find(":selected").val();
+                let amount = $('#amount').val();
 
-            let data = {
-                Id: idParam,
-                Category: category,
-                Amount: amount
-            };
+                let data = {
+                    Id: idParam,
+                    Category: category,
+                    Amount: amount
+                };
 
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                method: 'POST',
-                url: "/Diary/AddRecipeServing",
-                data: JSON.stringify(data),
-                success: function(result) {
-                    window.location = "https://localhost:7043/Diary/Index";
-                }
-            });
-        })
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    method: 'POST',
+                    url: "/Diary/AddRecipeServing",
+                    data: JSON.stringify(data),
+                    success: function(result) {
+                        window.location = "https://localhost:7043/Diary/Index";
+                    }
+                });
+            })
         };
-        
+        $('#close').click(function() {
+            $("#servingModal").modal('hide');
+        })
+
     </script>
 }

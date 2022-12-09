@@ -1,67 +1,65 @@
 ﻿@using FitnessDiary.Infrastructure.Data.Enums
-@model             FitnessDiary.Core.Models.Recepie.AddRecipeViewModel
+@model FitnessDiary.Core.Models.Recepie.AddRecipeViewModel
 
 @{
     ViewBag.Title = "Create New Recepie";
 }
 
-<h2 class="text-center">@ViewBag.Title</h2>
+<h2 class="text-center" style="color:#ff6347">@ViewBag.Title</h2>
 <hr />
-<div class="container">
-<form>
-        <div>
-            <h5 style="color:#ff6347">Recipe</h5>
-            <hr />
-            <div class="form-horizontal">
-                <input type="hidden" id="CustomerId" />
-                <div class="form-group">
-                    <input type="hidden" id="userId" value="@Model.UserId"/>
 
-                    <label asp-for="Name" class="control-label col-md-2">
-                        Recipe Name
-                    </label>
-                    <div class="col-md-4">
-                        <input asp-for="Name" type="text" id="name" name="name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <label asp-for="ServingsSize" class="control-label col-md-2">
-                        Servings
-                    </label>
-                    <div class="col-md-4">
-                        <input asp-for="ServingsSize" type="text" id="servings" name="description" class="form-control" />
-                        <span asp-validation-for="ServingsSize" class="text-danger"></span>
-                    </div>
-                    <label asp-for="ImageUrl" class="control-label col-md-2">
-                        Image Url
-                    </label>
-                    <div class="col-md-4">
-                        <input asp-for="ImageUrl" type="text" id="image" name="image" class="form-control" />
-                        <span asp-validation-for="ImageUrl" class="text-danger"></span>
+<div class="d-flex justify-content-center">
+    <div>
+        <form>
+            <div>
+                <div>
+                    <div class="form-group">
+                        <input type="hidden" id="userId" value="@Model.UserId" />
+                        <div  class="mb-3">
+                            <label asp-for="Name" class="control-label">Recipe Name</label>
+                            <input asp-for="Name" type="text" id="name" name="name" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label asp-for="ServingsSize" class="control-label">Servings</label>
+                            <input asp-for="ServingsSize" type="text" id="servings" name="description" class="form-control" />
+                            <span asp-validation-for="ServingsSize" class="text-danger"></span>
+                        </div>
+                        
+                        <div  class="mb-3">
+                            <label asp-for="ImageUrl" class="control-label">ImageUrl</label>
+                            <input asp-for="ImageUrl" type="text" id="image" name="image" class="form-control" />
+                            <span asp-validation-for="ImageUrl" class="text-danger"></span>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-        <div class="panel-body">
-            <table id="ingredientsTable" class="table table-striped table-responsive">
-                <thead>
-                    <tr>
-                        <td class="d-none">Id</td>
-                        <td>Food Name </td>
-                        <td>Amount </td
-                    </tr>
-                    <tr>
-                </thead>
-                <tbody>
-                </tbody>
-            </table>
+            <div >
+                <p><b>Ingredients:</b></p>
+                <div class="panel-body ">
+                    <table id="ingredientsTable" class="table table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <td class="d-none">Id</td>
+                                <td>Food Name </td>
+                                <td>Amount </td>
+                            </tr>
+                            <tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
 
-        </div>
-        <div>
-            <button type="button" class="btn btn-primary" onclick="addNewIngredient()">Add Ingredient </button>
-            <button id="saveRecipe" type="submit" class="btn btn-primary">Save Recipe </button>
-        </div>
-    </form>
+                </div>
+            </div>
+            <div>
+                <button type="button" class="btn btn-primary" id="addIngredient">Add Ingredient </button>
+                <button id="saveRecipe" type="submit" class="btn btn-primary">Save Recipe </button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <div class="modal fade" id="ingredientsModal">
@@ -81,7 +79,7 @@
                             Choose Food
                         </label>
                         <div class="col-md-4">
-                            <select  class="form-select" id="food" >
+                            <select class="form-select" id="food">
                                 @foreach (var food in @Model.Foods)
                                 {
                                     <option value="@food.Id">@food.Name - @food.Type - @food.Calories  @((MeassureUnitType)food.MeassureUnit)</option>
@@ -92,14 +90,14 @@
                             Amount
                         </label>
                         <div class="col-md-4">
-                            <input type="text"  id="amount" class="form-control"/>
+                            <input type="text" id="amount" class="form-control" />
                         </div>
-                       
+
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="close">Close</button>
                     <button id="saveIngredient" type="submit" class="btn btn-danger">Save Ingredient</button>
                 </div>
 
@@ -109,20 +107,24 @@
 </div>
 @section Scripts{
     <script>
-        function addNewIngredient() {
-            $("#ingredientsModal").modal();
-        }
+        $('#addIngredient').click(function() {
+            $("#ingredientsModal").modal('show');
+        })
+
+        $('#close').click(function() {
+            $("#ingredientsModal").modal('hide');
+        })
         $("#saveIngredient").click(function(e) {
             e.preventDefault();
 
-            if ($.trim($("#amount").val()) == "" ) {
+            if ($.trim($("#amount").val()) == "") {
                 return alert("Amount is required")
             }
             if ($.trim($("#amount").val()) <= 0) {
                 return alert("Amount must be a positive number!")
             }
 
-            
+
             var foodId = $('#food').find(":selected").val();
             let foodData = $('#food').find(":selected").text();
             let amount = $("#amount").val();
@@ -145,6 +147,7 @@
             ingredientsTableBody.append(ingredient);
 
             amount.val = '';
+            $("#ingredientsModal").modal('hide');
         });
 
         $("#saveRecipe").click(function(e) {
@@ -179,6 +182,6 @@
                 }
             });
         });
-        
+
     </script>
 }

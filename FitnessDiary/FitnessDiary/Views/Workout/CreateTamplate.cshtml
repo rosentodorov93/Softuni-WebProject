@@ -53,7 +53,7 @@
 
         </div>
         <div>
-            <button type="button" class="btn btn-primary" onclick="addNewExercise()">Add exercise </button>
+            <button type="button" class="btn btn-primary" id="addExercise">Add exercise </button>
             <button id="saveWorkout" type="submit" class="btn btn-primary">Save Workout </button>
         </div>
     </form>
@@ -99,7 +99,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="close">Close</button>
                     <button id="saveExercise" type="submit" class="btn btn-danger">Save Exercise</button>
                 </div>
 
@@ -108,11 +108,17 @@
     </div>
 </div>
 
+
 @section Scripts{
     <script>
-        function addNewExercise() {
-            $("#exerciseModal").modal();
-        }
+        
+        $('#addExercise').click(function() {
+            $("#exerciseModal").modal('show');
+        })
+
+        $('#close').click(function() {
+            $("#exerciseModal").modal('hide');
+        })
 
         $("#saveExercise").click(function(e) {
             e.preventDefault();
@@ -145,6 +151,7 @@
 
             detailsTableBody.append(exercise);
             clearItem();
+            $("#exerciseModal").modal('hide');
         });
         function clearItem() {
             $("#exrciseName").val('');

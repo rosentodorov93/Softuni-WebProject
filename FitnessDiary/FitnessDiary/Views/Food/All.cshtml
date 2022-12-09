@@ -145,7 +145,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="close">Close</button>
                     <button id="addServing" type="submit" class="btn btn-danger">Add Serving</button>
                 </div>
 
@@ -157,7 +157,7 @@
 @section Scripts{
     <script>
         function AddToDiary(id) {
-            $("#servingModal").modal();
+            $("#servingModal").modal('show');
 
             $('#addServing').click(function(e) {
             e.preventDefault();
@@ -183,6 +183,10 @@
             });
         })
         };
+       
+        $('#close').click(function() {
+            $("#servingModal").modal('hide');
+        })
         
     </script>
 }

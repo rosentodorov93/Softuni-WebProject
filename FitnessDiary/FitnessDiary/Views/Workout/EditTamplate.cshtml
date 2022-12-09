@@ -1,70 +1,70 @@
 ﻿@using FitnessDiary.Infrastructure.Data.Enums
 @model EditTamplateViewModel
 
-<form asp-controller="Workout" asp-action="EditTamplate" method="post">
-    <div>
-        <h5 style="color:#ff6347">Edit Workout</h5>
-        <hr />
-        <div class="form-horizontal">
-            <input id="tamplateId" type="hidden" value="@Model.Id"/>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label col-md-2">
-                    Workout Name
-                </label>
-                <div class="col-md-4">
-                    <input asp-for="Name" type="text" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                </div>
-                <label asp-for="Description" class="control-label col-md-2">
-                    Description
-                </label>
-                <div class="col-md-4">
-                    <input asp-for="Description" type="text" id="description" name="description" class="form-control" />
-                    <span asp-validation-for="Description" class="text-danger"></span>
+<div class="d-flex justify-content-center">
+    <form asp-controller="Workout" asp-action="EditTamplate" method="post">
+        <div class="px-2 py-2 border border-3" >
+            <div>
+                <h5 class="text-center" style="color:#ff6347">Edit Workout</h5>
+                <hr />
+                <div class="form-horizontal">
+                    <input id="tamplateId" type="hidden" value="@Model.Id" />
+                    <div class="form-group row">
+                        <div class="col-md-4">
+                            <label asp-for="Name" class="control-label">Workout Name</label>
+                            <input asp-for="Name" type="text" class="form-control" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-4">
+                            <label asp-for="Description" class="control-label">Description</label>
+                            <input asp-for="Description" type="text" id="description" name="description" class="form-control" />
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+                    </div>
                 </div>
             </div>
+
+            <div class="panel-body">
+                <table class="table table-striped table-responsive">
+                    <thead>
+                        <tr>
+                            <td>Exercise Name </td>
+                            <td>Body Part </td>
+                            <td>Sets</td>
+                        </tr>
+                        <tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Exercises.Count; i++)
+                        {
+                            @Html.HiddenFor(modelItem => Model.Exercises[i].Id)
+                            <tr>
+                                <td>@Html.EditorFor(modelItem => Model.Exercises[i].Name) </td>
+                                <td>
+                                    @Html.DropDownListFor(modelItem => Model.Exercises[i].BodyPart, new[] {
+                                new SelectListItem() {Text = "Chest", Value = "Chest"},
+                                new SelectListItem() {Text = "Back", Value = "Back"},
+                                new SelectListItem() {Text = "Legs", Value = "Legs"},
+                                new SelectListItem() {Text = "Shoulder", Value = "Shoulders"},
+                                new SelectListItem() {Text = "Bicep", Value = "Biceps"},
+                                new SelectListItem() {Text = "Tricep", Value = "Triceps"},
+                                })
+                                </td>
+                                <td>@Html.EditorFor(modelItem => Model.Exercises[i].SetCount)</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary mr-2">Edit Workout </button>
+                <button type="button" class="btn btn-primary mr-2" onclick="addExercise()">Add exercise </button>
+                <button type="button" class="btn btn-primary mr-2" onclick="removeExercise()">Remove exercise </button>
+            </div>
         </div>
-    </div>
-
-    <div class="panel-body">
-        <table class="table table-striped table-responsive">
-            <thead>
-                <tr>
-                    <td>Exercise Name </td>
-                    <td>Body Part </td>
-                    <td>Sets</td>
-                </tr>
-                <tr>
-            </thead>
-            <tbody>
-                @for (int i = 0; i < Model.Exercises.Count; i++)
-                {
-                    @Html.HiddenFor(modelItem => Model.Exercises[i].Id)
-                    <tr>
-                        <td>@Html.EditorFor(modelItem => Model.Exercises[i].Name) </td>
-                        <td>
-                            @Html.DropDownListFor(modelItem => Model.Exercises[i].BodyPart, new[] {
-                        new SelectListItem() {Text = "Chest", Value = "Chest"},
-                        new SelectListItem() {Text = "Back", Value = "Back"},
-                        new SelectListItem() {Text = "Legs", Value = "Legs"},
-                        new SelectListItem() {Text = "Shoulder", Value = "Shoulders"},
-                        new SelectListItem() {Text = "Bicep", Value = "Biceps"},
-                        new SelectListItem() {Text = "Tricep", Value = "Triceps"},
-                        })
-                        </td>
-                        <td>@Html.EditorFor(modelItem => Model.Exercises[i].SetCount)</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-
-    </div>
-    <div>
-        <button type="submit" class="btn btn-primary">Edit Workout </button>
-        <button type="button" class="btn btn-primary" onclick="addExercise()">Add exercise </button>
-        <button type="button" class="btn btn-primary" onclick="removeExercise()">Remove exercise </button>
-    </div>
-</form>
+    </form>
+</div>
 
 <div class="modal fade" id="addExerciseModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
@@ -148,8 +148,8 @@
 
 @section Scripts{
     <script>
-            function addExercise() {
-            $("#addExerciseModal").modal();
+        function addExercise() {
+            $("#addExerciseModal").modal('show');
         }
 
         $("#save").click(function(e) {
@@ -187,8 +187,8 @@
         }
 
 
-           function removeExercise() {
-            $("#removeExerciseModal").modal();
+        function removeExercise() {
+            $("#removeExerciseModal").modal('show');
         }
 
         $("#remove").click(function(e) {
