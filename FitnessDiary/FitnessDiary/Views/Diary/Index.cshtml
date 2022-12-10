@@ -5,137 +5,272 @@
 }
 
 
-<h1 class="text-center">@ViewBag.Title @Model.CurrentDayDate</h1>
+<h1 class="text-center">@ViewBag.Title @Model.CurrentDayDate.DayOfWeek @Model.CurrentDayDate.Date.ToString("dd/MM/yyyy")</h1>
+<hr />
+<div class="mb-5"></div>
 
-<h3>Breakfast</h3>
-<ul class="list-group">
-    @foreach (var serving in Model.Breakfast)
-    {
-        <li class="list-group-item">
-            @serving.Name
-            @serving.Amount
-            @serving.Nutrition.Calories,
-            @serving.Nutrition.Carbs,
-            @serving.Nutrition.Protein,
-            @serving.Nutrition.Fats,
-            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
-        </li>
-    }
-</ul>
-<h3>Lunch</h3>
-<ul class="list-group">
-    @foreach (var serving in Model.Lunch)
-    {
-        <li class="list-group-item">
-            @serving.Name
-            @serving.Amount
-            @serving.Nutrition.Calories,
-            @serving.Nutrition.Carbs,
-            @serving.Nutrition.Protein,
-            @serving.Nutrition.Fats,
-            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
-        </li>
-    }
-</ul>
-<h3>Dinner</h3>
-<ul class="list-group">
-    @foreach (var serving in Model.Dinner)
-    {
-        <li class="list-group-item">
-            @serving.Name
-            @serving.Amount
-            @serving.Nutrition.Calories,
-            @serving.Nutrition.Carbs,
-            @serving.Nutrition.Protein,
-            @serving.Nutrition.Fats,
-            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
-        </li>
-    }
-</ul>
-<h3>Snack</h3>
-<ul class="list-group">
-    @foreach (var serving in Model.Snack)
-    {
-        <li class="list-group-item">
-            @serving.Name
-            @serving.Amount
-            @serving.Nutrition.Calories,
-            @serving.Nutrition.Carbs,
-            @serving.Nutrition.Protein,
-            @serving.Nutrition.Fats,
-            <a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a>
-        </li>
-    }
-</ul>
-<div class="dropdown">
-    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-        Add Food
-    </button>
-    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-        <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromDatabase">From Database</a>
-        <a class="dropdown-item" asp-controller="Diary" asp-action="AddFromMine">From My Foods</a>
-        <a class="dropdown-item" asp-controller="Diary" asp-action="AddRecipe">Add My Recipe</a>
+<div class="row mb-5">
+    <div class="col-6 ">
+        <h4 class="text-center mb-3"><b>Food Records:</b></h4>
+        <div class="d-flex justify-content-center">
+            <table class="table table-borderless table-sm w-75">
+                <thead>
+                    <tr>
+                        <td class="scope"></td>
+                        <td class="scope table-primary text-center"><b>Amount</b></td>
+                        <td class="scope table-primary text-center"><b>Calories kcal</b></td>
+                        <td class="scope table-primary text-center"><b>Carbs</b></td>
+                        <td class="scope table-primary text-center"><b>Protein g</b></td>
+                        <td class="scope table-primary text-center"><b>Fats g</b></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="scope"><h3><b>Breakfast</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Breakfast)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories</td>
+                            <td class="text-center">@serving.Nutrition.Carbs</td>
+                            <td class="text-center">@serving.Nutrition.Protein</td>
+                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Lunch</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Lunch)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories</td>
+                            <td class="text-center">@serving.Nutrition.Carbs</td>
+                            <td class="text-center">@serving.Nutrition.Protein</td>
+                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Dinner</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Dinner)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories</td>
+                            <td class="text-center">@serving.Nutrition.Carbs</td>
+                            <td class="text-center">@serving.Nutrition.Protein</td>
+                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Snack</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Snack)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories</td>
+                            <td class="text-center">@serving.Nutrition.Carbs</td>
+                            <td class="text-center">@serving.Nutrition.Protein</td>
+                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="d-flex justify-content-center">
+            <div class="dropdown">
+                <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                    Add Food
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                    <li><a class="dropdown-item" asp-controller="Food" asp-action="All">From Database</a></li>
+                    <li><a class="dropdown-item" asp-controller="Food" asp-action="Mine">From My Foods</a></li>
+                    <li><a class="dropdown-item" asp-controller="Recepie" asp-action="Mine">Add My Recipe</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="col-6 ">
+        <h4 class="text-center mb-3"><b>Workout Record:</b></h4>
+        <div class="d-flex justify-content-center">
+            @if (Model.Workout == null)
+            {
+                <p>You don't have workout for today yet!</p>
+                <a class="btn btn-primary" asp-controller="Workout" asp-action="MIneTamlates">Add workout</a>
+            }
+            else
+            {
+                <div>
+                    <p><b>Workout Name:</b> @Model.Workout.Name</p>
+                    <p><b>Workout Description:</b> @Model.Workout.Name</p>
+                    <p><b>Exercises:</b> @Model.Workout.Exercises.Count</p>
+                    <table class="table table-bordered table-hover  w-100">
+                        <tbody>
+                            @foreach (var exercise in @Model.Workout.Exercises)
+                            {
+                                <tr data-widget="expandable-table" aria-expanded="false">
+                                    <td>Exercise: @exercise.Name</td>
+                                    <td>BodyPart: @exercise.BodyPart</td>
+                                    <td>Sets: @exercise.Sets.Count</td>
+                                </tr>
+                                <tr class="expandable-body d-none">
+                                    <td colspan="3">
+                                        <p style="display: none;">
+                                            Set Info
+                                            <ol>
+                                                @foreach (var set in exercise.Sets)
+                                                {
+                                                    <li>Reps: @set.Reps Load: @set.Load</li>
+                                                }
+                                            </ol>
+                                        </p>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                </div>
+
+            }
+        </div>
+        <div class="d-flex justify-content-center">
+            <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout.Id">Change Workout Data</a>
+        </div>
+
     </div>
 </div>
-<table class="table table-hover text-nowrap">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Calories</th>
-            <th>Carbs</th>
-            <th>Proteins</th>
-            <th>Fats</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Totals</td>
-            <td>@Model.NutritionStatistics.CurrentNutrition.Calories</td>
-            <td>@Model.NutritionStatistics.CurrentNutrition.Carbs</td>
-            <td>@Model.NutritionStatistics.CurrentNutrition.Protein</td>
-            <td>@Model.NutritionStatistics.CurrentNutrition.Fats</td>
 
-        </tr>
-        <tr>
-            <td>Required</td>
-            <td>@Model.NutritionStatistics.RequiredNutrition.Calories</td>
-            <td>@Model.NutritionStatistics.RequiredNutrition.Carbs</td>
-            <td>@Model.NutritionStatistics.RequiredNutrition.Protein</td>
-            <td>@Model.NutritionStatistics.RequiredNutrition.Fats</td>
-        </tr>
-    </tbody>
-</table>
-<div>
-    @if (Model.Workout == null)
-    {
-        <p>You don't have workout for today yet!</p>
-        <a asp-controller="Workout" asp-action="MineTamplates">Add workout</a>
-    }
-    else
-    {
-        <p>Workout Name: @Model.Workout.Name</p>
-        <p>Workout Description: @Model.Workout.Name</p>
-        <p>Exercises: @Model.Workout.Exercises.Count</p>
-        <ul>
-            @foreach (var exercise in @Model.Workout.Exercises)
-            {
-                <li>
-                    <p>Exercise: @exercise.Name</p>
-                    <p>BodyPart: @exercise.BodyPart</p>
-                    <p>Sets: @exercise.Sets.Count</p>
-                    <ol>
-                        @foreach (var set in exercise.Sets)
-                        {
-                            <li>
-                                <p>Reps: @set.Reps Load: @set.Load</p>
-                            </li>
-                        }
-                    </ol>
-                </li>
-            }
-        </ul>
+<hr class="mb-5" />
 
-        <a asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout.Id">Change Workout Data</a>
-    }
+<div class="d-flex justify-content-center mb-5">
+    <table class="table table-sm w-50">
+        <thead>
+            <tr>
+                <th></th>
+                <th class="text-center table-primary"><b>Calories kcal</b></th>
+                <th class="text-center table-primary"><b>Carbs g</b></th>
+                <th class="text-center table-primary"><b>Proteins g</b></th>
+                <th class="text-center table-primary"><b>Fats g</b></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><b>Total</b></td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Calories</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Carbs</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Protein</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Fats</td>
+
+            </tr>
+            <tr>
+                <td><b>Required</b></td>
+                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Calories.ToString("f2")</td>
+                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Carbs.ToString("f2")</td>
+                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Protein.ToString("f2")</td>
+                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Fats.ToString("f2")</td>
+            </tr>
+        </tbody>
+    </table>
 </div>
+<div class="d-flex justify-content-center mb-5">
+    <button class="btn btn-primary" id="btn">Show Stats</button>
+</div>
+
+<div id="stats" class="row d-none mb-5">
+    <div class="col-6">
+        <canvas id="caloriesChart"></canvas>
+    </div>
+    <div class="col-6">
+        <canvas id="workoutsChart"></canvas>
+    </div>
+</div>
+
+
+@section Scripts{
+    <script>
+        $('#btn').click(function() {
+            let statsDiv = document.getElementById('stats');
+            let statsBtn = document.getElementById('btn');
+            console.log(statsDiv);
+            if (statsDiv.classList.contains('d-none')) {
+                statsDiv.classList.remove('d-none')
+                statsBtn.textContent = 'Hide Stats'
+            }
+            else {
+                statsDiv.classList.add('d-none');
+                statsBtn.textContent = 'Show Stats'
+            }
+        })
+        $(document).ready(function() {
+            $.get('/api/statistics', (stats) => {
+                const ctx = document.getElementById('caloriesChart');
+
+
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: stats.labels,
+                        datasets: [{
+                            label: 'Calories',
+                            data: stats.calories,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+
+                const ctx2 = document.getElementById('workoutsChart');
+                new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: stats.labels,
+                        datasets: [{
+                            label: 'Load',
+                            data: stats.workouts,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}
+
 
