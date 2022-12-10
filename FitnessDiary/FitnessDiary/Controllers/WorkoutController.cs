@@ -1,11 +1,13 @@
 ﻿using FitnessDiary.Core.Constants;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Workout;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
+    [Authorize(Roles = "User")]
     public class WorkoutController : Controller
     {
         private readonly IWorkoutService workoutService;

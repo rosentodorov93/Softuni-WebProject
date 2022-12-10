@@ -9,7 +9,8 @@ using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
-  
+
+    [Authorize(Roles = "Admin, Moderator, User")]
     public class FoodController : Controller
     {
         private readonly IFoodService service;
@@ -20,7 +21,6 @@ namespace FitnessDiary.Controllers
             service = _service;
             accountService = _accountService;
         }
-        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
             var result = await service.GetAllAsync(
@@ -38,7 +38,6 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> Add()
         {
             var model = new FoodViewModel();
@@ -81,12 +80,11 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        [Authorize(Roles = "User,Admin,Moderator")]
         public async Task<IActionResult> Edit(string Id)
         {
             if ((await service.ExistsByIdAsync(Id) == false))
             {
-                return RedirectToAction("Mine");
+                return RedirectToAction("Index", "Home" , new {area = ""});
             }
             var food = await service.GetByIdAsync(Id);
 

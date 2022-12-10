@@ -1,10 +1,12 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Diary;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
+    [Authorize(Roles = "User")]
     public class DiaryController : Controller
     {
         private readonly IDiaryService diaryService;

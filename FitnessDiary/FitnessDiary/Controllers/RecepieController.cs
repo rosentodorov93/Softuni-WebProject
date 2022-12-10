@@ -2,11 +2,13 @@
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Core.Models.Recepie;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
+    [Authorize(Roles = "User")]
     public class RecepieController : Controller
     {
         private readonly IFoodService foodService;

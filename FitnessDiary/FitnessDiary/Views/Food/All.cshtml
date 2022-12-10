@@ -99,7 +99,15 @@
                         <td>@food.Carbohydtrates</td>
                         <td>@food.Proteins</td>
                         <td>@food.Fats</td>
-                        <td><button class="btn btn-primary" onclick="AddToDiary(&quot;@food.Id&quot;)">Add to Diary</button></td>
+                        @if (User?.IsInRole("User") ?? false)
+                        {
+                            <td><button class="btn btn-primary" onclick="AddToDiary(&quot;@food.Id&quot;)">Add to Diary</button></td>
+                        }
+                        @if ((User?.IsInRole("Admin") ?? false) || (User?.IsInRole("Moderator") ?? false))
+                        {
+                            <td><a asp-area="" asp-controller="Food" asp-action="Edit" asp-route-id="@food.Id" class="btn btn-primary" >Edit</a></td>
+                            <td><button class="btn btn-primary" onclick='DeleteFood(&quot;@food.Id&quot;);'>Delete</button></td>
+                        }
                     </tr>
                 }
             </tbody>
@@ -187,6 +195,20 @@
         $('#close').click(function() {
             $("#servingModal").modal('hide');
         })
-        
+        function DeleteFood(id) {
+            let isConfirmed = confirm('Are you sure you want to delete this item ?');
+            if (isConfirmed) {
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    type: "POST",
+                    url: "https://localhost:7043/Food/Delete",
+                    data: JSON.stringify(id),
+                    success: function(result) {
+                        window.location = "https://localhost:7043/Food/All";
+                    }
+                });
+            }
+        };
     </script>
 }
