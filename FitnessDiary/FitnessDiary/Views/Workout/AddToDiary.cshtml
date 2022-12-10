@@ -1,62 +1,63 @@
 ﻿@model AddToDiaryViewModel
 
-<div class="panel panel-default">
+<div class="panel panel-default mb-5">
     <div class="panel-heading">
-        <div class="row">
-            <h2 class="panel-title pull-left" style="margin-left:10px;">
+        <div>
+            <h2 class="text-center">
                 <strong>Add Workout to Diary</strong>
             </h2>
         </div>
     </div>
 
+    <hr class="mb-5"/>
 
-
-    <form asp-controller="Workout" asp-action="AddToDiary" method="post">
-        <div>
-            <h5 style="color:#ff6347">Workout</h5>
-            <hr />
-            <div class="form-horizontal">
-
-                <div class="form-group">
-                    <label asp-for="Name" class="control-label col-md-2" >
-                        Workout Name: @Model.Name
-                    </label>
-                    @Html.HiddenFor(modelItem => Model.Name)
-                    <label asp-for="Description" class="control-label col-md-2">
-                        Description: @Model.Description
-                    </label>
-                    @Html.HiddenFor(modelItem => Model.Description)
+    <div class="d-flex justify-content-center">
+        <div class="mb-3">
+            <form asp-controller="Workout" asp-action="AddToDiary" method="post">
+                <div class="mb-3">
+                    <div class="form-group">
+                        <p class="h4"><b>Name:</b> @Model.Name</p>
+                        @Html.HiddenFor(modelItem => Model.Name)
+                    </div>
+                    <div class="form-group">
+                        <p class="h4"><b>Description:</b> @Model.Description</p>
+                        @Html.HiddenFor(modelItem => Model.Description)
+                    </div>
+                    <p class="h4"><b>Exercises:</b></p>
                 </div>
+                <div>
+                    <ol class="list-group">
+
+                        @for (int i = 0; i < Model.Exercises.Count; i++)
+                        {
+                            <li>
+                                <div>
+                                    <p class="h5">@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
+                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
+                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
+                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
+                                </div>
+                                <ol>
+                                    @for (int j = 0; j < @Model.Exercises[i].Sets.Count; j++)
+                                    {
+                                        <div class="form-group">
+                                            <label>Reps</label>
+                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
+                                            <label>Load</label>
+                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
+                                        </div>
+                                    }
+                                </ol>
+                            </li>
+                        }
+                    </ol>
+                </div>
+            </form>
+             <div class="text-center mb-5">
+                <input type="submit" class="btn btn-primary" value="Add toDiary"/>
             </div>
         </div>
-
-        <div class="panel-body">
-            <ul class="list-group">
-                
-                @for (int i = 0; i < Model.Exercises.Count; i++)
-                {
-                    <li>
-                          <p>@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
-                          @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
-                          @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
-                          @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
-                          <ul>
-                             @for (int j = 0; j < @Model.Exercises[i].Sets.Count; j++)
-                            {
-                                <label>Reps</label>
-                                @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
-                                <label>Load</label>
-                                @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
-                            }
-                          </ul>
-                      </li>
-                }
-                   
-            </ul>
-
-        </div>
-        <div>
-            <button type="submit" class="btn btn-primary">Add to Diary </button>
-        </div>
-    </form>
+        
+    </div>
+   
 </div>
