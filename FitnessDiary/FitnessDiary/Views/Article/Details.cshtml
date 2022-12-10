@@ -4,32 +4,28 @@
     ViewBag.Title = "Article Details";
 }
 
-<div class="card card-info">
-    <div class="card-header">
-        <h3 class="card-title">@Model.Title</h3>
-        <!-- /.card-tools -->
-    </div>
-     <img src="@Model.ImageUrl" alt="@Model.Title" class="card-img-top">
-    <!-- /.card-header -->
-    <div class="card-body">
-        <p>@Model.Category</p>
-        <p>@Model.Author</p>
-        <p>@Model.Date</p>
-        <div>
-            @Html.Raw(@Model.Content)
-        </div>
-        @if (User.IsInRole("Admin"))
-        {
-            <div class="row">
-                <a asp-area="Administration" asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Article</a>
-                <a asp-area="Administration" asp-controller="Article" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete Article</a>
-            </div>
-        }
-    </div>
-    <!-- /.card-body -->
-    <div class="card-footer">
-        Fitness Diary
-    </div>
-    <!-- /.card-footer -->
+<div class="mb-5">
+    <h2 class="text-center mb-5">@Model.Title</h2>
+
+<div class="row mb-5">
+    <label class="h4 col-4">Author: @Model.Author  </label>
+    <label class="h4 col-4">Date: @Model.Date.Date.ToString("dd/MM/yyyy")</label>
+    <label class="h4 col-4">Category: @Model.Category</label>
 </div>
-<!-- /.card -->
+
+<div class="text-center mb-5">
+    <img src="@Model.ImageUrl" alt="@Model.Title" width="400" height="400">
+</div>
+<!-- /.card-header -->
+
+<div class="mb-5">
+    @Html.Raw(@Model.Content)
+</div>
+@if (User.IsInRole("Admin"))
+{
+    <div class="text-center mb-5">
+        <a asp-area="Administration" asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Article</a>
+        <a asp-area="Administration" asp-controller="Article" asp-action="Delete" asp-route-id="@Model.Id" class="btn btn-primary">Delete Article</a>
+    </div>
+}
+</div>
