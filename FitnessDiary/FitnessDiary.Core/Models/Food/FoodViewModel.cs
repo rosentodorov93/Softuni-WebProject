@@ -11,9 +11,11 @@ namespace FitnessDiary.Core.Models.Food
     {
 
         [Required]
+        [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; } = null!;
 
         [Required]
+        [StringLength(30, MinimumLength = 3)]
         public string Type { get; set; } = null!;
 
         [Required]
