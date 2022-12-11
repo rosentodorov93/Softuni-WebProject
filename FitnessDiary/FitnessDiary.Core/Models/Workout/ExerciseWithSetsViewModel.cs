@@ -4,7 +4,7 @@
     {
         public string Id { get; set; } = null!;
         public string Name { get; set; } = null!;
-        public string BodyPart { get; set; } = null!;
+        public int BodyPart { get; set; }
         public List<SetViewModel> Sets { get; set; } = null!;
     } 
 }

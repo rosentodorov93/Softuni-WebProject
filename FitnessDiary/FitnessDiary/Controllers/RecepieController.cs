@@ -189,6 +189,11 @@ namespace FitnessDiary.Controllers
         public async Task<IActionResult> Mine()
         {
             var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if ((await accountService.ExistsById(userId)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
 
             var recipes = await recepieService.GetAllById(userId);
 

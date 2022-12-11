@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Article;
+using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace FitnessDiary.Controllers
@@ -13,11 +14,12 @@ namespace FitnessDiary.Controllers
             articleService = _articleService;
         }
 
-        public async Task<IActionResult> All()
+        public async Task<IActionResult> All(AllArticlesQueryModel query)
         {
-            var articles = await articleService.GetAllAsync();
-
-            return View(articles);
+            var articles = await articleService.GetAllAsync(query.CategoryFilter);
+            query.Articles = articles;
+            query.Categories = await articleService.GetCategoriesAsync();
+            return View(query);
         }
         
         public async Task<IActionResult> Details(string Id)

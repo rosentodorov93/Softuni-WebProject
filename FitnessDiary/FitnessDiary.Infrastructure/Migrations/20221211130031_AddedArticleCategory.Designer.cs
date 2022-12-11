@@ -4,6 +4,7 @@ using FitnessDiary.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FitnessDiary.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20221211130031_AddedArticleCategory")]
+    partial class AddedArticleCategory
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,23 +222,6 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ArticleCategories");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = "c4763ddf-d44c-41e2-b2eb-2d9885cddcd0",
-                            Name = "Nutrition"
-                        },
-                        new
-                        {
-                            Id = "dd454378-f80d-4380-b6fd-ff592b4aca4d",
-                            Name = "Training and Tecniques"
-                        },
-                        new
-                        {
-                            Id = "351a06c6-9c12-45d4-9cd1-c9ff5db75212",
-                            Name = "Lifestyle"
-                        });
                 });
 
             modelBuilder.Entity("FitnessDiary.Infrastructure.Data.DiaryDay", b =>
@@ -765,15 +750,15 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         {
                             Id = "cf28b02f-bcd9-4464-9100-6343cc8ca939",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "bb583043-c23e-463a-ba14-c8f9fdcc39e3",
+                            ConcurrencyStamp = "67704411-3a88-4e29-8ae2-39dee8842984",
                             Email = "admin@mail.bg",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@MAIL.BG",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAEAACcQAAAAENJj8UEXJtYVe7Rr9tIk4txw2rRLJSiL6E9ePtA17OOyspJThZgg+dFZhuKm8wbALQ==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEBQVPIkXaZlEC5QD1U8XSDcdTEzxMj8vljiOOAKl994k5fIjVbYvG5yLWTfgKA+1HQ==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "eaf4b05a-69c2-4135-afdd-1657e29d0e16",
+                            SecurityStamp = "9aadfd4c-346e-445d-bd42-adcf20445202",
                             TwoFactorEnabled = false,
                             UserName = "admin"
                         },
@@ -781,15 +766,15 @@ namespace FitnessDiary.Infrastructure.Data.Migrations
                         {
                             Id = "02b52032-ec58-496e-b58e-0533479ff27d",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9cb9bf1d-6794-4370-ba1c-001a0d994ef4",
+                            ConcurrencyStamp = "80c6fa7f-e852-47ed-b1b1-ff72dc9c17d4",
                             Email = "moderator@mail.bg",
                             EmailConfirmed = false,
                             LockoutEnabled = false,
                             NormalizedEmail = "MODERATOR@MAIL.BG",
                             NormalizedUserName = "MODERATOR",
-                            PasswordHash = "AQAAAAEAACcQAAAAEPt5vm6z6HXut8CeSVFTa8de662CznzRCsChhSG49RLI8wLQ6g06LJPSxuaF7PUorg==",
+                            PasswordHash = "AQAAAAEAACcQAAAAEKicUCQm4ScU2G2liPnHtf6McVWvzpjq4ZbK32RRkEpUSE085q/9XaRl1UXwHGVOGA==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "084e3a5b-f61c-425b-9930-c7b1e4c1dbcd",
+                            SecurityStamp = "e9dc2a17-fd7c-495a-84ba-ef76b2f2cc43",
                             TwoFactorEnabled = false,
                             UserName = "moderator"
                         });

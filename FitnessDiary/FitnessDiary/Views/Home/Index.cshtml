@@ -1,40 +1,49 @@
 ﻿@model IEnumerable<ListingViewModel>
 @{
     ViewData["Title"] = "Home Page";
-    bool first = true;
 }
+<div class="p-5 text-center bg-image rounded-3 mb-3" style="
+    background-image: url('https://www.wallpapertip.com/wmimgs/191-1913940_weight-lifting-hd.jpg');
+    width:100%;
+    height: 400px;
+  ">
+    <div>
+        <div class="d-flex justify-content-center align-items-center h-100">
+            <div class="text-white">
+                <h1 class="mb-3">FitnessDiary</h1>
+                <h4 class="mb-3">Start recording your success!</h4>
+                <a class="btn btn-outline-light btn-lg" href="#!" role="button">Register</a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="text-center mb-3">
+    <h2>Latest Articles</h2>
+</div>
+<div class="col-md-8 offset-md-2 mb-3">
 
-<div id="homeArticles" class="carousel slide" data-bs-ride="carousel width=75%">
-
-    <div class="carousel-inner">
+    <div class="row">
         @foreach (var article in Model)
         {
-            <div class="carousel-item @(first ? "active" : string.Empty)">
-
-                <div class="card">
-                    <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top d-block w-100" style="height:367px">
-                    <div class="card-body">
+            <div class="col">
+                <div class="card card-info">
+                    <div class="card-header">
                         <h5 class="card-title">@article.Title</h5>
-                        <p class="card-text text-center">Category: @article.Category</p>
-                        <p class="card-text text-center">Author: @article.Author</p>
-                        <p class="card-text text-center">Date: @article.Date</p>
-                        <div class="carousel-caption d-none d-md-block">
-                            <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-primary">Read More</a>
-                        </div>
+                    </div>
+                    <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top">
+                    <div class="card-body">
+                        <p class="card-text">Category: @article.Category</p>
+                        <p class="card-text">Author: @article.Author</p>
+                        <p class="card-text">Date: @article.Date</p>
+
+                        <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-success btn-sm">Read More</a>
                     </div>
                 </div>
-            </div>
 
-            first = false;
+            </div>
         }
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#homeArticles" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#homeArticles" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
 </div>
-<div class="mb-5"></div>
+<div class="text-center mb-5">
+    <a asp-area="" asp-controller="Article" asp-action="All" class="btn btn-info">All Articles</a>
+</div>

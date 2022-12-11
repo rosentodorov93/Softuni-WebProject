@@ -56,7 +56,7 @@ namespace FitnessDiary.Core.Services
                 Exercises = model.Exercises.Select(e => new Exercise()
                 {
                     Name = e.Name,
-                    BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), e.BodyPart),
+                    BodyPart = (BodyPartType)e.BodyPart,
                     Sets = e.Sets.Select(s => new Set()
                     {
                         ExerciseId = e.Id,
@@ -197,7 +197,7 @@ namespace FitnessDiary.Core.Services
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    BodyPart = e.BodyPart.ToString(),
+                    BodyPart = (int)e.BodyPart,
                     Sets = CreateSets(e.SetCount)
                 }).ToList()
             };
@@ -222,7 +222,7 @@ namespace FitnessDiary.Core.Services
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    BodyPart = e.BodyPart.ToString(),
+                    BodyPart = (int)e.BodyPart,
                     Sets = e.Sets.Select(s => new SetViewModel()
                     {
                         Reps = s.Reps,

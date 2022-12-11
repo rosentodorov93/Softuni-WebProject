@@ -226,7 +226,7 @@ namespace FitnesDiary.Tests.UnitTests
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    BodyPart = e.BodyPart.ToString(),
+                    BodyPart = (int)e.BodyPart,
                     Sets = e.Sets.Select(s => new SetViewModel()
                     {
                         Load = 1,
@@ -254,7 +254,7 @@ namespace FitnesDiary.Tests.UnitTests
                 {
                     Id = e.Id,
                     Name = e.Name,
-                    BodyPart = e.BodyPart.ToString(),
+                    BodyPart = (int)e.BodyPart,
                     Sets = e.Sets.Select(s => new SetViewModel()
                     {
                         Load = 2,

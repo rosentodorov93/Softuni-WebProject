@@ -13,9 +13,10 @@ namespace FitnessDiary.Areas.Administration.Controllers
             articleService = _articleService;
         }
 
-        public IActionResult Add()
+        public async Task<IActionResult> Add()
         {
             var model = new AddViewModel();
+            model.Categories = await articleService.GetCategoriesAsync();
 
             return View(model);
         }
@@ -25,6 +26,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
         {
             if (!ModelState.IsValid)
             {
+                model.Categories = await articleService.GetCategoriesAsync();
                 return View(model);
             }
 
@@ -35,7 +37,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
         public async Task<IActionResult> Edit(string Id)
         {
             var article = await articleService.GetByIdAsync(Id);
-
+            article.Categories = await articleService.GetCategoriesAsync();
             return View(article);
         }
 

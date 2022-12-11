@@ -17,20 +17,15 @@
             <h5 style="color:#ff6347">Workout</h5>
             <hr />
             <div class="form-horizontal">
-                <input type="hidden" id="CustomerId" />
                 <div class="form-group">
-                    <label asp-for="Name" class="control-label col-md-2">
-                        Workout Name
-                    </label>
                     <div class="col-md-4">
-                        <input asp-for="Name" type="text" id="name" name="name" class="form-control" />
+                        <label asp-for="Name" class="control-label">Workout Name</label>
+                        <input asp-for="Name" type="text" id="name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <label asp-for="Description" class="control-label col-md-2">
-                        Description
-                    </label>
                     <div class="col-md-4">
-                        <input asp-for="Description" type="text" id="description" name="description" class="form-control" />
+                        <label asp-for="Description" class="control-label">Workout Name</label>
+                        <input asp-for="Description" type="text" id="description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
                 </div>
@@ -53,12 +48,13 @@
 
         </div>
         <div>
-            <button type="button" class="btn btn-primary" id="addExercise">Add exercise </button>
+            <button type="button" class="btn btn-primary" onclick="addExercise()">Add exercise </button>
             <button id="saveWorkout" type="submit" class="btn btn-primary">Save Workout </button>
         </div>
     </form>
 </div>
 
+<!--Exercise Modal-->
 <div class="modal fade" id="exerciseModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
         <div class="modal-content">
@@ -72,27 +68,24 @@
                 <hr />
                 <div class="form-horizontal">
                     <div class="form-group">
-                        <label class="control-label col-md-2">
-                            Exercise Name
-                        </label>
+
                         <div class="col-md-4">
+                            <label class="control-label col-md-2">Exercise Name</label>
                             <input type="text" id="exrciseName" name="name" class="form-control" />
                         </div>
-                        <label class="control-label col-md-2">
-                            Body Part
-                        </label>
+
                         <div class="col-md-4">
+                            <label class="control-label col-md-2">Body Part</label>
                             <select id="bodyPart" class="form-control">
-                                @foreach (var name in Enum.GetNames<BodyPartType>())
+                                @foreach (var value in Enum.GetValues<BodyPartType>())
                                 {
-                                    <option value="@name">@name</option>
+                                    var name = Enum.GetName<BodyPartType>(value);
+                                    <option value="@value">@name</option>
                                 }
                             </select>
                         </div>
-                        <label class="control-label col-md-2">
-                            Number of Sets
-                        </label>
                         <div class="col-md-4">
+                            <label class="control-label col-md-2">Number of Sets</label>
                             <input type="text" id="sets" name="sets" class="form-control" />
                         </div>
                     </div>
@@ -110,11 +103,11 @@
 
 
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script>
-        
-        $('#addExercise').click(function() {
+        function addExercise() {
             $("#exerciseModal").modal('show');
-        })
+        }
 
         $('#close').click(function() {
             $("#exerciseModal").modal('hide');
@@ -123,7 +116,8 @@
         $("#saveExercise").click(function(e) {
             e.preventDefault();
 
-            if ($.trim($("#exrciseName").val()) == "" || $.trim($("#bodyPart").val()) == "" || $.trim($("#sets").val()) == "") {
+
+            if ($.trim($("#exrciseName").val()) == "" || $.trim($("#sets").val()) == "") {
                 return alert("All fields are required!")
             }
             if ($.trim($("#sets").val()) <= 0) {
@@ -131,6 +125,11 @@
             }
 
             let exerciseName = $("#exrciseName").val();
+
+            if (exerciseName.length < 5 || exerciseName.length > 70) {
+                return alert("Name field must be between 5 and 70 characters long!")
+            }
+
             var bodyPart = $('#bodyPart').find(":selected").val();
             let sets = $("#sets").val();
             let detailsTableBody = $("#exerciseTable tbody");
@@ -155,7 +154,6 @@
         });
         function clearItem() {
             $("#exrciseName").val('');
-            $("#bodyPart").val('');
             $("#sets").val('');
         }
 

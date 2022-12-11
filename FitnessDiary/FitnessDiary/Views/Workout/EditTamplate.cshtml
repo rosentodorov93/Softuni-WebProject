@@ -17,7 +17,7 @@
                         </div>
                         <div class="col-md-4">
                             <label asp-for="Description" class="control-label">Description</label>
-                            <input asp-for="Description" type="text" id="description" name="description" class="form-control" />
+                            <input asp-for="Description" type="text" class="form-control" />
                             <span asp-validation-for="Description" class="text-danger"></span>
                         </div>
                     </div>
@@ -41,14 +41,16 @@
                             <tr>
                                 <td>@Html.EditorFor(modelItem => Model.Exercises[i].Name) </td>
                                 <td>
-                                    @Html.DropDownListFor(modelItem => Model.Exercises[i].BodyPart, new[] {
-                                new SelectListItem() {Text = "Chest", Value = "Chest"},
-                                new SelectListItem() {Text = "Back", Value = "Back"},
-                                new SelectListItem() {Text = "Legs", Value = "Legs"},
-                                new SelectListItem() {Text = "Shoulder", Value = "Shoulders"},
-                                new SelectListItem() {Text = "Bicep", Value = "Biceps"},
-                                new SelectListItem() {Text = "Tricep", Value = "Triceps"},
-                                })
+                                    @{
+                                        var names = new List<SelectListItem>();
+                                        foreach (var name in Enum.GetNames<BodyPartType>())
+                                        {
+                                            names.Add(new SelectListItem() { Text = name, Value = name });
+                                        }
+
+                                    }
+                                        @Html.DropDownListFor(modelItem => Model.Exercises[i].BodyPart, @names.ToArray())
+                                    
                                 </td>
                                 <td>@Html.EditorFor(modelItem => Model.Exercises[i].SetCount)</td>
                             </tr>
@@ -147,11 +149,11 @@
 </div>
 
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script>
         function addExercise() {
             $("#addExerciseModal").modal('show');
         }
-
         $("#save").click(function(e) {
             e.preventDefault();
 

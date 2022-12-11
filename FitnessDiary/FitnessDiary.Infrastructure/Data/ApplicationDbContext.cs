@@ -34,6 +34,7 @@ namespace FitnessDiary.Infrastructure.Data
         public DbSet<Serving> Servings { get; set; } = null!;
         public DbSet<DiaryDay> DiaryDays { get; set; } = null!;
         public DbSet<Article> Articles { get; set; } = null!;
+        public DbSet<ArticleCategory> ArticleCategories { get; set; } = null!;
         public DbSet<Workout> Workouts { get; set; } = null!;
         public DbSet<WorkoutTamplate> WorkoutTamplates { get; set; } = null!;
         public DbSet<Exercise> Exercises { get; set; } = null!;
@@ -45,6 +46,7 @@ namespace FitnessDiary.Infrastructure.Data
             if (shouldSeedDb)
             {
                 builder.ApplyConfiguration(new ActivityLevelConfiguration());
+                builder.ApplyConfiguration(new ArticleCategoryConfiguration());
                 builder.ApplyConfiguration(new RolesConfiguration());
                 builder.ApplyConfiguration(new NutritionConfiguration());
                 builder.ApplyConfiguration(new IdentityUserConfiguration());

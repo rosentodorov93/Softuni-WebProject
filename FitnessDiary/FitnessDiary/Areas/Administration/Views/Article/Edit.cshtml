@@ -18,9 +18,14 @@
         <span asp-validation-for="Author" class="text-danger"></span>
     </div>
     <div class="mb-3">
-        <label asp-for="@Model.Category" class="form-label">Category: </label>
-        <input asp-for="@Model.Category" class="form-control" aria-required="true" value="@Model.Category"/>
-        <span asp-validation-for="Category" class="text-danger"></span>
+        <label asp-for="@Model.CategoryId" class="form-label">Categories </label>
+        <select asp-for="@Model.CategoryId" class="form-control">
+            @foreach (var category in Model.Categories)
+            {
+                <option value="@category.Id">@category.Name</option>
+            }
+        </select>
+
     </div>
 
     <div>

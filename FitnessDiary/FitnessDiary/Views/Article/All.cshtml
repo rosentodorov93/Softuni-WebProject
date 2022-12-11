@@ -1,9 +1,25 @@
-﻿@model List<ListingViewModel>
+﻿@model AllArticlesQueryModel
 
 <div class="row mt-5">
-    @if (Model.Any())
+    <div>
+        <form method="get">
+            <div>
+                <label asp-for="@Model.CategoryFilter" class="form-label">Sort By Category </label>
+                <select asp-for="@Model.CategoryFilter" class="form-control">
+                    <option value="">All</option>
+                    @foreach (var category in Model.Categories)
+                    {
+                        <option value="@category.Name">@category.Name</option>
+                    }
+                </select>
+            </div>
+            <input class="btn-primary btn-primary" type="submit" value="Apply Filter"/>
+        </form>
+
+    </div>
+    @if (Model.Articles.Any())
     {
-        foreach (var article in Model)
+        foreach (var article in Model.Articles)
         {
             <div class="col-3">
                 <div class="card card-primary">
@@ -21,6 +37,10 @@
                 </div>
             </div>
         }
+    }
+    else
+    {
+        <p>No results!</p>
     }
 </div>
 

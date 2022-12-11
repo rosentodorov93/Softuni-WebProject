@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,7 +28,10 @@ namespace FitnessDiary.Infrastructure.Data
         public string Author { get; set; } = null!;
 
         [Required]
-        public string Category { get; set; } = null!;
+        public string CategoryId { get; set; } = null!;
+
+        [ForeignKey(nameof(CategoryId))]
+        public ArticleCategory Category { get; set; } = null!;
 
         [Required]
         public string Content { get; set; } = null!;

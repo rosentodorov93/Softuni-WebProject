@@ -1,4 +1,6 @@
-﻿@model ArticleDetailsViewModel
+﻿@using FitnessDiary.Core.Contracts
+@model ArticleDetailsViewModel
+@inject IArticleService articleService
 
 @{
     ViewBag.Title = "Article Details";
@@ -10,7 +12,7 @@
 <div class="row mb-5">
     <label class="h4 col-4">Author: @Model.Author  </label>
     <label class="h4 col-4">Date: @Model.Date.Date.ToString("dd/MM/yyyy")</label>
-    <label class="h4 col-4">Category: @Model.Category</label>
+    <label class="h4 col-4">Category: @articleService.GetCategoryName(Model.CategoryId)</label>
 </div>
 
 <div class="text-center mb-5">

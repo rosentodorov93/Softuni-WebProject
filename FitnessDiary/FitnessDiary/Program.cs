@@ -1,6 +1,5 @@
 
 using FitnessDiary.Infrastructure.Data;
-using FitnessDiary.Infrastructure.Data.Account;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 using FitnessDiary.Core.Contracts;
@@ -10,7 +9,7 @@ using FitnessDiary.Infrastructure.Data.Common;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+var connectionString = builder.Configuration.GetConnectionString("ApplicationConnection");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
