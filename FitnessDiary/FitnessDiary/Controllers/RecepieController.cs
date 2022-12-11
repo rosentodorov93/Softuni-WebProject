@@ -26,7 +26,7 @@ namespace FitnessDiary.Controllers
         {
             var model = new AddRecipeViewModel();
             model.Foods = await foodService.LoadIngedientsAsync();
-            model.UserId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            model.UserId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier)) ?? String.Empty;
 
             return View(model);
         }
@@ -34,6 +34,11 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> Add([FromBody] CreateRecipeModel model)
         {
+            if ((await accountService.ExistsById(model.UserId)) == false)
+            {
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
             if (!ModelState.IsValid)
             {
                 return View(model);

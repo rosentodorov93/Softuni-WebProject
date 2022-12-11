@@ -17,13 +17,13 @@
                         <input type="hidden" id="userId" value="@Model.UserId" />
                         <div  class="mb-3">
                             <label asp-for="Name" class="control-label">Recipe Name</label>
-                            <input asp-for="Name" type="text" id="name" name="name" class="form-control" />
+                            <input asp-for="Name" type="text" id="name" class="form-control" />
                             <span asp-validation-for="Name" class="text-danger"></span>
                         </div>
                         
                         <div class="mb-3">
                             <label asp-for="ServingsSize" class="control-label">Servings</label>
-                            <input asp-for="ServingsSize" type="text" id="servings" name="description" class="form-control" />
+                            <input asp-for="ServingsSize" type="text" id="servings" class="form-control" />
                             <span asp-validation-for="ServingsSize" class="text-danger"></span>
                         </div>
                         
@@ -62,6 +62,7 @@
     </div>
 </div>
 
+<!--Ingredients Modal-->
 <div class="modal fade" id="ingredientsModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
         <div class="modal-content">
@@ -105,7 +106,9 @@
         </div>
     </div>
 </div>
+
 @section Scripts{
+    <partial name="_ValidationScriptsPartial" />
     <script>
         $('#addIngredient').click(function() {
             $("#ingredientsModal").modal('show');
@@ -182,6 +185,5 @@
                 }
             });
         });
-
     </script>
 }
