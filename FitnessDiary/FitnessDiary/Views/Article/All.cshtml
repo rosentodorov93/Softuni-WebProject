@@ -1,10 +1,10 @@
 ﻿@model AllArticlesQueryModel
 
-<div class="row mt-5">
-    <div>
+<div>
+
+    <div class="mt-3">
         <form method="get">
-            <div>
-                <label asp-for="@Model.CategoryFilter" class="form-label">Sort By Category </label>
+            <div class="input-group col-4 mb-5">
                 <select asp-for="@Model.CategoryFilter" class="form-control">
                     <option value="">All</option>
                     @foreach (var category in Model.Categories)
@@ -12,35 +12,37 @@
                         <option value="@category.Name">@category.Name</option>
                     }
                 </select>
+                <button type="submit" class="btn btn-outline-primary">Filter</button>
             </div>
-            <input class="btn-primary btn-primary" type="submit" value="Apply Filter"/>
         </form>
-
     </div>
-    @if (Model.Articles.Any())
-    {
-        foreach (var article in Model.Articles)
+    <div class="row">
+        @if (Model.Articles.Any())
         {
-            <div class="col-3">
-                <div class="card card-primary">
-                    <div class="card-header">
-                        <h5 class="card-title">@article.Title</h5>
-                    </div>
-                    <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top">
-                    <div class="card-body">
-                        <p class="card-text">Category: @article.Category</p>
-                        <p class="card-text">Author: @article.Author</p>
-                        <p class="card-text">Date: @article.Date</p>
+            foreach (var article in Model.Articles)
+            {
+                <div class="col-3">
+                    <div class="card card-primary">
+                        <div class="card-header">
+                            <h5 class="card-title">@article.Title</h5>
+                        </div>
+                        <img src="@article.ImageUrl" alt="@article.Title" class="card-img-top">
+                        <div class="card-body">
+                            <p class="card-text">Category: @article.Category</p>
+                            <p class="card-text">Author: @article.Author</p>
+                            <p class="card-text">Date: @article.Date</p>
 
-                        <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-success btn-sm">Read More</a>
+                            <a asp-controller="Article" asp-action="Details" asp-route-id="@article.Id" class="btn btn-outline-success btn-sm">Read More</a>
+                        </div>
                     </div>
                 </div>
-            </div>
+            }
+
         }
-    }
-    else
-    {
-        <p>No results!</p>
-    }
+        else
+        {
+            <p>No results!</p>
+        }
+    </div>
 </div>
 
