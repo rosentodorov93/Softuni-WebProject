@@ -31,9 +31,20 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
+        public async Task DeleteAsync(string id)
+        {
+            var article = repo.All<Article>().Where(a => a.IsActive).FirstOrDefault(a => a.Id == id);
+
+            if (article != null)
+            {
+                article.IsActive = false;
+                await repo.SaveChangesAsync();
+            }
+        }
+
         public async Task EditAsync(ArticleDetailsViewModel model)
         {
-            var article = repo.All<Article>().FirstOrDefault(a => a.Id == model.Id);
+            var article = repo.All<Article>().Where(a => a.IsActive).FirstOrDefault(a => a.Id == model.Id);
 
             if (article != null)
             {
@@ -47,9 +58,17 @@ namespace FitnessDiary.Core.Services
             }
         }
 
+        public async Task<bool> ExistsById(string id)
+        {
+            return await repo.AllReadonly<Article>().Where(a => a.IsActive).AnyAsync(a => a.Id == id);
+        }
+
         public async Task<List<ListingViewModel>> GetAllAsync(string? filter)
         {
-            var articles = repo.AllReadonly<Article>().Include(a => a.Category).ToList();
+            var articles = repo.AllReadonly<Article>()
+                .Where(a => a.IsActive)
+                .Include(a => a.Category)
+                .ToList();
 
             if (filter != null)
             {
@@ -69,7 +88,10 @@ namespace FitnessDiary.Core.Services
 
         public async Task<ArticleDetailsViewModel> GetByIdAsync(string id)
         {
-            var article = repo.All<Article>().Include(a => a.Category).FirstOrDefault(a => a.Id == id);
+            var article = repo.All<Article>()
+                .Where(a => a.IsActive)
+                .Include(a => a.Category)
+                .FirstOrDefault(a => a.Id == id);
 
             return new ArticleDetailsViewModel()
             {

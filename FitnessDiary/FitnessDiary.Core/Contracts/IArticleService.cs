@@ -11,5 +11,7 @@ namespace FitnessDiary.Core.Contracts
         Task<IEnumerable<ListingViewModel>> GetLatestAsync();
         Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync();
         string GetCategoryName(string categoryId);
+        Task<bool> ExistsById(string id);
+        Task DeleteAsync(string id);
     }
 }

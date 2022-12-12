@@ -48,5 +48,21 @@ namespace FitnessDiary.Areas.Administration.Controllers
 
             return RedirectToAction("All", "Article", new { Area = "" });
         }
+
+        public async Task<IActionResult> Delete(string Id)
+        {
+            if ((await articleService.ExistsById(Id)) == false)
+            {
+                return RedirectToAction("All", "Article", new { area = "" });
+            }
+
+            if (User.IsInRole("Admin"))
+            {
+                await articleService.DeleteAsync(Id);
+            }
+
+
+            return RedirectToAction("All", "Article", new { area = "" });
+        }
     }
 }
