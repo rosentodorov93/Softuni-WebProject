@@ -130,23 +130,34 @@
                 return alert("Name field must be between 5 and 70 characters long!")
             }
 
-            var bodyPart = $('#bodyPart').find(":selected").val();
+            let bodyPart = $('#bodyPart').find(":selected").val();
             let sets = $("#sets").val();
             let detailsTableBody = $("#exerciseTable tbody");
 
-            var exercise = document.createElement('tr');
-            var nameTd = document.createElement('td');
+            let exercise = document.createElement('tr');
+            let nameTd = document.createElement('td');
             nameTd.textContent = exerciseName;
 
-            var bodyPartTd = document.createElement('td');
+            let bodyPartTd = document.createElement('td');
             bodyPartTd.textContent = bodyPart;
 
-            var setTd = document.createElement('td');
+            let setTd = document.createElement('td');
             setTd.textContent = sets;
+
+            let removeTd = document.createElement('td');
+            let removeBtn = document.createElement('button');
+            removeBtn.textContent = "X"
+            removeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                let targetTr = e.currentTarget.parentElement.parentElement;
+                targetTr.remove();
+            })
+            removeTd.appendChild(removeBtn);
 
             exercise.appendChild(nameTd);
             exercise.appendChild(bodyPartTd);
             exercise.appendChild(setTd);
+            exercise.appendChild(removeTd);
 
             detailsTableBody.append(exercise);
             clearItem();

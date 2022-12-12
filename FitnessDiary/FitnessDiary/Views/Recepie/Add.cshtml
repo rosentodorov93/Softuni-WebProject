@@ -133,19 +133,28 @@
             let amount = $("#amount").val();
             let ingredientsTableBody = $("#ingredientsTable tbody");
 
-            var ingredient = document.createElement('tr');
-            var idTd = document.createElement('td');
+            let ingredient = document.createElement('tr');
+            let idTd = document.createElement('td');
             idTd.textContent = foodId;
             idTd.style.display = 'none';
-            var foodTd = document.createElement('td');
+            let foodTd = document.createElement('td');
             foodTd.textContent = foodData;
-
+            let removeTd = document.createElement('td');
+            let removeBtn = document.createElement('button');
+            removeBtn.textContent = "X"
+            removeBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                let targetTr = e.currentTarget.parentElement.parentElement;
+                targetTr.remove();
+            })
+            removeTd.appendChild(removeBtn);
             var amountTd = document.createElement('td');
             amountTd.textContent = amount;
 
             ingredient.appendChild(idTd);
             ingredient.appendChild(foodTd);
             ingredient.appendChild(amountTd);
+            ingredient.appendChild(removeTd);
 
             ingredientsTableBody.append(ingredient);
 
