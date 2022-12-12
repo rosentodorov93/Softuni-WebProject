@@ -63,11 +63,13 @@
                 <button type="submit" class="btn btn-primary mr-2">Edit Workout </button>
                 <button type="button" class="btn btn-primary mr-2" onclick="addExercise()">Add exercise </button>
                 <button type="button" class="btn btn-primary mr-2" onclick="removeExercise()">Remove exercise </button>
+                
             </div>
         </div>
     </form>
 </div>
 
+<!--Add Exercise Modal-->
 <div class="modal fade" id="addExerciseModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
         <div class="modal-content">
@@ -115,6 +117,7 @@
     </div>
 </div>
 
+<!--Remove Exercise Modal-->
 <div class="modal fade" id="removeExerciseModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
         <div class="modal-content">
@@ -188,7 +191,6 @@
             $("#sets").val('');
         }
 
-
         function removeExercise() {
             $("#removeExerciseModal").modal('show');
         }
@@ -215,5 +217,7 @@
                 }
             });
         });
+
+        
     </script>
 }

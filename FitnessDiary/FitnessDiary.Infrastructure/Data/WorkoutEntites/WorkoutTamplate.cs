@@ -22,5 +22,6 @@ namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 
         [ForeignKey(nameof(UserId))]
         public ApplicationUser User { get; set; } = null!;
+        public bool IsActive { get; set; } = true;
     }
 }

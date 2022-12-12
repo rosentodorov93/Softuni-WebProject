@@ -16,5 +16,6 @@ namespace FitnessDiary.Core.Contracts
         Task<bool> WorkoutExistsByIdAsync(string id);
         Task EditWorkoutAsync(WorkoutViewModel model);
         Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id);
+        Task DeleteAsync(string id);
     }
 }

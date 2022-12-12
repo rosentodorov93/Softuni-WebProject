@@ -169,5 +169,17 @@ namespace FitnessDiary.Controllers
 
             return RedirectToAction("Index", "Diary");
         }
+
+        public async Task<IActionResult> DeleteTamplate([FromBody] string id)
+        {
+            if ((await workoutService.TamplateExistsByIdAsync(id)) == false)
+            {
+                return RedirectToAction(nameof(MineTamlates));
+            }
+
+            await workoutService.DeleteAsync(id);
+            return Json("success");
+        }
+
     }
 }

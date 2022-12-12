@@ -20,6 +20,7 @@ namespace FitnessDiary.Core.Services
         public async Task AddExerciseToTamplateAsync(AddExerciseModel model)
         {
             var workout = await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
                 .Where(t => t.Id == model.WorkoutId)
                 .Include(t => t.Exercises)
                 .FirstOrDefaultAsync();
@@ -92,9 +93,27 @@ namespace FitnessDiary.Core.Services
             return $"Creaated {model.Name}";
         }
 
+        public async Task DeleteAsync(string id)
+        {
+            var tamplate = await repo.All<WorkoutTamplate>()
+               .Where(t => t.IsActive)
+               .Where(t => t.Id == id)
+               .FirstOrDefaultAsync();
+
+            if (tamplate != null)
+            {
+                tamplate.IsActive = false;
+                await repo.SaveChangesAsync();
+            }
+        }
+
         public async Task EditTamplateAsync(EditTamplateViewModel model)
         {
-            var tamplate = await repo.All<WorkoutTamplate>().Where(t => t.Id == model.Id).Include(t => t.Exercises).FirstOrDefaultAsync();
+            var tamplate = await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
+                .Where(t => t.Id == model.Id)
+                .Include(t => t.Exercises)
+                .FirstOrDefaultAsync();
 
             tamplate.Name = model.Name;
             tamplate.Description = model.Description;
@@ -143,6 +162,7 @@ namespace FitnessDiary.Core.Services
         public async Task<IEnumerable<ListingTamplateViewModel>> GetMineTamplatesAsync(string userId)
         {
             return await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
                 .Where(t => t.UserId == userId)
                 .Include(t => t.Exercises)
                 .Select(t => new ListingTamplateViewModel()
@@ -163,6 +183,7 @@ namespace FitnessDiary.Core.Services
         public async Task<EditTamplateViewModel> GetTamplateById(string id)
         {
             var tamplate = await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
                 .Where(t => t.Id == id)
                 .Include(t => t.Exercises)
                 .FirstOrDefaultAsync();
@@ -185,6 +206,7 @@ namespace FitnessDiary.Core.Services
         public async Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id)
         {
             var tamplate = await repo.All<WorkoutTamplate>()
+               .Where(t => t.IsActive)
                .Where(t => t.Id == id)
                .Include(t => t.Exercises)
                .FirstOrDefaultAsync();
@@ -236,6 +258,7 @@ namespace FitnessDiary.Core.Services
         public async Task RemoveExerciseAsync(string exerciseId, string tamplateId)
         {
             var tamplate = await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
                 .Where(t => t.Id == tamplateId)
                 .Include(t => t.Exercises)
                 .FirstOrDefaultAsync();
@@ -254,7 +277,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task<bool> TamplateExistsByIdAsync(string id)
         {
-            return await repo.AllReadonly<WorkoutTamplate>().AnyAsync(t => t.Id == id);
+            return await repo.AllReadonly<WorkoutTamplate>().Where(t => t.IsActive).AnyAsync(t => t.Id == id);
         }
 
         public async Task<bool> WorkoutExistsByIdAsync(string id)
