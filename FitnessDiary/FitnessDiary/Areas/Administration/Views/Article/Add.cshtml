@@ -5,39 +5,7 @@
 
 <form asp-controller="Article" asp-action="Add" method="post">
 
-    <div class="mb-3">
-        <label asp-for="@Model.Title" class="form-label">Title: </label>
-        <input asp-for="@Model.Title" class="form-control" aria-required="true" value="@Model.Title"/>
-        <span asp-validation-for="Title" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="@Model.ImageUrl" class="form-label">Img Url: </label>
-        <input asp-for="@Model.ImageUrl" class="form-control" aria-required="true" value="@Model.ImageUrl"/>
-        <span asp-validation-for="ImageUrl" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="@Model.Author" class="form-label">Author: </label>
-        <input asp-for="@Model.Author" class="form-control" aria-required="true" value="@Model.Author"/>
-        <span asp-validation-for="Author" class="text-danger"></span>
-    </div>
-    <div class="mb-3">
-        <label asp-for="@Model.CategoryId" class="form-label">Categories </label>
-        <select asp-for="@Model.CategoryId" class="form-control">
-            @foreach (var category in Model.Categories)
-            {
-                <option value="@category.Id">@category.Name</option>
-            }
-        </select>
-
-    </div>
-
-    <div>
-        <label asp-for="@Model.Content" class="form-label">Content: </label>
-        <textarea id="article-content" asp-for="@Model.Content" class="form-control" value="@Model.Content"></textarea>
-    </div>
-
-    <input type="submit" value="Save" />
-
+    <partial name="_AddEditArticleInputPartial" model="@Model" />
 </form>
 
 @section Scripts{
