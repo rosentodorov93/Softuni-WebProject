@@ -1,6 +1,7 @@
 ﻿using FitnessDiary.Core.Constants;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
+using FitnessDiary.Extensions;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -48,7 +49,7 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> Add(FoodViewModel model)
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
 
             if (!ModelState.IsValid)
             {
@@ -63,7 +64,7 @@ namespace FitnessDiary.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> Mine([FromQuery] MinePageViewModel query)
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
 
             var result = await service.GetAllAsync(
                 userId,
@@ -100,7 +101,7 @@ namespace FitnessDiary.Controllers
 
                 return View(model);
             }
-            var appUserId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var appUserId = accountService.GetById(this.User.Id());
             var foodIsPrivate = await service.IsFoodPrivate(Id);
 
             if (appUserId != null && foodIsPrivate == false)

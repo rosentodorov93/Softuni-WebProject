@@ -6,13 +6,12 @@ using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Mvc;
+using FitnessDiary.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var connectionString = builder.Configuration.GetConnectionString("ApplicationConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(connectionString));
+builder.Services.AddApplicationDbContexts(builder.Configuration);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options =>
@@ -25,20 +24,13 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
+
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
 });
 
-builder.Services
-    .AddScoped<IAccountService, AccountService>()
-    .AddScoped<IRepository, Repository>()
-    .AddScoped<IFoodService, FoodService>()
-    .AddScoped<IRecipeService, RecipeService>()
-    .AddScoped<IDiaryService, DiaryService>()
-    .AddScoped<IArticleService, ArticleService>()
-    .AddScoped<IWorkoutService, WorkoutService>()
-    .AddScoped<IStatisticsService, StatisticsService>();
+builder.Services.AddApplicationServices();
 
 var app = builder.Build();
 

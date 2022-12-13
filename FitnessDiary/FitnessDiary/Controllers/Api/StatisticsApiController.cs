@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Statistics;
+using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
 
@@ -21,7 +22,7 @@ namespace FitnessDiary.Controllers.Api
         [HttpGet]
         public async Task<StatisticsServiceModel> GetStatistics()
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
 
             var result =  await statisticsService.Total(userId);
 

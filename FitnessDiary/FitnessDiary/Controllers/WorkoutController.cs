@@ -1,6 +1,7 @@
 ﻿using FitnessDiary.Core.Constants;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Workout;
+using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -28,7 +29,7 @@ namespace FitnessDiary.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> CreateTamplate([FromBody]CreateWorkoutViewModel model)
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
             if (userId == null)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
@@ -43,7 +44,7 @@ namespace FitnessDiary.Controllers
         }
         public async Task<IActionResult> MineTamlates()
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
             if (userId == null)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
@@ -157,7 +158,7 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> AddToDiary(AddToDiaryViewModel model)
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
             if (userId == null)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";

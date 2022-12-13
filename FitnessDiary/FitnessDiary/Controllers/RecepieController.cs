@@ -2,6 +2,7 @@
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Core.Models.Recepie;
+using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -189,7 +190,7 @@ namespace FitnessDiary.Controllers
         }
         public async Task<IActionResult> Mine()
         {
-            var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var userId = accountService.GetById(this.User.Id());
             if ((await accountService.ExistsById(userId)) == false)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
