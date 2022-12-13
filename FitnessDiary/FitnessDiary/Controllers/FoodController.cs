@@ -131,6 +131,7 @@ namespace FitnessDiary.Controllers
             return RedirectToAction("Mine");
         }
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Delete([FromBody]string Id)
         {
             if ((await service.ExistsByIdAsync(Id)))

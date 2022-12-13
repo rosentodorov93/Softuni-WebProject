@@ -32,6 +32,7 @@ namespace FitnessDiary.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Add([FromBody] CreateRecipeModel model)
         {
             if ((await accountService.ExistsById(model.UserId)) == false)
@@ -199,6 +200,7 @@ namespace FitnessDiary.Controllers
 
             return View(recipes);
         }
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> Delete([FromBody] string id)
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)

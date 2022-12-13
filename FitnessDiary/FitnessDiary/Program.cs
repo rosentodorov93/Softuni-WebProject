@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data.Common;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,7 +25,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+});
 
 builder.Services
     .AddScoped<IAccountService, AccountService>()

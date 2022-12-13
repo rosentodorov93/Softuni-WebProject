@@ -45,6 +45,7 @@ namespace FitnessDiary.Controllers
         }
       
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddRecipeServing([FromBody] ServingServiceModel model)
         {
             var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -66,6 +67,7 @@ namespace FitnessDiary.Controllers
         }
 
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddFoodServing([FromBody] ServingServiceModel model)
         {
             var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));

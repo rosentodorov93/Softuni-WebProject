@@ -25,6 +25,7 @@ namespace FitnessDiary.Controllers
             return View(model);
         }
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> CreateTamplate([FromBody]CreateWorkoutViewModel model)
         {
             var userId = accountService.GetById(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -107,6 +108,7 @@ namespace FitnessDiary.Controllers
             return RedirectToAction("Index", "Diary");
         }
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddExerciseToTamplate([FromBody] AddExerciseModel model)
         {
             if ((await workoutService.TamplateExistsByIdAsync(model.WorkoutId)) == false)
@@ -124,6 +126,7 @@ namespace FitnessDiary.Controllers
             return Json("success");
         }
         [HttpPost]
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> RemoveExerciseFromTamplate([FromBody] RemoveExerciseModel model)
         {
             if ((await workoutService.TamplateExistsByIdAsync(model.TamplateId)) == false)
@@ -170,6 +173,7 @@ namespace FitnessDiary.Controllers
             return RedirectToAction("Index", "Diary");
         }
 
+        [IgnoreAntiforgeryToken]
         public async Task<IActionResult> DeleteTamplate([FromBody] string id)
         {
             if ((await workoutService.TamplateExistsByIdAsync(id)) == false)
