@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Article;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,14 +37,26 @@ namespace FitnessDiary.Areas.Administration.Controllers
         }
         public async Task<IActionResult> Edit(string Id)
         {
+            if (await articleService.ExistsById(Id) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid Id";
+                RedirectToAction("All", "Article", new {area = ""});
+            }
             var article = await articleService.GetByIdAsync(Id);
             article.Categories = await articleService.GetCategoriesAsync();
+
             return View(article);
         }
 
         [HttpPost]
         public async Task<IActionResult> Edit(ArticleDetailsViewModel model)
         {
+            if (await articleService.ExistsById(model.Id) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid Id";
+                RedirectToAction("All", "Article", new { area = "" });
+            }
+
             await articleService.EditAsync(model);
 
             return RedirectToAction("All", "Article", new { Area = "" });

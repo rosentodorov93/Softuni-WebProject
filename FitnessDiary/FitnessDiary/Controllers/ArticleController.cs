@@ -1,4 +1,5 @@
-﻿using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Article;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
@@ -24,6 +25,11 @@ namespace FitnessDiary.Controllers
         
         public async Task<IActionResult> Details(string Id)
         {
+            if ((await articleService.ExistsById(Id)) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Invalid Id";
+                RedirectToAction(nameof(All);
+            }
             var article = await articleService.GetByIdAsync(Id);
 
             return View(article);
