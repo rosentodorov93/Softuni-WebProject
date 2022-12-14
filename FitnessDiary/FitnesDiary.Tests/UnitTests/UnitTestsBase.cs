@@ -21,6 +21,7 @@ namespace FitnesDiary.Tests.UnitTests
         public Recipe TestRecipe { get; private set; } = null!;
         public WorkoutTamplate TestTamplate { get; private set; } = null!;
         public ApplicationUser AppUser { get; private set; } = null!;
+        public Article TestArticle { get; private set; } = null!;
         private void SeedDatabase()
         {
             var nutritions = new List<NutritionData>()
@@ -222,6 +223,38 @@ namespace FitnesDiary.Tests.UnitTests
 
             this.TestTamplate = tamplate;
             this.data.WorkoutTamplates.Add(tamplate);
+
+            var articleCategories = new List<ArticleCategory>()
+            {
+                new ArticleCategory()
+                {
+                    Id = "categoryId",
+                    Name = "testCategory"
+                },
+                new ArticleCategory()
+                {
+                    Id = "categoryId2",
+                    Name = "nutrition"
+                }
+            };
+
+            this.data.ArticleCategories.AddRange(articleCategories);
+
+            var article = new Article()
+            {
+                Title = "TestArticle",
+                Author = "Admin",
+                Date = DateTime.Now,
+                IsActive = true,
+                CategoryId = "categoryId",
+                Content = "Test Article Content",
+                Id = "articleId",
+                ImageUrl = "img",
+            };
+
+            this.TestArticle = article;
+
+            this.data.Articles.Add(article);
 
             this.data.SaveChanges();
         }

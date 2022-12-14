@@ -23,7 +23,7 @@ namespace FitnessDiary.Controllers
         {
             var applicationUserId = accountService.GetById(this.User.Id());
 
-            var diaryDay = await diaryService.GetByIdAsync(applicationUserId);
+            var diaryDay = await diaryService.LoadDiaryDay(applicationUserId);
             var requiredNutrition = await accountService.GetUserTargetNutritionAsync(applicationUserId);
 
             var model = new IdexViewQueryModel()
@@ -72,6 +72,7 @@ namespace FitnessDiary.Controllers
         public async Task<IActionResult> AddFoodServing([FromBody] ServingServiceModel model)
         {
             var userId = accountService.GetById(this.User.Id());
+
             await diaryService.AddFoodServingAsync(userId, model.Id, model.Amount, model.Category);
 
             return Json("success");

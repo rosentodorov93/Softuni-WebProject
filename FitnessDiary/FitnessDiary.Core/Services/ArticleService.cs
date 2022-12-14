@@ -52,6 +52,7 @@ namespace FitnessDiary.Core.Services
                 article.Date = model.Date;
                 article.Title = model.Title;
                 article.Content = model.Content;
+                article.ImageUrl = model.ImageUrl;
                 article.CategoryId = model.CategoryId;
 
                 await repo.SaveChangesAsync();
@@ -118,6 +119,7 @@ namespace FitnessDiary.Core.Services
 
         public string GetCategoryName(string categoryId)
         {
+
             return repo.AllReadonly<ArticleCategory>().FirstOrDefault(a => a.Id == categoryId)?.Name ?? "";
         }
 

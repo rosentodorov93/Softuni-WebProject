@@ -26,14 +26,23 @@ namespace FitnessDiary.Core.Services
                 .Include(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            //validate
+            if (food == null)
+            {
+                throw new ArgumentException("Invalid foodId");
+            }
+
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
                 .Include(x => x.Diary)
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
 
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid userId");
+            }
+
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
-            //validate
+
 
             currentDay.Servings.Add(new Serving()
             {
@@ -54,14 +63,23 @@ namespace FitnessDiary.Core.Services
                 .Include(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            //validate
+            if (recipe == null)
+            {
+                throw new ArgumentException("Invalid foodId");
+            }
+
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
                 .Include(x => x.Diary)
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
 
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid userId");
+            }
+
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
-            //validate
+
 
             currentDay.Servings.Add(new Serving()
             {
@@ -75,7 +93,7 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task<DiaryDayServiceModel> GetByIdAsync(string userId)
+        public async Task<DiaryDayServiceModel> LoadDiaryDay(string userId)
         {
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
                 .Include(x => x.Diary)
@@ -164,7 +182,12 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(d => d.Servings)
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
-            //validate
+
+            if (user == null)
+            {
+                throw new ArgumentException("Invalid userId");
+            }
+
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
             var serving = currentDay.Servings.FirstOrDefault(s => s.Id == id);
             currentDay.Servings.Remove(serving);

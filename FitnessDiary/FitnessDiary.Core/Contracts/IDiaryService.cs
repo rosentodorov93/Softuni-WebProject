@@ -9,7 +9,7 @@ namespace FitnessDiary.Core.Contracts
 {
     public interface IDiaryService
     {
-        Task<DiaryDayServiceModel> GetByIdAsync(string userId);
+        Task<DiaryDayServiceModel> LoadDiaryDay(string userId);
         Task AddFoodServingAsync(string userId, string id, double amount, string category);
         Task AddRecipeServingAsync(string userId, string id, double amount, string category);
         Task RemoveServingAsync(string userId, int id);
