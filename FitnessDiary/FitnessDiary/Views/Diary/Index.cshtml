@@ -157,13 +157,14 @@
                     </table>
 
                 </div>
-                <div class="d-flex justify-content-center">
-                    <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout?.Id">Change Workout Data</a>
-                </div>
+
 
             }
-        </div>
 
+        </div>
+        <div class="text-center">
+            <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout?.Id">Change Workout Data</a>
+        </div>
 
     </div>
 </div>

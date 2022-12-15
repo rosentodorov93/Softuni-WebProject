@@ -43,10 +43,14 @@
                                         <div class="form-group">
                                             <label>Reps</label>
                                             @Html.TextBoxFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
-                                            <span asp-validation-for="@Model.Exercises[i].Sets[j].Reps" class="text-danger"></span>
+                                            <div>
+                                                <span asp-validation-for="@Model.Exercises[i].Sets[j].Reps" class="text-danger"></span>
+                                            </div>
                                             <label>Load</label>
                                             @Html.TextBoxFor(modelItem => @Model.Exercises[i].Sets[j].Load)
-                                            <span asp-validation-for="@Model.Exercises[i].Sets[j].Load" class="text-danger"></span>
+                                            <div>
+                                                <span asp-validation-for="@Model.Exercises[i].Sets[j].Load" class="text-danger"></span>
+                                            </div>
                                         </div>
                                     }
                                 </ol>
