@@ -17,13 +17,9 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddExerciseToTamplateAsync(AddExerciseModel model)
+        public async Task<string> AddExerciseToTamplateAsync(AddExerciseModel model)
         {
-            var workout = await repo.All<WorkoutTamplate>()
-                .Where(t => t.IsActive)
-                .Where(t => t.Id == model.WorkoutId)
-                .Include(t => t.Exercises)
-                .FirstOrDefaultAsync();
+            var workout = await LoadTamplate(model.WorkoutId);
 
 
             var exercise = new ExerciseTamplate()
@@ -36,6 +32,8 @@ namespace FitnessDiary.Core.Services
             workout.Exercises.Add(exercise);
 
             await repo.SaveChangesAsync();
+
+            return $"Successfuly added {exercise.Name} to {workout.Name}";
         }
 
         public async Task AddToDiaryAsync(AddToDiaryViewModel model, string userId)
@@ -93,8 +91,10 @@ namespace FitnessDiary.Core.Services
             return $"Creaated {model.Name}";
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<string> DeleteAsync(string id)
         {
+            var resultMessage = "Error! Unable to delete item";
+
             var tamplate = await repo.All<WorkoutTamplate>()
                .Where(t => t.IsActive)
                .Where(t => t.Id == id)
@@ -103,17 +103,16 @@ namespace FitnessDiary.Core.Services
             if (tamplate != null)
             {
                 tamplate.IsActive = false;
+                resultMessage = $"Successfuly deleted {tamplate.Name}";
                 await repo.SaveChangesAsync();
             }
+
+            return resultMessage;
         }
 
         public async Task EditTamplateAsync(EditTamplateViewModel model)
         {
-            var tamplate = await repo.All<WorkoutTamplate>()
-                .Where(t => t.IsActive)
-                .Where(t => t.Id == model.Id)
-                .Include(t => t.Exercises)
-                .FirstOrDefaultAsync();
+            var tamplate = await LoadTamplate(model.Id);
 
             tamplate.Name = model.Name;
             tamplate.Description = model.Description;
@@ -182,11 +181,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task<EditTamplateViewModel> GetTamplateById(string id)
         {
-            var tamplate = await repo.All<WorkoutTamplate>()
-                .Where(t => t.IsActive)
-                .Where(t => t.Id == id)
-                .Include(t => t.Exercises)
-                .FirstOrDefaultAsync();
+            var tamplate = await LoadTamplate(id);
 
             return new EditTamplateViewModel()
             {
@@ -205,11 +200,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id)
         {
-            var tamplate = await repo.All<WorkoutTamplate>()
-               .Where(t => t.IsActive)
-               .Where(t => t.Id == id)
-               .Include(t => t.Exercises)
-               .FirstOrDefaultAsync();
+            var tamplate = await LoadTamplate(id);
 
             var result = new AddToDiaryViewModel()
             {
@@ -255,24 +246,21 @@ namespace FitnessDiary.Core.Services
 
         }
 
-        public async Task RemoveExerciseAsync(string exerciseId, string tamplateId)
+        public async Task<string> RemoveExerciseAsync(string exerciseId, string tamplateId)
         {
-            var tamplate = await repo.All<WorkoutTamplate>()
-                .Where(t => t.IsActive)
-                .Where(t => t.Id == tamplateId)
-                .Include(t => t.Exercises)
-                .FirstOrDefaultAsync();
+            var resultMessage = "Error! Unable to remove exercise!";
+            var tamplate = await LoadTamplate(tamplateId);
 
             var exercise = tamplate.Exercises.FirstOrDefault(e => e.Id == exerciseId);
 
             if (exercise != null)
             {
                 tamplate.Exercises.Remove(exercise);
-
+                resultMessage = $"Successfuly removed {exercise.Name} from {tamplate.Name}";
                 await repo.SaveChangesAsync();
             }
 
-            
+            return resultMessage;
         }
 
         public async Task<bool> TamplateExistsByIdAsync(string id)
@@ -295,6 +283,14 @@ namespace FitnessDiary.Core.Services
             }
 
             return result;
+        }
+        private async Task<WorkoutTamplate> LoadTamplate(string id)
+        {
+            return await repo.All<WorkoutTamplate>()
+                .Where(t => t.IsActive)
+                .Where(t => t.Id == id)
+                .Include(t => t.Exercises)
+                .FirstOrDefaultAsync();
         }
 
     }

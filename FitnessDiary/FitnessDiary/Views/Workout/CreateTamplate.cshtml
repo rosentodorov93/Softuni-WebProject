@@ -1,30 +1,25 @@
 ﻿@using FitnessDiary.Infrastructure.Data.Enums
 @model CreateWorkoutViewModel
 
-<div class="panel panel-default">
-    <div class="panel-heading">
-        <div class="row">
+<div class="text-center">
+
             <h2 class="panel-title pull-left" style="margin-left:10px;">
                 <strong>Create Workout Sheet</strong>
             </h2>
-        </div>
-    </div>
-
-
-
-    <form>
+    <div class="d-flex justify-content-center">
+        <form>
         <div>
             <h5 style="color:#ff6347">Workout</h5>
             <hr />
             <div class="form-horizontal">
                 <div class="form-group">
-                    <div class="col-md-4">
+                    <div class="mb-3">
                         <label asp-for="Name" class="control-label">Workout Name</label>
                         <input asp-for="Name" type="text" id="name" class="form-control" />
                         <span asp-validation-for="Name" class="text-danger"></span>
                     </div>
-                    <div class="col-md-4">
-                        <label asp-for="Description" class="control-label">Workout Name</label>
+                    <div class="mb-3">
+                        <label asp-for="Description" class="control-label">Desscription(optional)</label>
                         <input asp-for="Description" type="text" id="description" class="form-control" />
                         <span asp-validation-for="Description" class="text-danger"></span>
                     </div>
@@ -52,7 +47,9 @@
             <button id="saveWorkout" type="submit" class="btn btn-primary">Save Workout </button>
         </div>
     </form>
+    </div>
 </div>
+
 
 <!--Exercise Modal-->
 <div class="modal fade" id="exerciseModal">
@@ -69,13 +66,13 @@
                 <div class="form-horizontal">
                     <div class="form-group">
 
-                        <div class="col-md-4">
-                            <label class="control-label col-md-2">Exercise Name</label>
+                        <div class="col-6 mb-3">
+                            <label class="control-label">Exercise Name</label>
                             <input type="text" id="exrciseName" name="name" class="form-control" />
                         </div>
 
-                        <div class="col-md-4">
-                            <label class="control-label col-md-2">Body Part</label>
+                        <div class="col-6 mb-3">
+                            <label class="control-label">Body Part</label>
                             <select id="bodyPart" class="form-control">
                                 @foreach (var value in Enum.GetValues<BodyPartType>())
                                 {
@@ -84,8 +81,8 @@
                                 }
                             </select>
                         </div>
-                        <div class="col-md-4">
-                            <label class="control-label col-md-2">Number of Sets</label>
+                        <div class="col-6 mb-3">
+                            <label class="control-label">Number of Sets</label>
                             <input type="text" id="sets" name="sets" class="form-control" />
                         </div>
                     </div>

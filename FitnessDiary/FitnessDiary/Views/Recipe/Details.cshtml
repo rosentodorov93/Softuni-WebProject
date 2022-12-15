@@ -25,10 +25,10 @@
         </ul>
         <h3><b>Nutrition:</b></h3>
         <ul>
-            <li><b>Calories per serving:</b> @Model.CaloriesPerPortion</li>
-            <li><b>Per Serving Carbs:</b> @Model.Carbs</li>
-            <li><b>Per Serving Proteins:</b> @Model.Protein</li>
-            <li><b>Per Serving Fats:</b> @Model.Fats</li>
+            <li><b>Calories per serving:</b> @Model.CaloriesPerPortion.ToString("f2")</li>
+            <li><b>Per Serving Carbs:</b> @Model.Carbs.ToString("f2")</li>
+            <li><b>Per Serving Proteins:</b> @Model.Protein.ToString("f2")</li>
+            <li><b>Per Serving Fats:</b> @Model.Fats.ToString("f2")</li>
         </ul>
         <div >
             <a asp-controller="Recipe" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>

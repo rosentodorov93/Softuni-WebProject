@@ -9,11 +9,11 @@
         </div>
     </div>
 
-    <hr class="mb-5"/>
+    <hr class="mb-5" />
 
     <div class="d-flex justify-content-center">
         <div class="mb-3">
-            <form asp-controller="Workout" asp-action="AddToDiary" method="post">
+            <form method="post">
                 <div class="mb-3">
                     <div class="form-group">
                         <p class="h4"><b>Name:</b> @Model.Name</p>
@@ -42,9 +42,11 @@
                                     {
                                         <div class="form-group">
                                             <label>Reps</label>
-                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
+                                            @Html.TextBoxFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
+                                            <span asp-validation-for="@Model.Exercises[i].Sets[j].Reps" class="text-danger"></span>
                                             <label>Load</label>
-                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
+                                            @Html.TextBoxFor(modelItem => @Model.Exercises[i].Sets[j].Load)
+                                            <span asp-validation-for="@Model.Exercises[i].Sets[j].Load" class="text-danger"></span>
                                         </div>
                                     }
                                 </ol>
@@ -52,12 +54,14 @@
                         }
                     </ol>
                 </div>
+                <div class="text-center mb-5">
+                    <input type="submit" class="btn btn-primary" value="Add to Diary" />
+                </div>
             </form>
-             <div class="text-center mb-5">
-                <input type="submit" class="btn btn-primary" value="Add toDiary"/>
-            </div>
+
         </div>
-        
     </div>
-   
 </div>
+@section Scripts{
+    <partial name="_ValidationScriptsPartial" />
+}

@@ -33,10 +33,10 @@
                         <tr>
                             <td class="text-center">@serving.Name</td>
                             <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories</td>
-                            <td class="text-center">@serving.Nutrition.Carbs</td>
-                            <td class="text-center">@serving.Nutrition.Protein</td>
-                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
                             <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
                         </tr>
                     }
@@ -51,10 +51,10 @@
                         <tr>
                             <td class="text-center">@serving.Name</td>
                             <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories</td>
-                            <td class="text-center">@serving.Nutrition.Carbs</td>
-                            <td class="text-center">@serving.Nutrition.Protein</td>
-                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
                             <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
                         </tr>
                     }
@@ -69,10 +69,10 @@
                         <tr>
                             <td class="text-center">@serving.Name</td>
                             <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories</td>
-                            <td class="text-center">@serving.Nutrition.Carbs</td>
-                            <td class="text-center">@serving.Nutrition.Protein</td>
-                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
                             <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
                         </tr>
                     }
@@ -87,10 +87,10 @@
                         <tr>
                             <td class="text-center">@serving.Name</td>
                             <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories</td>
-                            <td class="text-center">@serving.Nutrition.Carbs</td>
-                            <td class="text-center">@serving.Nutrition.Protein</td>
-                            <td class="text-center">@serving.Nutrition.Fats</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
                             <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
                         </tr>
                     }
@@ -184,10 +184,10 @@
         <tbody>
             <tr>
                 <td><b>Total</b></td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Calories</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Carbs</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Protein</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Fats</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Calories.ToString("f2")</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Carbs.ToString("f2")</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Protein.ToString("f2")</td>
+                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Fats.ToString("f2")</td>
 
             </tr>
             <tr>

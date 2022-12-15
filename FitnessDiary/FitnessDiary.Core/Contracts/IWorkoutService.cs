@@ -7,8 +7,8 @@ namespace FitnessDiary.Core.Contracts
         Task<string> CreateTamplateAsync(CreateWorkoutViewModel model, string userId);
         Task<IEnumerable<ListingTamplateViewModel>> GetMineTamplatesAsync(string userId);
         Task<EditTamplateViewModel> GetTamplateById(string id);
-        Task AddExerciseToTamplateAsync(AddExerciseModel model);
-        Task RemoveExerciseAsync(string exerciseId, string tamplateId);
+        Task<string> AddExerciseToTamplateAsync(AddExerciseModel model);
+        Task<string> RemoveExerciseAsync(string exerciseId, string tamplateId);
         Task<WorkoutViewModel> GetWorkoutByIdAsync(string id);
         Task EditTamplateAsync(EditTamplateViewModel model);
         Task AddToDiaryAsync(AddToDiaryViewModel model, string userId);
@@ -16,6 +16,6 @@ namespace FitnessDiary.Core.Contracts
         Task<bool> WorkoutExistsByIdAsync(string id);
         Task EditWorkoutAsync(WorkoutViewModel model);
         Task<AddToDiaryViewModel> GetTamplateForDiaryByIdAsync(string id);
-        Task DeleteAsync(string id);
+        Task<string> DeleteAsync(string id);
     }
 }
