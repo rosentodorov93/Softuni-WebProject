@@ -10,7 +10,7 @@
 
 <div class="row">
     <div class="col-sm-12 offset-lg-2 col-lg-8 offset-xl-3 col-xl-6">
-        <form asp-controller="Recepie" asp-action="RemoveIngredient" method="post">
+        <form asp-controller="Recipe" asp-action="RemoveIngredient" method="post">
             <input type="hidden" asp-for="@Model.Recipeid" value="@Model.Recipeid"/>
             <div class="mb-3">
                 <label class="form-label">Ingrdedients</label>

@@ -23,7 +23,7 @@
                         <p><b>Servings:</b> @recipe.ServingsSize</p>
                         <p><b>Calorie per Serving:</b> @recipe.CaloriesPerPortion</p>
 
-                        <a asp-controller="Recepie" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">Recipe Details</a>
+                        <a asp-controller="Recipe" asp-action="Details" asp-route-id="@recipe.Id" class="btn btn-primary">Recipe Details</a>
                         <a class="btn btn-primary" onclick="AddRecipeServing(&quot;@recipe.Id&quot;)">Add to Diary</a>
                     </div>
 
@@ -35,7 +35,7 @@
 </div>
 
 <div class="text-center mt-5">
-    <a asp-area="" asp-controller="Recepie" asp-action="Add" class="btn btn-primary">Add New Recipe</a>
+    <a asp-area="" asp-controller="Recipe" asp-action="Add" class="btn btn-primary">Add New Recipe</a>
 </div>
 
 <!--Serving Modal-->

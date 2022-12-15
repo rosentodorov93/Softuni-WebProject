@@ -6,9 +6,11 @@ namespace FitnessDiary.Core.Models.Recepie
     {
         [Required]
         public string Id { get; set; } = null!;
+
         [Required]
         [StringLength(50, MinimumLength = 4)]
         public string Name { get; set; } = null!;
+
         [Range(1,100)]
         public int ServingsSize { get; set; }
         public string?  ImageUrl { get; set; }

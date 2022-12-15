@@ -15,9 +15,10 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddAsync(CreateRecipeModel model)
+        public async Task<string> AddAsync(CreateRecipeModel model)
         {
             var ingredients = new List<Ingredient>();
+            var resultMessage = $"Successfully added recipe {model.Name}";
 
             double calories = 0;
             double carbs = 0;
@@ -65,22 +66,18 @@ namespace FitnessDiary.Core.Services
             await repo.AddAsync<Recipe>(recipe);
             await repo.SaveChangesAsync();
 
+            return resultMessage;
+
         }
 
-        public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recepieId)
+        public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recipeId)
         {
             var food = await repo.All<Food>()
                 .Where(f => f.Id == ingredient.FoodId)
                 .Include(f => f.Nutrition)
                 .FirstOrDefaultAsync();
 
-            var recipe = await repo.All<Recipe>()
-                .Where(r => r.Id == recepieId)
-                .Include(r => r.Nutrition)
-                .Include(r => r.Ingredients)
-                .ThenInclude(i => i.Food)
-                .ThenInclude(f => f.Nutrition)
-                .FirstOrDefaultAsync();
+            var recipe = await LoadFullRecipe(recipeId);
 
             if (!recipe.Ingredients.Any(i => i.FoodId == food.Id))
             {
@@ -99,26 +96,28 @@ namespace FitnessDiary.Core.Services
                 await repo.SaveChangesAsync();
             }
 
-            var result = await GetByIdAsync(recepieId);
-
-            return result;
+            return new DetailsViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                ServingsSize = recipe.ServingsSize,
+                ImageUrl = recipe.ImageUrl,
+                Carbs = recipe.Nutrition.Carbohydrates,
+                Protein = recipe.Nutrition.Proteins,
+                Fats = recipe.Nutrition.Fats,
+                CaloriesPerPortion = recipe.Nutrition.Calories,
+                Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Name = i.Food.Name,
+                    Amount = i.Amount
+                }).ToList()
+            };
         }
 
         public async Task<DetailsViewModel> EditAsync(EditViewModel model)
         {
-            var recipe = await repo.All<Recipe>()
-                 .Where(r => r.IsActive)
-                 .Where(r => r.Id == model.Id)
-                 .Include(r => r.Nutrition)
-                 .Include(r => r.Ingredients)
-                 .ThenInclude(i => i.Food)
-                 .ThenInclude(f => f.Nutrition)
-                 .FirstOrDefaultAsync();
-
-            if (recipe == null)
-            {
-                throw new ArgumentException("Invalid recipe Id");
-            }
+            var recipe = await LoadFullRecipe(model.Id);
 
 
             recipe.Name = model.Name;
@@ -174,7 +173,7 @@ namespace FitnessDiary.Core.Services
             recipe.CaloriesPerServing = recipe.Nutrition.Calories;
         }
 
-        public async Task<IEnumerable<RecipeListingViewModel>> GetAllById(string userId)
+        public async Task<IEnumerable<RecipeListingViewModel>> GetAllByUserId(string userId)
         {
             var recipe = await repo.All<Recipe>()
                  .Where(r => r.IsActive)
@@ -195,15 +194,9 @@ namespace FitnessDiary.Core.Services
             });
         }
 
-        public async Task<DetailsViewModel> GetByIdAsync(string id)
+        public async Task<DetailsViewModel> GetDetailsByIdAsync(string id)
         {
-            var recipe = await repo.All<Recipe>()
-                 .Where(r => r.IsActive)
-                 .Where(r => r.Id == id)
-                 .Include(r => r.Nutrition)
-                 .Include(r => r.Ingredients)
-                 .ThenInclude(i => i.Food)
-                 .FirstOrDefaultAsync();
+            var recipe = await LoadFullRecipe(id);
 
             if (recipe == null)
             {
@@ -219,7 +212,31 @@ namespace FitnessDiary.Core.Services
                 Carbs = recipe.Nutrition.Carbohydrates,
                 Protein = recipe.Nutrition.Proteins,
                 Fats = recipe.Nutrition.Fats,
-                CaloriesPerPortion = recipe.CaloriesPerServing,
+                CaloriesPerPortion = recipe.Nutrition.Calories,
+                Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
+                {
+                    Id = i.Id,
+                    Name = i.Food.Name,
+                    Amount = i.Amount
+                }).ToList()
+            };
+        }
+        public async Task<EditViewModel> GetByIdAsync(string id)
+        {
+            var recipe = await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
+                 .Where(r => r.Id == id)
+                 .Include(r => r.Nutrition)
+                 .Include(r => r.Ingredients)
+                 .ThenInclude(i => i.Food)
+                 .FirstOrDefaultAsync();
+
+            return new EditViewModel()
+            {
+                Id = recipe.Id,
+                Name = recipe.Name,
+                ServingsSize = recipe.ServingsSize,
+                ImageUrl = recipe.ImageUrl,
                 Ingredients = recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
                 {
                     Id = i.Id,
@@ -231,19 +248,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id)
         {
-            var recipe = await repo.All<Recipe>()
-                .Where(r => r.IsActive)
-                .Where(r => r.Id == id)
-                .Include(r => r.Nutrition)
-                .Include(r => r.Ingredients)
-                .ThenInclude(i => i.Food)
-                .ThenInclude(f => f.Nutrition)
-                .FirstOrDefaultAsync();
-
-            if (recipe == null)
-            {
-                throw new ArgumentException("Invalid Recipe Id");
-            }
+            var recipe = await LoadFullRecipe(id);
 
             return recipe.Ingredients.Select(i => new IngredientDetailsViewModel()
             {
@@ -255,14 +260,7 @@ namespace FitnessDiary.Core.Services
 
         public async Task RemoveIngredient(string recipeid, int ingredientToRemove)
         {
-            var recipe = await repo.All<Recipe>()
-                 .Where(r => r.IsActive)
-                 .Where(r => r.Id == recipeid)
-                 .Include(r => r.Nutrition)
-                 .Include(r => r.Ingredients)
-                 .ThenInclude(i => i.Food)
-                 .ThenInclude(f => f.Nutrition)
-                 .FirstOrDefaultAsync();
+            var recipe = await LoadFullRecipe(recipeid);
 
 
             var ingredient = recipe.Ingredients.FirstOrDefault(i => i.Id == ingredientToRemove);
@@ -289,8 +287,10 @@ namespace FitnessDiary.Core.Services
             return await repo.AllReadonly<Recipe>().Where(r => r.IsActive).AnyAsync(r => r.Id == id);
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<string> DeleteAsync(string id)
         {
+            var resultMessage = "Error! Unable to delete item";
+
             var recipe = await repo.All<Recipe>()
                  .Where(r => r.IsActive)
                  .FirstOrDefaultAsync(f => f.Id == id);
@@ -298,9 +298,23 @@ namespace FitnessDiary.Core.Services
             if (recipe != null)
             {
                 recipe.IsActive = false;
-
+                resultMessage = "Successfuly deleted item";
                 await repo.SaveChangesAsync();
             }
+
+            return resultMessage;
+        }
+
+        private async Task<Recipe> LoadFullRecipe(string id)
+        {
+            return await repo.All<Recipe>()
+                 .Where(r => r.IsActive)
+                 .Where(r => r.Id == id)
+                 .Include(r => r.Nutrition)
+                 .Include(r => r.Ingredients)
+                 .ThenInclude(i => i.Food)
+                 .ThenInclude(f => f.Nutrition)
+                 .FirstOrDefaultAsync();
         }
     }
 }

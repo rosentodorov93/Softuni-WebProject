@@ -31,9 +31,9 @@
             <li><b>Per Serving Fats:</b> @Model.Fats</li>
         </ul>
         <div >
-            <a asp-controller="Recepie" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>
-            <a asp-controller="Recepie" asp-action="RemoveIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Remove ingredients</a>
-            <a asp-controller="Recepie" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
+            <a asp-controller="Recipe" asp-action="AddIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Add more ingredients</a>
+            <a asp-controller="Recipe" asp-action="RemoveIngredient" asp-route-id="@Model.Id" class="btn btn-primary">Remove ingredients</a>
+            <a asp-controller="Recipe" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary">Edit Recipe</a>
             <a onclick='DeleteRecipe(&quot;@Model.Id&quot;);' class="btn btn-primary">Delete Recipe</a>
         </div>
     </div>
@@ -54,10 +54,10 @@
                     contentType: 'application/json; charset=utf-8',
                     dataType: 'json',
                     type: "POST",
-                    url: "https://localhost:7043/Recepie/Delete",
+                    url: "https://localhost:7043/Recipe/Delete",
                     data: JSON.stringify(id),
                     success: function(result) {
-                        window.location = "https://localhost:7043/Recepie/Mine";
+                        window.location = "https://localhost:7043/Recipe/Mine";
                     }
                 });
             }

@@ -38,15 +38,19 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
         }
 
-        public async Task DeleteAsync(string id)
+        public async Task<string> DeleteAsync(string id)
         {
+            var resultMessage = "Error! Unable to delete this item";
             var food = await LoadFood(id);
 
             if (food != null)
             {
+                resultMessage = "Seccessfuly deleted item!";
                 food.IsActive = false;
                 await repo.SaveChangesAsync();
             }
+
+            return resultMessage;
         }
 
         public async Task EditAsync(string Id, FoodViewModel model)
@@ -82,7 +86,7 @@ namespace FitnessDiary.Core.Services
 
             IQueryable<Food> foods;
 
-            foods = repo.AllReadonly<Food>().Where(f => f.UserId == userId).Where(f => f.IsActive);
+            foods = repo.AllReadonly<Food>().Include(f => f.Nutrition).Where(f => f.UserId == userId).Where(f => f.IsActive);
 
             if (string.IsNullOrEmpty(type) == false)
             {
@@ -99,15 +103,14 @@ namespace FitnessDiary.Core.Services
 
             foods = sorting switch
             {
-                FoodSorting.PerCalories => foods
-                    .OrderByDescending(h => h.Nutrition.Calories),
                 FoodSorting.PerType => foods
                     .OrderBy(f => f.Type),
+                FoodSorting.PerCalories => foods
+                    .OrderByDescending(f => f.Nutrition.Calories),
                 _ => foods.OrderBy(f => f.Name)
             };
 
             result.Foods = await foods
-                .Include(f => f.Nutrition)
                 .Skip((currentPage - 1) * foodsPerPage)
                 .Take(foodsPerPage)
                 .Select(f => new FoodServiceModel()
@@ -127,71 +130,14 @@ namespace FitnessDiary.Core.Services
             return result;
         }
 
-        //public async Task<MinePageViewModel> GetAllById(string? userId = null,
-        //    string? type = null, string? searchTerm = null,
-        //    FoodSorting sorting = FoodSorting.PerName,
-        //    int currentPage = 1,
-        //    int foodsPerPage = int.MaxValue)
-        //{
-        //    var user = await repo.All<ApplicationUser>().Include(u => u.Foods).ThenInclude(f => f.Nutrition).FirstOrDefaultAsync(u => u.Id == userId);
-
-        //    if (user == null)
-        //    {
-        //        throw new ArgumentException("Invalid user ID");
-        //    }
-
-        //    var userFoods = user.Foods.Select(f => new FoodServiceModel()
-        //    {
-        //        Id = f.Id,
-        //        Name = f.Name,
-        //        Type = f.Type,
-        //        MeassureUnit = (int)f.MeassureUnits,
-        //        Calories = f.Nutrition.Calories,
-        //        Carbohydtrates = f.Nutrition.Carbohydrates,
-        //        Proteins = f.Nutrition.Proteins,
-        //        Fats = f.Nutrition.Fats
-        //    });
-
-        //    if (type != null)
-        //    {
-        //        userFoods = userFoods.Where(f => f.Type == type);
-        //    }
-
-        //    if (searchTerm != null)
-        //    {
-        //        userFoods = userFoods.Where(f => f.Name.ToLower().Contains(searchTerm.ToLower()));
-        //    }
-
-        //    userFoods = sorting switch
-        //    {
-        //        FoodSorting.PerCalories => userFoods.OrderByDescending(c => c.Calories),
-        //        FoodSorting.PerType => userFoods.OrderBy(c => c.Type),
-        //        FoodSorting.PerName or _ => userFoods.OrderByDescending(c => c.Name)
-        //    };
-
-        //    var totalFoods = userFoods.Count();
-
-        //    userFoods = userFoods.Skip((currentPage - 1) * foodsPerPage).Take(foodsPerPage);
-
-        //    return new MinePageViewModel()
-        //    {
-        //        TotalFoods = totalFoods,
-        //        CurrentPage = currentPage,
-        //        FoodsPerPage = foodsPerPage,
-        //        Foods = userFoods,
-        //    };
-        //}
-
         public async Task<IEnumerable<string>> getAllTypesAsync()
-            => await repo.All<Food>().Where(f => f.IsActive).Select(f => f.Type).Distinct().ToListAsync();
+        {
+            return await repo.All<Food>().Where(f => f.IsActive).Select(f => f.Type).Distinct().ToListAsync();
+        }
 
         public async Task<FoodViewModel> GetByIdAsync(string id)
         {
-            var food = await repo.All<Food>()
-                .Include(f => f.Nutrition)
-                .Where(f => f.IsActive)
-                .Where(f => f.Id == id)
-                .FirstOrDefaultAsync(f => f.Id == id);
+            var food = await LoadFood(id);
 
             return new FoodViewModel()
             {
@@ -205,7 +151,7 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        public async Task<bool> IsFoodPrivate(string id)
+        public async Task<bool> FoodHasAppUser(string id)
         {
             var food = await repo.AllReadonly<Food>().FirstOrDefaultAsync(f => f.Id == id);
 

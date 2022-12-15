@@ -115,7 +115,7 @@ namespace FitnesDiary.Tests.UnitTests
             var userRecipesCount = this.AppUser.Recipes.Where(r => r.IsActive).Count();
             var recipesNames = this.AppUser.Recipes.Select(r => r.Name).ToList();
 
-            var result = await recipeService.GetAllById(AppUser.Id);
+            var result = await recipeService.GetAllByUserId(AppUser.Id);
             var resultRecipeNames = result.Select(r => r.Name).ToList();
 
             Assert.That(result.Count, Is.EqualTo(userRecipesCount));
@@ -197,12 +197,12 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetBiIdAsync_ShouldThrowErrorWithInvalidId()
         {
-            Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.GetByIdAsync("invalidId"));
+            Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.GetDetailsByIdAsync("invalidId"));
         }
         [Test]
         public async Task GetBiIdAsync_ShouldReturnCorrectRecipe()
         {
-            var result = await recipeService.GetByIdAsync(this.TestRecipe.Id);
+            var result = await recipeService.GetDetailsByIdAsync(this.TestRecipe.Id);
 
             Assert.IsNotNull(result);
             Assert.That(result.Name.Equals(this.TestRecipe.Name));

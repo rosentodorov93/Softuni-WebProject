@@ -16,20 +16,22 @@ namespace FitnessDiary.Controllers
     {
         private readonly IFoodService service;
         private readonly IAccountService accountService;
+        private readonly ILogger logger;
 
-        public FoodController(IFoodService _service, IAccountService _accountService)
+        public FoodController(IFoodService _service, IAccountService _accountService, ILogger<FoodController> _logger)
         {
             service = _service;
             accountService = _accountService;
+            logger = _logger;
         }
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
             var result = await service.GetAllAsync(
                 null,
-                query.Type, 
-                query.SearchTerm, 
-                query.Sorting, 
-                query.CurrentPage, 
+                query.Type,
+                query.SearchTerm,
+                query.Sorting,
+                query.CurrentPage,
                 AllFoodsQueryModel.FoodsPerPage);
 
             query.TotalFoods = result.TotalFoodsCount;
@@ -57,6 +59,10 @@ namespace FitnessDiary.Controllers
             }
 
             await service.AddFood(model, userId);
+            if (userId == null)
+            {
+                logger.LogInformation($"New food {model.Name} added to food Database");
+            }
 
             return RedirectToAction("All", "Food");
         }
@@ -85,8 +91,32 @@ namespace FitnessDiary.Controllers
         {
             if ((await service.ExistsByIdAsync(Id) == false))
             {
-                return RedirectToAction("Index", "Home" , new {area = ""});
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
+
+            var foodHasUser = await service.FoodHasAppUser(Id);
+
+            if (this.User.IsInRole("User") && foodHasUser == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "You can't edit public food database";
+                logger.LogError($"User {this.User.Identity.Name} don't have access to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            if (this.User.IsInRole("Admin") && foodHasUser)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                logger.LogError($"Admin {this.User.Identity.Name} don't have access to to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            if (this.User.IsInRole("Moderator") && foodHasUser)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
             var food = await service.GetByIdAsync(Id);
 
             return View(food);
@@ -94,31 +124,34 @@ namespace FitnessDiary.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(string Id, FoodViewModel model)
         {
-            
+
             if ((await service.ExistsByIdAsync(Id)) == false)
             {
                 ModelState.AddModelError("", "Food does not exist");
 
                 return View(model);
             }
-            var appUserId = accountService.GetById(this.User.Id());
-            var foodIsPrivate = await service.IsFoodPrivate(Id);
 
-            if (appUserId != null && foodIsPrivate == false)
+            var foodHasUser = await service.FoodHasAppUser(Id);
+
+            if (this.User.IsInRole("User") && foodHasUser == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "You cant edit public food databse";
+                TempData[MessageConstant.ErrorMessage] = "You can't edit public food database";
+                logger.LogError($"User {this.User.Identity.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 
-            if (appUserId == null && this.User.IsInRole("Admin") && foodIsPrivate)
+            if (this.User.IsInRole("Admin") && foodHasUser)
             {
-                TempData[MessageConstant.ErrorMessage] = "Admin can only edit public foods";
+                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                logger.LogError($"Admin {this.User.Identity.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 
-            if (appUserId == null && this.User.IsInRole("Moderator") && foodIsPrivate)
+            if (this.User.IsInRole("Moderator") && foodHasUser)
             {
-                TempData[MessageConstant.ErrorMessage] = "Moderator can only edit public foods";
+                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 
@@ -133,14 +166,39 @@ namespace FitnessDiary.Controllers
         }
         [HttpPost]
         [IgnoreAntiforgeryToken]
-        public async Task<IActionResult> Delete([FromBody]string Id)
+        public async Task<IActionResult> Delete([FromBody] string Id)
         {
-            if ((await service.ExistsByIdAsync(Id)))
+            if ((await service.ExistsByIdAsync(Id)) == false)
             {
-                await service.DeleteAsync(Id);
+                TempData[MessageConstant.ErrorMessage] = "Invalid food Id";
+                logger.LogError($"Invalid Id");
+                return RedirectToAction("Index", "Home", new { area = "" });
             }
 
-            return Json("success");
+            var foodHasUser = await service.FoodHasAppUser(Id);
+
+            if (this.User.IsInRole("User") && foodHasUser == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "You can't delete public food database";
+                logger.LogError($"User {this.User.Identity.Name} don't have access to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            if (this.User.IsInRole("Admin") && foodHasUser)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Admin can't delete private foods";
+                logger.LogError($"Admin {this.User.Identity.Name} don't have access to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            if (this.User.IsInRole("Moderator") && foodHasUser)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Admin can't delete private foods";
+                logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            return Json(await service.DeleteAsync(Id));
         }
     }
 }
