@@ -18,14 +18,13 @@ namespace FitnessDiary.Controllers
         private readonly IFoodService service;
         private readonly IAccountService accountService;
         private readonly ILogger logger;
-        private readonly IMemoryCache cache;
 
-        public FoodController(IFoodService _service, IAccountService _accountService, ILogger<FoodController> _logger, IMemoryCache _cache)
+
+        public FoodController(IFoodService _service, IAccountService _accountService, ILogger<FoodController> _logger)
         {
             service = _service;
             accountService = _accountService;
             logger = _logger;
-            cache = _cache;
         }
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
@@ -39,13 +38,7 @@ namespace FitnessDiary.Controllers
 
             query.TotalFoods = result.TotalFoodsCount;
             query.Types = await service.getAllTypesAsync();
-            query.Foods = cache.Get<IEnumerable<FoodServiceModel>>(FoodConstants.AllFoodsCacheKey);
-
-            if (query.Foods == null)
-            {
-                query.Foods = result.Foods;
-            }
-
+            query.Foods = result.Foods;
 
             return View(query);
         }
