@@ -1,9 +1,9 @@
-﻿using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Constants;
+using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Diary;
 using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
 {
@@ -12,17 +12,28 @@ namespace FitnessDiary.Controllers
     {
         private readonly IDiaryService diaryService;
         private readonly IAccountService accountService;
+        private ILogger logger;
 
-        public DiaryController(IDiaryService _service, IAccountService _accountService)
+        public DiaryController(IDiaryService _service,
+            IAccountService _accountService,
+            ILogger<DiaryController> _logger)
         {
             diaryService = _service;
             accountService = _accountService;
+            logger = _logger;
         }
 
         public async Task<IActionResult> Index()
         {
             var applicationUserId = accountService.GetById(this.User.Id());
+            if (await accountService.ExistsById(applicationUserId) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
+                logger.LogError("Invalid user");
 
+                return RedirectToAction("Index", "Home", new { area = "" }); 
+            }
+            
             var diaryDay = await diaryService.LoadDiaryDay(applicationUserId);
             var requiredNutrition = await accountService.GetUserTargetNutritionAsync(applicationUserId);
 
@@ -49,33 +60,93 @@ namespace FitnessDiary.Controllers
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddRecipeServing([FromBody] ServingServiceModel model)
         {
+            
             var userId = accountService.GetById(this.User.Id());
-            await diaryService.AddRecipeServingAsync(userId, model.Id, model.Amount, model.Category);
 
-            return Json("success");
+            if (await accountService.ExistsById(userId) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
+                logger.LogError("Invalid user");
+
+
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+            try
+            {
+                var result = await diaryService.AddRecipeServingAsync(userId, model.Id, model.Amount, model.Category);
+                logger.LogInformation(result);
+
+                return Json(result);
+            }
+            catch (ArgumentException ae)
+            {
+
+                TempData[MessageConstant.ErrorMessage] = ae.Message;
+                logger.LogError(ae, ae.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+            
         }
         public async Task<IActionResult> RemoveServing(int Id)
         {
             var userId = accountService.GetById(this.User.Id());
-            await diaryService.RemoveServingAsync(userId, Id);
 
-            return RedirectToAction("Index", "Diary");
+            if (await accountService.ExistsById(userId) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
+                logger.LogError("Invalid user");
+
+
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            try
+            {
+                await diaryService.RemoveServingAsync(userId, Id);
+
+                return RedirectToAction("Index", "Diary");
+            }
+            catch (ArgumentException ae)
+            {
+                TempData[MessageConstant.ErrorMessage] = ae.Message;
+                logger.LogError(ae, ae.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
         }
-        public IActionResult Statistics()
-        {
-
-            return View();
-        }
-
+       
         [HttpPost]
         [IgnoreAntiforgeryToken]
         public async Task<IActionResult> AddFoodServing([FromBody] ServingServiceModel model)
         {
             var userId = accountService.GetById(this.User.Id());
 
-            await diaryService.AddFoodServingAsync(userId, model.Id, model.Amount, model.Category);
+            if (await accountService.ExistsById(userId) == false)
+            {
+                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
+                logger.LogError("Invalid user");
 
-            return Json("success");
+
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
+
+            try
+            {
+                var result = await diaryService.AddFoodServingAsync(userId, model.Id, model.Amount, model.Category);
+                logger.LogInformation(result);
+
+                return Json(result);
+            }
+            catch (ArgumentException ae)
+            {
+
+                TempData[MessageConstant.ErrorMessage] = ae.Message;
+                logger.LogError(ae, ae.Message);
+
+                return RedirectToAction(nameof(Index));
+            }
+            
         }
     }
 }

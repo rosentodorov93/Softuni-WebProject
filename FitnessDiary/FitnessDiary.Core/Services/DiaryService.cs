@@ -19,7 +19,7 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
         }
 
-        public async Task AddFoodServingAsync(string userId, string id, double amount, string category)
+        public async Task<string> AddFoodServingAsync(string userId, string id, double amount, string category)
         {
             var food = await repo.All<Food>()
                 .Where(f => f.Id == id)
@@ -43,6 +43,16 @@ namespace FitnessDiary.Core.Services
 
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
 
+            if (currentDay == null || currentDay.DateTime.Date < DateTime.Today)
+            {
+                var diaryDay = new DiaryDay()
+                {
+                    DateTime = DateTime.Today,
+                    Nutrition = new NutritionData()
+                };
+                user?.Diary.Add(diaryDay);
+                currentDay = diaryDay;
+            }
 
             currentDay.Servings.Add(new Serving()
             {
@@ -54,10 +64,12 @@ namespace FitnessDiary.Core.Services
             });
 
             await repo.SaveChangesAsync();
+            return $"Successfully added {amount} {food.Name} to {category}";
         }
 
-        public async Task AddRecipeServingAsync(string userId, string id, double amount, string category)
+        public async Task<string> AddRecipeServingAsync(string userId, string id, double amount, string category)
         {
+            
             var recipe = await repo.All<Recipe>()
                 .Where(r => r.Id == id)
                 .Include(f => f.Nutrition)
@@ -65,7 +77,7 @@ namespace FitnessDiary.Core.Services
 
             if (recipe == null)
             {
-                throw new ArgumentException("Invalid foodId");
+                throw new ArgumentException("Invalid recipe Id");
             }
 
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
@@ -80,6 +92,16 @@ namespace FitnessDiary.Core.Services
 
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
 
+            if (currentDay == null || currentDay.DateTime.Date < DateTime.Today)
+            {
+                var diaryDay = new DiaryDay()
+                {
+                    DateTime = DateTime.Today,
+                    Nutrition = new NutritionData()
+                };
+                user?.Diary.Add(diaryDay);
+                currentDay = diaryDay;
+            }
 
             currentDay.Servings.Add(new Serving()
             {
@@ -91,6 +113,7 @@ namespace FitnessDiary.Core.Services
             });
 
             await repo.SaveChangesAsync();
+            return $"Successfully added {amount} portions {recipe.Name} to {category}";
         }
 
         public async Task<DiaryDayServiceModel> LoadDiaryDay(string userId)
@@ -183,13 +206,27 @@ namespace FitnessDiary.Core.Services
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
 
-            if (user == null)
-            {
-                throw new ArgumentException("Invalid userId");
-            }
 
             var currentDay = user?.Diary.OrderBy(x => x.Id).LastOrDefault();
+
+            if (currentDay == null || currentDay.DateTime.Date < DateTime.Today)
+            {
+                var diaryDay = new DiaryDay()
+                {
+                    DateTime = DateTime.Today,
+                    Nutrition = new NutritionData()
+                };
+                user?.Diary.Add(diaryDay);
+                currentDay = diaryDay;
+            }
+
             var serving = currentDay.Servings.FirstOrDefault(s => s.Id == id);
+
+            if (serving == null)
+            {
+                throw new ArgumentException("Invalid serving Id");
+            }
+
             currentDay.Servings.Remove(serving);
             await repo.SaveChangesAsync();
         }
