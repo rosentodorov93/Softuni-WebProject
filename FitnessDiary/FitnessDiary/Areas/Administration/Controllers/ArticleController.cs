@@ -2,6 +2,8 @@
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Article;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Areas.Administration.Controllers
 {
@@ -9,11 +11,13 @@ namespace FitnessDiary.Areas.Administration.Controllers
     {
         private readonly IArticleService articleService;
         private readonly ILogger logger;
+        private IMemoryCache cache;
 
-        public ArticleController(IArticleService _articleService, ILogger<ArticleController> _logger)
+        public ArticleController(IArticleService _articleService, ILogger<ArticleController> _logger, IMemoryCache _cache)
         {
             articleService = _articleService;
             logger = _logger;
+            cache = _cache;
         }
 
         public async Task<IActionResult> Add()
@@ -34,6 +38,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             }
 
             await articleService.AddAsync(model);
+            cache.Remove(ArticlesCacheKey);
             logger.LogInformation($"Ärticle {model.Title} created!");
 
             return RedirectToAction("All", "Article", new { Area = "" });
@@ -61,6 +66,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             }
 
             await articleService.EditAsync(model);
+            cache.Remove(ArticlesCacheKey);
 
             return RedirectToAction("All", "Article", new { Area = "" });
         }
@@ -75,6 +81,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             if (User.IsInRole("Admin"))
             {
                 await articleService.DeleteAsync(Id);
+                cache.Remove(ArticlesCacheKey);
                 logger.LogInformation($"Admin deleted article with id: {Id}");
             }
 

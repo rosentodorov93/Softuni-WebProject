@@ -1,7 +1,10 @@
 ﻿using FitnessDiary.Core.Constants;
 using FitnessDiary.Core.Contracts;
+using FitnessDiary.Core.Models.Article;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
@@ -9,19 +12,36 @@ namespace FitnessDiary.Controllers
     {
         private readonly IArticleService articleService;
         private readonly ILogger logger;
+        private readonly IMemoryCache cache;
 
-        public ArticleController(IArticleService _articleService, ILogger<ArticleController> _logger)
+        public ArticleController(IArticleService _articleService, ILogger<ArticleController> _logger, IMemoryCache _cache)
         {
             articleService = _articleService;
             logger = _logger;
+            cache = _cache;
         }
 
         public async Task<IActionResult> All(AllArticlesQueryModel query)
         {
-            var articles = await articleService.GetAllAsync(query.CategoryFilter);
+            var articles = cache.Get<List<ListingViewModel>>(ArticlesCacheKey);
+            if (articles == null)
+            {
+                articles = await articleService.GetAllAsync(query.CategoryFilter);
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+                cache.Set(ArticlesCacheKey, articles, cacheOptions);
+            }
 
             query.Articles = articles;
-            query.Categories = await articleService.GetCategoriesAsync();
+            query.Categories = cache.Get<IEnumerable<CategoryViewModel>>(ArticlesCategoriesCacheKey);
+
+            if (query.Categories == null)
+            {
+                query.Categories = await articleService.GetCategoriesAsync();
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+                cache.Set(ArticlesCategoriesCacheKey, query.Categories, cacheOptions);
+            }
 
             return View(query);
         }

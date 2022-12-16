@@ -11,6 +11,8 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Extensions.Caching.Memory;
+using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Areas.Identity.Pages.Account
 {
@@ -19,6 +21,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IAccountService _service;
+        private readonly IMemoryCache cache;
 
 
         private readonly ILogger<RegisterModel> _logger;
@@ -28,14 +31,15 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             UserManager<IdentityUser> userManager,
             SignInManager<IdentityUser> signInManager,
             IAccountService accountService,
-            ILogger<RegisterModel> logger)
+            ILogger<RegisterModel> logger,
+            IMemoryCache _cache)
         {
             _userManager = userManager;
             _service = accountService;
 
             _signInManager = signInManager;
             _logger = logger;
-
+            cache = _cache;
         }
 
         /// <summary>
@@ -160,6 +164,7 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                 if (result)
                 {
                     _logger.LogInformation("User created a new account with password.");
+                    cache.Remove(UsersCacheKey);
 
                     return RedirectToPage("/Account/Login", new { area = "Identity" });
 

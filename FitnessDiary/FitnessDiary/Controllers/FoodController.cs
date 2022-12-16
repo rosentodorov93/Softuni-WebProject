@@ -5,6 +5,7 @@ using FitnessDiary.Extensions;
 using FitnessDiary.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
@@ -17,12 +18,14 @@ namespace FitnessDiary.Controllers
         private readonly IFoodService service;
         private readonly IAccountService accountService;
         private readonly ILogger logger;
+        private readonly IMemoryCache cache;
 
-        public FoodController(IFoodService _service, IAccountService _accountService, ILogger<FoodController> _logger)
+        public FoodController(IFoodService _service, IAccountService _accountService, ILogger<FoodController> _logger, IMemoryCache _cache)
         {
             service = _service;
             accountService = _accountService;
             logger = _logger;
+            cache = _cache;
         }
         public async Task<IActionResult> All([FromQuery] AllFoodsQueryModel query)
         {
@@ -36,7 +39,13 @@ namespace FitnessDiary.Controllers
 
             query.TotalFoods = result.TotalFoodsCount;
             query.Types = await service.getAllTypesAsync();
-            query.Foods = result.Foods;
+            query.Foods = cache.Get<IEnumerable<FoodServiceModel>>(FoodConstants.AllFoodsCacheKey);
+
+            if (query.Foods == null)
+            {
+                query.Foods = result.Foods;
+            }
+
 
             return View(query);
         }
