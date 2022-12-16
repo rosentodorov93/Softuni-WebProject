@@ -21,13 +21,41 @@ namespace FitnessDiary.Core.Services
             userManager = _userManager;
         }
 
-        public async Task AddApplicationUser(ApplicationUser applicationUser)
+        public async Task<bool> CreateApplicationUser(IdentityUser user,
+            int age,
+            string fullName,
+            int gender,
+            int height,
+            double weight,
+            int activityLevel,
+            int fitnessGoal)
         {
+            var applicationUser = new ApplicationUser()
+            {
+                FullName = fullName,
+                Gender = (Gender)gender,
+                Age = age,
+                Height = height,
+                Weight = weight,
+                ActivityLevelId = activityLevel,
+                FitnessGoal = (FitnessGoalType)fitnessGoal,
+                TargetNutrients = new NutritionData(),
+                Diary = new List<DiaryDay>(),
+                User = user
+            };
+            var targetNutrient = await CalculateTargetNutrientsAsync(applicationUser);
+            applicationUser.TargetNutrients.Calories = targetNutrient.Calories;
+            applicationUser.TargetNutrients.Carbohydrates = targetNutrient.Carbs;
+            applicationUser.TargetNutrients.Proteins = targetNutrient.Protein;
+            applicationUser.TargetNutrients.Fats = targetNutrient.Fats;
+
             await repo.AddAsync(applicationUser);
             await repo.SaveChangesAsync();
+
+            return true;
         }
 
-        public async Task<NutritionServiceModel> CalculateTargetNutrientsAsync(ApplicationUser user)
+        private async Task<NutritionServiceModel> CalculateTargetNutrientsAsync(ApplicationUser user)
         {
             double targetCalories = 0;
 
@@ -64,7 +92,7 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        public async Task CreateUserAsync(CreateUserViewModel model)
+        public async Task CreateAdministrationUser(CreateUserViewModel model)
         {
             var username = $"{model.FirstName.Substring(0, 1)}.{model.LastName}";
             var user = new IdentityUser()

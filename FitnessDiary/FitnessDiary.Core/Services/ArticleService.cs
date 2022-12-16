@@ -66,17 +66,17 @@ namespace FitnessDiary.Core.Services
 
         public async Task<List<ListingViewModel>> GetAllAsync(string? filter)
         {
-            var articles = repo.AllReadonly<Article>()
+            var articles =  repo.AllReadonly<Article>()
                 .Where(a => a.IsActive)
                 .Include(a => a.Category)
-                .ToList();
+                .AsQueryable();
 
             if (filter != null)
             {
-                articles = articles.Where(a => a.Category.Name == filter).ToList();
+                articles = articles.Where(a => a.Category.Name == filter);
             }
 
-            return articles.Select(a => new ListingViewModel()
+            return await articles.Select(a => new ListingViewModel()
             {
                 Id = a.Id,
                 Title = a.Title,
@@ -84,15 +84,15 @@ namespace FitnessDiary.Core.Services
                 Category = a.Category.Name,
                 Author = a.Author,
                 Date = a.Date
-            }).ToList();
+            }).ToListAsync();
         }
 
         public async Task<ArticleDetailsViewModel> GetByIdAsync(string id)
         {
-            var article = repo.All<Article>()
+            var article = await repo.All<Article>()
                 .Where(a => a.IsActive)
                 .Include(a => a.Category)
-                .FirstOrDefault(a => a.Id == id);
+                .FirstOrDefaultAsync(a => a.Id == id);
 
             return new ArticleDetailsViewModel()
             {

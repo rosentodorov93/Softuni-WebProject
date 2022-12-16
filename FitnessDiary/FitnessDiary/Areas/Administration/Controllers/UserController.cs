@@ -13,11 +13,16 @@ namespace FitnessDiary.Areas.Administration.Controllers
         private readonly IAccountService accountService;
         private readonly RoleManager<IdentityRole> roleManager;
         private readonly UserManager<IdentityUser> userManager;
-        public UserController(IAccountService _accountService, UserManager<IdentityUser> _userManager, RoleManager<IdentityRole> _roleManager)
+        private ILogger logger;
+        public UserController(IAccountService _accountService,
+            UserManager<IdentityUser> _userManager,
+            RoleManager<IdentityRole> _roleManager,
+            ILogger<UserController> _logger)
         {
             accountService = _accountService;
             userManager = _userManager;
             roleManager = _roleManager;
+            logger = _logger;
         }
 
         public async Task<IActionResult> All()
@@ -45,7 +50,8 @@ namespace FitnessDiary.Areas.Administration.Controllers
                 return View(model);
             }
 
-            await accountService.CreateUserAsync(model);
+            await accountService.CreateAdministrationUser(model);
+            logger.LogInformation($"Administration user {model.FirstName} {model.LastName} created!");
 
             return RedirectToAction(nameof(All));
         }

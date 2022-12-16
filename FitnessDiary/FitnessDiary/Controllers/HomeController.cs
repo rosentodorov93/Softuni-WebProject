@@ -9,7 +9,7 @@ namespace FitnessDiary.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger<HomeController> _logger;
+        private readonly ILogger _logger;
         private readonly IArticleService articleService;
 
         public HomeController(ILogger<HomeController> logger, IArticleService _articleService)

@@ -8,10 +8,12 @@ namespace FitnessDiary.Areas.Administration.Controllers
     public class ArticleController : AdministrationController
     {
         private readonly IArticleService articleService;
+        private readonly ILogger logger;
 
-        public ArticleController(IArticleService _articleService)
+        public ArticleController(IArticleService _articleService, ILogger<ArticleController> _logger)
         {
             articleService = _articleService;
+            logger = _logger;
         }
 
         public async Task<IActionResult> Add()
@@ -32,6 +34,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             }
 
             await articleService.AddAsync(model);
+            logger.LogInformation($"Ärticle {model.Title} created!");
 
             return RedirectToAction("All", "Article", new { Area = "" });
         }
@@ -72,6 +75,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             if (User.IsInRole("Admin"))
             {
                 await articleService.DeleteAsync(Id);
+                logger.LogInformation($"Admin deleted article with id: {Id}");
             }
 
 

@@ -127,13 +127,13 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
         {
             ReturnUrl = returnUrl;
             this.ActivityLevels = await _service.GetActivityLevels();
-            //ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
             returnUrl ??= Url.Content("~/");
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
+
             if (ModelState.IsValid)
             {                
                 var user = new IdentityUser()
@@ -142,56 +142,33 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
                     UserName = Input.Username
                 };
                 
-                var result = await _userManager.CreateAsync(user, Input.Password);
+                await _userManager.CreateAsync(user, Input.Password);
 
                 await _userManager.AddToRoleAsync(user, "User");
 
-                var applicationUser = new ApplicationUser()
-                {
-                    FullName = Input.FullName,
-                    Gender = (Gender)Input.Gender,
-                    Age = Input.Age,
-                    Height = Input.Height,
-                    Weight = Input.Weight,
-                    ActivityLevelId = Input.ActivityLevelId,
-                    FitnessGoal = (FitnessGoalType)Input.FitnessGoal,
-                    TargetNutrients = new NutritionData(),
-                    Diary = new List<DiaryDay>(),
-                    User = user
-                };
-                var target = await _service.CalculateTargetNutrientsAsync(applicationUser);
-                applicationUser.TargetNutrients.Calories = target.Calories;
-                applicationUser.TargetNutrients.Carbohydrates = target.Carbs;
-                applicationUser.TargetNutrients.Proteins = target.Protein;
-                applicationUser.TargetNutrients.Fats = target.Fats;
-                await _service.AddApplicationUser(applicationUser);
+               
+                var result = await _service.CreateApplicationUser(
+                    user, 
+                    Input.Age,
+                    Input.FullName, 
+                    Input.Gender, 
+                    Input.Height, 
+                    Input.Weight, 
+                    Input.ActivityLevelId,
+                    Input.FitnessGoal);
 
-                if (result.Succeeded)
+                if (result)
                 {
                     _logger.LogInformation("User created a new account with password.");
 
-                    //await _signInManager.SignInAsync(user, isPersistent: false);
                     return RedirectToPage("/Account/Login", new { area = "Identity" });
 
                 }
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(string.Empty, error.Description);
-                }
             }
 
-            // If we got this far, something failed, redisplay form
             this.ActivityLevels = await _service.GetActivityLevels();
             return Page();
         }
 
-        //private IUserEmailStore<IdentityUser> GetEmailStore()
-        //{
-        //    if (!_userManager.SupportsUserEmail)
-        //    {
-        //        throw new NotSupportedException("The default UI requires a user store with email support.");
-        //    }
-        //    return (IUserEmailStore<IdentityUser>)_userStore;
-        //}
     }
 }

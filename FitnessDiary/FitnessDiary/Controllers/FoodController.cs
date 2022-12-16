@@ -41,7 +41,7 @@ namespace FitnessDiary.Controllers
             return View(query);
         }
 
-        public async Task<IActionResult> Add()
+        public IActionResult Add()
         {
             var model = new FoodViewModel();
 
@@ -137,21 +137,21 @@ namespace FitnessDiary.Controllers
             if (this.User.IsInRole("User") && foodHasUser == false)
             {
                 TempData[MessageConstant.ErrorMessage] = "You can't edit public food database";
-                logger.LogError($"User {this.User.Identity.Name} don't have access to food with id {Id}");
+                logger.LogError($"User {this.User?.Identity?.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 
             if (this.User.IsInRole("Admin") && foodHasUser)
             {
                 TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
-                logger.LogError($"Admin {this.User.Identity.Name} don't have access to food with id {Id}");
+                logger.LogError($"Admin {this.User?.Identity?.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 
             if (this.User.IsInRole("Moderator") && foodHasUser)
             {
                 TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
-                logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
+                logger.LogError($"Moderator {this.User?.Identity?.Name} don't have access to food with id {Id}");
                 return View(model);
             }
 

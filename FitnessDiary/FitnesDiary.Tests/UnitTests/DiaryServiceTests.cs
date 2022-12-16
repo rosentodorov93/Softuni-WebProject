@@ -50,7 +50,7 @@ namespace FitnesDiary.Tests.UnitTests
 
         }
         [Test]
-        public async Task AddFoodServing_ShouldThrowErrorWithInvalidUser()
+        public void AddFoodServing_ShouldThrowErrorWithInvalidUser()
         {
             var serving = new ServingServiceModel()
             {
@@ -62,7 +62,7 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.ThrowsAsync<ArgumentException>(async () => await diaryService.AddFoodServingAsync("invalidId", serving.Id, serving.Amount, serving.Category));
         }
         [Test]
-        public async Task AddFoodServing_ShouldThrowErrorWithInvalidFood()
+        public void AddFoodServing_ShouldThrowErrorWithInvalidFood()
         {
             var serving = new ServingServiceModel()
             {
@@ -108,7 +108,7 @@ namespace FitnesDiary.Tests.UnitTests
 
         }
         [Test]
-        public async Task AddRecipeServing_ShouldThrowErrorWithInvalidUser()
+        public void AddRecipeServing_ShouldThrowErrorWithInvalidUser()
         {
             var serving = new ServingServiceModel()
             {
@@ -120,7 +120,7 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.ThrowsAsync<ArgumentException>(async () => await diaryService.AddFoodServingAsync("invalidId", serving.Id, serving.Amount, serving.Category));
         }
         [Test]
-        public async Task AddRecipeServing_ShouldThrowErrorWithInvalidFood()
+        public void AddRecipeServing_ShouldThrowErrorWithInvalidFood()
         {
             var serving = new ServingServiceModel()
             {
