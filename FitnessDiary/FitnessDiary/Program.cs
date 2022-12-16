@@ -7,6 +7,7 @@ using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using FitnessDiary.Extensions;
+using FitnessDiary.ModelBinders;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +29,7 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options =>
 builder.Services.AddControllersWithViews(options =>
 {
     options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+    options.ModelBinderProviders.Insert(0, new DoubleModelBinderProvider());
 });
 
 builder.Services.AddApplicationServices();
@@ -44,7 +46,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 

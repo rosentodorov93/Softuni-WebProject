@@ -1,20 +1,19 @@
-﻿using FitnessDiary.Core.Constants;
-using FitnessDiary.Core.Contracts;
+﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Models;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
-using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly ILogger _logger;
+        private readonly ILogger logger;
         private readonly IArticleService articleService;
 
-        public HomeController(ILogger<HomeController> logger, IArticleService _articleService)
+        public HomeController(ILogger<HomeController> _logger, IArticleService _articleService)
         {
-            _logger = logger;
+            logger = _logger;
             articleService = _articleService;
         }
 
@@ -28,6 +27,10 @@ namespace FitnessDiary.Controllers
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
         public IActionResult Error()
         {
+            var feature = this.HttpContext.Features.Get<IExceptionHandlerFeature>();
+
+            logger.LogError(feature.Error, "TraceIdentifier: {0}", Activity.Current?.Id ?? HttpContext.TraceIdentifier);
+
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
         }
     }
