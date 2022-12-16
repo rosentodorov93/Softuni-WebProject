@@ -4,6 +4,7 @@ using FitnessDiary.Core.Models.Workout;
 using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
@@ -14,14 +15,17 @@ namespace FitnessDiary.Controllers
         private readonly IWorkoutService workoutService;
         private readonly IAccountService accountService;
         private readonly ILogger logger;
+        private readonly IMemoryCache cache;
 
         public WorkoutController(IWorkoutService _workoutService
             , IAccountService _accountService
-            , ILogger<WorkoutController> _logger)
+            , ILogger<WorkoutController> _logger
+            , IMemoryCache _cache)
         {
             workoutService = _workoutService;
             accountService = _accountService;
             logger = _logger;
+            cache = _cache;
         }
 
         public  IActionResult CreateTamplate()
@@ -39,7 +43,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
                 logger.LogError("Invalid user Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
             if (!ModelState.IsValid)
             {
@@ -47,11 +51,12 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await workoutService.CreateTamplateAsync(model, userId);
+            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
             logger.LogInformation(result);
 
             return Json(result);
         }
-        public async Task<IActionResult> MineTamlates()
+        public async Task<IActionResult> MineTamplates()
         {
             var userId = accountService.GetById(this.User.Id());
             if (userId == null)
@@ -61,10 +66,19 @@ namespace FitnessDiary.Controllers
 
                 return RedirectToAction("Index", "Home");
             }
+            var tamplates = cache.Get<IEnumerable<ListingTamplateViewModel>>(WorkoutConstants.MineTamplatesCacheKey);
 
-            var workouts = await workoutService.GetMineTamplatesAsync(userId);
+            if (tamplates == null)
+            {
+                tamplates =  await workoutService.GetMineTamplatesAsync(userId);
 
-            return View(workouts);
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+
+                cache.Set(WorkoutConstants.MineTamplatesCacheKey, tamplates, cacheOptions);
+            }
+
+            return View(tamplates);
         }
         public async Task<IActionResult> EditTamplate(string Id)
         {
@@ -73,7 +87,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var workoutTamplate = await workoutService.GetTamplateById(Id);
@@ -88,7 +102,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
             if (!ModelState.IsValid)
             {
@@ -96,6 +110,7 @@ namespace FitnessDiary.Controllers
             }
 
             await workoutService.EditTamplateAsync(model);
+            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
 
             return RedirectToAction("MineTamlates");
         }
@@ -106,7 +121,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var model = await workoutService.GetWorkoutByIdAsync(Id);
@@ -121,7 +136,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             if (!ModelState.IsValid)
@@ -142,7 +157,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
             if (!ModelState.IsValid)
             {
@@ -150,6 +165,7 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await workoutService.AddExerciseToTamplateAsync(model);
+            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
             logger.LogInformation(result);
 
             return Json(result);
@@ -163,7 +179,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
             if (!ModelState.IsValid)
             {
@@ -171,6 +187,7 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await workoutService.RemoveExerciseAsync(model.ExerciseId, model.TamplateId);
+            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
             logger.LogInformation(result);
 
             return Json(result);
@@ -182,7 +199,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var tamplate = await workoutService.GetTamplateForDiaryByIdAsync(Id);
@@ -203,7 +220,7 @@ namespace FitnessDiary.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             await workoutService.AddToDiaryAsync(model, userId);
@@ -219,10 +236,11 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid workout tamplate Id";
                 logger.LogError("Invalid workout tamplate Id");
 
-                return RedirectToAction(nameof(MineTamlates));
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var result = await workoutService.DeleteAsync(id);
+            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
             logger.LogInformation(result);
 
             return Json(result);

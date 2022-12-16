@@ -5,6 +5,7 @@ using FitnessDiary.Core.Models.Recepie;
 using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
 
 namespace FitnessDiary.Controllers
@@ -16,16 +17,19 @@ namespace FitnessDiary.Controllers
         private readonly IRecipeService recepieService;
         private readonly IAccountService accountService;
         private readonly ILogger logger;
+        private readonly IMemoryCache cache;
 
         public RecipeController(IFoodService _foodService,
             IRecipeService _recipeService,
             IAccountService _accountService,
-            ILogger<RecipeController> _logger)
+            ILogger<RecipeController> _logger,
+            IMemoryCache _cache)
         {
             foodService = _foodService;
             recepieService = _recipeService;
             accountService = _accountService;
             logger = _logger;
+            cache = _cache;
         }
 
         public async Task<IActionResult> Add()
@@ -53,7 +57,9 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await recepieService.AddAsync(model);
+            cache.Remove(RecipeConstants.MineRecipesCacheKey);
             logger.LogInformation(result);
+
             return Json(result);
         }
 
@@ -98,6 +104,8 @@ namespace FitnessDiary.Controllers
             }
 
             var recipe = await recepieService.AddIngredientAsync(model.Ingredient, model.RecepieId);
+            cache.Remove(RecipeConstants.MineRecipesCacheKey);
+
             return RedirectToAction("Details", "Recipe", new { id = recipe.Id });
 
         }
@@ -139,6 +147,7 @@ namespace FitnessDiary.Controllers
             try
             {
                 await recepieService.RemoveIngredient(model.Recipeid, model.IngredientToRemove);
+                cache.Remove(RecipeConstants.MineRecipesCacheKey);
 
                 return RedirectToAction("Details", "Recipe", new { id = model.Recipeid });
             }
@@ -193,6 +202,7 @@ namespace FitnessDiary.Controllers
             }
 
             await recepieService.EditAsync(model);
+            cache.Remove(RecipeConstants.MineRecipesCacheKey);
             logger.LogInformation($"Recipe {model.Name} was edited!");
 
             return RedirectToAction("Details", "Recipe", new { id = model.Id });
@@ -207,8 +217,15 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
+            var recipes = cache.Get<IEnumerable<RecipeListingViewModel>>(RecipeConstants.MineRecipesCacheKey);
 
-            var recipes = await recepieService.GetAllByUserId(userId);
+            if (recipes == null)
+            {
+                recipes = await recepieService.GetAllByUserId(userId);
+                var cacheOptions = new MemoryCacheEntryOptions()
+                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
+                cache.Set(RecipeConstants.MineRecipesCacheKey, recipes, cacheOptions);
+            }
 
             return View(recipes);
         }
@@ -224,6 +241,7 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await recepieService.DeleteAsync(id);
+            cache.Remove(RecipeConstants.MineRecipesCacheKey);
             logger.LogInformation(result);
 
             return Json(result);
