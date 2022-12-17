@@ -9,8 +9,8 @@
 <hr />
 
 <form method="get">
-    <div class="row">
-        <div class="form-group col-md-4">
+    <div class="d-flex">
+        <div class="form-group col-md-3">
             <div class="form-group">
                 <label asp-for="Type"></label>
                 <select asp-for="Type" class="form-control">
@@ -24,19 +24,27 @@
             </div>
         </div>
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <label asp-for="SearchTerm"></label>
-            <input asp-for="SearchTerm" class="form-control" >
+            <input asp-for="SearchTerm" class="form-control">
         </div>
 
-        <div class="form-group col-md-4">
+        <div class="form-group col-md-3">
             <div class="form-group">
                 <label asp-for="Sorting"></label>
                 <select asp-for="Sorting" class="form-control">
-                    <option value="0" selected>Name</option>
-                    <option value="1">Type</option>
-                    <option value="2">Calories</option>
+                    <option value="1" selected>Name</option>
+                    <option value="2">Type</option>
+                    <option value="3">Calories</option>
                 </select>
+            </div>
+        </div>
+
+        <div class="form-group col-md-2 mt-auto">
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-search"></i>
+                </button>
             </div>
         </div>
     </div>
@@ -105,7 +113,7 @@
                         }
                         @if ((User?.IsInRole("Admin") ?? false) || (User?.IsInRole("Moderator") ?? false))
                         {
-                            <td><a asp-area="" asp-controller="Food" asp-action="Edit" asp-route-id="@food.Id" class="btn btn-primary" >Edit</a></td>
+                            <td><a asp-area="" asp-controller="Food" asp-action="Edit" asp-route-id="@food.Id" class="btn btn-primary">Edit</a></td>
                             <td><button class="btn btn-primary" onclick='DeleteFood(&quot;@food.Id&quot;);'>Delete</button></td>
                         }
                     </tr>
@@ -168,30 +176,30 @@
             $("#servingModal").modal('show');
 
             $('#addServing').click(function(e) {
-            e.preventDefault();
-            let idParam = id;
-            let category = $('#category').find(":selected").val();
-            let amount = $('#amount').val();
+                e.preventDefault();
+                let idParam = id;
+                let category = $('#category').find(":selected").val();
+                let amount = $('#amount').val();
 
-            let data = {
-                Id: idParam,
-                Category: category,
-                Amount: amount
-            };
+                let data = {
+                    Id: idParam,
+                    Category: category,
+                    Amount: amount
+                };
 
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                method: 'POST',
-                url: "/Diary/AddFoodServing",
-                data: JSON.stringify(data),
-                success: function() {
-                    window.location = "https://localhost:7043/Diary/Index";
-                }
-            });
-        })
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    method: 'POST',
+                    url: "/Diary/AddFoodServing",
+                    data: JSON.stringify(data),
+                    success: function() {
+                        window.location = "https://localhost:7043/Diary/Index";
+                    }
+                });
+            })
         };
-       
+
         $('#close').click(function() {
             $("#servingModal").modal('hide');
         })
