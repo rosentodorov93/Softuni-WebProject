@@ -13,92 +13,7 @@
     <div class="col-6 ">
         <h4 class="text-center mb-3"><b>Food Records:</b></h4>
         <div class="d-flex justify-content-center">
-            <table class="table table-borderless table-sm w-75">
-                <thead>
-                    <tr>
-                        <td class="scope"></td>
-                        <td class="scope table-primary text-center"><b>Amount</b></td>
-                        <td class="scope table-primary text-center"><b>Calories kcal</b></td>
-                        <td class="scope table-primary text-center"><b>Carbs</b></td>
-                        <td class="scope table-primary text-center"><b>Protein g</b></td>
-                        <td class="scope table-primary text-center"><b>Fats g</b></td>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td class="scope"><h3><b>Breakfast</b></h3></td>
-                    </tr>
-                    @foreach (var serving in Model.Breakfast)
-                    {
-                        <tr>
-                            <td class="text-center">@serving.Name</td>
-                            <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
-                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
-                        </tr>
-                    }
-                    <tr style="border-bottom:1px solid black">
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr>
-                        <td class="scope"><h3><b>Lunch</b></h3></td>
-                    </tr>
-                    @foreach (var serving in Model.Lunch)
-                    {
-                        <tr>
-                            <td class="text-center">@serving.Name</td>
-                            <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
-                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
-                        </tr>
-                    }
-                    <tr style="border-bottom:1px solid black">
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr>
-                        <td class="scope"><h3><b>Dinner</b></h3></td>
-                    </tr>
-                    @foreach (var serving in Model.Dinner)
-                    {
-                        <tr>
-                            <td class="text-center">@serving.Name</td>
-                            <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
-                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
-                        </tr>
-                    }
-                    <tr style="border-bottom:1px solid black">
-                        <td colspan="3"></td>
-                    </tr>
-                    <tr>
-                        <td class="scope"><h3><b>Snack</b></h3></td>
-                    </tr>
-                    @foreach (var serving in Model.Snack)
-                    {
-                        <tr>
-                            <td class="text-center">@serving.Name</td>
-                            <td class="text-center">@serving.Amount</td>
-                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
-                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
-                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
-                        </tr>
-                    }
-                    <tr style="border-bottom:1px solid black">
-                        <td colspan="3"></td>
-                    </tr>
-                </tbody>
-            </table>
+            <partial name="_DiaryFoodRecordsTablePartial" model="Model" />
         </div>
         <div class="d-flex justify-content-center">
             <div class="dropdown">
@@ -126,39 +41,7 @@
             }
             else
             {
-                <div>
-                    <p><b>Workout Name:</b> @Model.Workout.Name</p>
-                    <p><b>Workout Description:</b> @Model.Workout.Name</p>
-                    <p><b>Exercises:</b> @Model.Workout.Exercises.Count</p>
-                    <table class="table table-bordered table-hover  w-100">
-                        <tbody>
-                            @foreach (var exercise in @Model.Workout.Exercises)
-                            {
-                                <tr data-widget="expandable-table" aria-expanded="false">
-                                    <td>Exercise: @exercise.Name</td>
-                                    <td>BodyPart: @exercise.BodyPart</td>
-                                    <td>Sets: @exercise.Sets.Count</td>
-                                </tr>
-                                <tr class="expandable-body d-none">
-                                    <td colspan="3">
-                                        <p style="display: none;">
-                                            Set Info
-                                            <ol>
-                                                @foreach (var set in exercise.Sets)
-                                                {
-                                                    <li>Reps: @set.Reps Load: @set.Load</li>
-                                                }
-                                            </ol>
-                                        </p>
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                </div>
-
-
+                <partial name="_DiaryWorkoutPartial" model="Model"/>
             }
 
         </div>
@@ -172,34 +55,8 @@
 <hr class="mb-5" />
 
 <div class="d-flex justify-content-center mb-5">
-    <table class="table table-sm w-50">
-        <thead>
-            <tr>
-                <th></th>
-                <th class="text-center table-primary"><b>Calories kcal</b></th>
-                <th class="text-center table-primary"><b>Carbs g</b></th>
-                <th class="text-center table-primary"><b>Proteins g</b></th>
-                <th class="text-center table-primary"><b>Fats g</b></th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><b>Total</b></td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Calories.ToString("f2")</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Carbs.ToString("f2")</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Protein.ToString("f2")</td>
-                <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Fats.ToString("f2")</td>
 
-            </tr>
-            <tr>
-                <td><b>Required</b></td>
-                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Calories.ToString("f2")</td>
-                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Carbs.ToString("f2")</td>
-                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Protein.ToString("f2")</td>
-                <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Fats.ToString("f2")</td>
-            </tr>
-        </tbody>
-    </table>
+    <partial name="_DiaryResultTablePartial" model="Model" />
 </div>
 <div class="d-flex justify-content-center mb-5">
     <button class="btn btn-primary" id="btn">Show Stats</button>

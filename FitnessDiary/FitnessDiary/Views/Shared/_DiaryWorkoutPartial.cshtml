@@ -1,0 +1,33 @@
+﻿@model IdexViewQueryModel
+
+<div>
+    <p><b>Workout Name:</b> @Model.Workout.Name</p>
+    <p><b>Workout Description:</b> @Model.Workout.Name</p>
+    <p><b>Exercises:</b> @Model.Workout.Exercises.Count</p>
+    <table class="table table-bordered table-hover  w-100">
+        <tbody>
+            @foreach (var exercise in @Model.Workout.Exercises)
+            {
+                <tr data-widget="expandable-table" aria-expanded="false">
+                    <td>Exercise: @exercise.Name</td>
+                    <td>BodyPart: @exercise.BodyPart</td>
+                    <td>Sets: @exercise.Sets.Count</td>
+                </tr>
+                <tr class="expandable-body d-none">
+                    <td colspan="3">
+                        <p style="display: none;">
+                            Set Info
+                            <ol>
+                                @foreach (var set in exercise.Sets)
+                                {
+                                    <li>Reps: @set.Reps Load: @set.Load</li>
+                                }
+                            </ol>
+                        </p>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

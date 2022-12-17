@@ -1,0 +1,30 @@
+﻿@model IdexViewQueryModel
+
+<table class="table table-sm w-50">
+    <thead>
+        <tr>
+            <th></th>
+            <th class="text-center table-primary"><b>Calories kcal</b></th>
+            <th class="text-center table-primary"><b>Carbs g</b></th>
+            <th class="text-center table-primary"><b>Proteins g</b></th>
+            <th class="text-center table-primary"><b>Fats g</b></th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><b>Total</b></td>
+            <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Calories.ToString("f2")</td>
+            <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Carbs.ToString("f2")</td>
+            <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Protein.ToString("f2")</td>
+            <td class="text-center table-light">@Model.NutritionStatistics.CurrentNutrition.Fats.ToString("f2")</td>
+
+        </tr>
+        <tr>
+            <td><b>Required</b></td>
+            <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Calories.ToString("f2")</td>
+            <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Carbs.ToString("f2")</td>
+            <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Protein.ToString("f2")</td>
+            <td class="text-center">@Model.NutritionStatistics.RequiredNutrition.Fats.ToString("f2")</td>
+        </tr>
+    </tbody>
+</table>

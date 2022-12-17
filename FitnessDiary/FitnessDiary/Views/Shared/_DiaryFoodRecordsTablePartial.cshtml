@@ -1,0 +1,88 @@
+﻿@model IdexViewQueryModel
+
+     <table class="table table-borderless table-sm w-75">
+                <thead>
+                    <tr>
+                        <td class="scope"></td>
+                        <td class="scope table-primary text-center"><b>Amount</b></td>
+                        <td class="scope table-primary text-center"><b>Calories kcal</b></td>
+                        <td class="scope table-primary text-center"><b>Carbs</b></td>
+                        <td class="scope table-primary text-center"><b>Protein g</b></td>
+                        <td class="scope table-primary text-center"><b>Fats g</b></td>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="scope"><h3><b>Breakfast</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Breakfast)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Lunch</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Lunch)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Dinner</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Dinner)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                    <tr>
+                        <td class="scope"><h3><b>Snack</b></h3></td>
+                    </tr>
+                    @foreach (var serving in Model.Snack)
+                    {
+                        <tr>
+                            <td class="text-center">@serving.Name</td>
+                            <td class="text-center">@serving.Amount</td>
+                            <td class="text-center">@serving.Nutrition.Calories.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Carbs.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Protein.ToString("f2")</td>
+                            <td class="text-center">@serving.Nutrition.Fats.ToString("f2")</td>
+                            <td class="text-center"><a asp-controller="Diary" asp-action="RemoveServing" asp-route-id="@serving.Id" type="btn">Remove</a></td>
+                        </tr>
+                    }
+                    <tr style="border-bottom:1px solid black">
+                        <td colspan="3"></td>
+                    </tr>
+                </tbody>
+            </table>
