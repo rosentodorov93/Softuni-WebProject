@@ -49,7 +49,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
 
         public IActionResult Create()
         {
-            var model = new CreateUserViewModel();
+            var model = new CreateAdministrationUserViewModel();
 
             model.Roles = roleManager.Roles.Select(r => r.Name).Where(n => n != "User").ToArray();
 
@@ -57,7 +57,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(CreateUserViewModel model)
+        public async Task<IActionResult> Create(CreateAdministrationUserViewModel model)
         {
             if (!ModelState.IsValid)
             {

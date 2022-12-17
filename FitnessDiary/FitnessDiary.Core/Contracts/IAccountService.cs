@@ -20,7 +20,7 @@ namespace FitnessDiary.Core.Contracts
             int activityLevel,
             int fitnessGoal);
         string? GetById(string id);
-        Task CreateAdministrationUser(CreateUserViewModel model);
+        Task CreateAdministrationUser(CreateAdministrationUserViewModel model);
         Task<bool> ExistsById(string? userId);
     }
 }

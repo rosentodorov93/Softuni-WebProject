@@ -92,7 +92,7 @@ namespace FitnessDiary.Core.Services
             };
         }
 
-        public async Task CreateAdministrationUser(CreateUserViewModel model)
+        public async Task CreateAdministrationUser(CreateAdministrationUserViewModel model)
         {
             var username = $"{model.FirstName.Substring(0, 1)}.{model.LastName}";
             var user = new IdentityUser()

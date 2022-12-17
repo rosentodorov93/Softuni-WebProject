@@ -1,5 +1,5 @@
 ﻿
-@model CreateUserViewModel
+@model CreateAdministrationUserViewModel
 
 @{
     ViewBag.Title = "Create Administration User";
@@ -7,26 +7,31 @@
 
 <h3>@ViewBag.Title</h3>
 
-<form asp-area="Administration" asp-controller="User" asp-action="Create" method="post">
-    <div class="mb-3">
-        <label asp-for="FirstName">FirstName</label>
-        <input asp-for="FirstName" type="text" />
+<div >
+    <form asp-area="Administration" asp-controller="User" asp-action="Create" method="post">
+    <div class="mb-3 col-4">
+        <label asp-for="@Model.FirstName" class="form-label">First Name </label>
+        <input asp-for="@Model.FirstName" class="form-control" aria-required="true" />
+        <span asp-validation-for="FirstName" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="LastName">LastName</label>
-        <input asp-for="LastName" type="text" />
+    <div class="mb-3 col-4">
+        <label asp-for="@Model.LastName" class="form-label">Last Name </label>
+        <input asp-for="@Model.LastName" class="form-control" aria-required="true" />
+        <span asp-validation-for="LastName" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Email">Email</label>
-        <input asp-for="Email" type="text" />
+    <div class="mb-3 col-4">
+        <label asp-for="@Model.Email" class="form-label">Email </label>
+        <input asp-for="@Model.Email" class="form-control" aria-required="true" />
+        <span asp-validation-for="Email" class="text-danger"></span>
     </div>
-    <div class="mb-3">
-        <label asp-for="Password">Password</label>
-        <input asp-for="Password" type="password" />
+    <div class="mb-3 col-4">
+        <label asp-for="@Model.Password" class="form-label">Password </label>
+        <input asp-for="@Model.Password" class="form-control" aria-required="true" type="password"/>
+        <span asp-validation-for="Password" class="text-danger"></span>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="RoleName">Role</label>
+    <div class="mb-3 col-4">
+        <label asp-for="RoleName" class="form-label">Role</label>
         <select asp-for="RoleName">
             @foreach (var role in Model.Roles)
             {
@@ -37,3 +42,8 @@
 
     <input type="submit" value="Create" />
 </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

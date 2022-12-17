@@ -2,6 +2,15 @@
 {
     public static class DataConstants
     {
+        public static class AdministrationUserDataConstants
+        {
+            public const int MaxFirstNameLength = 80;
+            public const int MinFirstNameLength = 4;
+
+            public const int MaxLastNameLength = 80;
+            public const int MinLastNameLength = 4;
+        }
+
         public static class FoodDataConstants
         {
             public const int MaxNameLength = 50;
@@ -27,7 +36,7 @@
             public const int MaxServingSize = int.MaxValue;
             public const int MinServingSize = 1;
 
-            public const string AmountMinValue = "0.1"
+            public const string AmountMinValue = "0.1";
             public const string AmontMaxValue = "1.7976931348623157E+308";
         }
 
