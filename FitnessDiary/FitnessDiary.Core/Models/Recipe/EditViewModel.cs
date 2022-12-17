@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.RecipeDataConstants;
 
 namespace FitnessDiary.Core.Models.Recepie
 {
@@ -8,10 +9,10 @@ namespace FitnessDiary.Core.Models.Recepie
         public string Id { get; set; } = null!;
 
         [Required]
-        [StringLength(50, MinimumLength = 4)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
-        [Range(1,100)]
+        [Range(MinServingSize,MaxServingSize)]
         public int ServingsSize { get; set; }
         public string?  ImageUrl { get; set; }
         public List<IngredientDetailsViewModel> Ingredients { get; set; } = null!;

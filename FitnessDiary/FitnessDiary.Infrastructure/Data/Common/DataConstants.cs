@@ -26,6 +26,9 @@
 
             public const int MaxServingSize = int.MaxValue;
             public const int MinServingSize = 1;
+
+            public const string AmountMinValue = "0.1"
+            public const string AmontMaxValue = "1.7976931348623157E+308";
         }
 
     }
