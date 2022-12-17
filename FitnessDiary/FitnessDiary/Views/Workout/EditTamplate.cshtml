@@ -160,7 +160,19 @@
         $("#save").click(function(e) {
             e.preventDefault();
 
+            if ($.trim($("#exrciseName").val()) == "" || $.trim($("#sets").val()) == "") {
+                return alert("All fields are required!")
+            }
+            if ($.trim($("#sets").val()) <= 0) {
+                return alert("Sets must be positive number!")
+            }
+
             let exerciseName = $("#exrciseName").val();
+
+            if (exerciseName.length < 3 || exerciseName.length > 70) {
+                return alert("Name field must be between 3 and 70 characters long!")
+            }
+
             let bodyPart = $('#bodyPart').find(":selected").val();
             let sets = $("#sets").val();
             let tamplateId = $("#tamplateId").val();
