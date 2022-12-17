@@ -61,9 +61,15 @@ namespace FitnessDiary.Controllers
             }
 
             await service.AddFood(model, userId);
-            if (userId == null)
+
+            if (User.IsInRole("Admin") || User.IsInRole("Moderator"))
             {
                 logger.LogInformation($"New food {model.Name} added to food Database");
+            }
+
+            if (User.IsInRole("User"))
+            {
+                return RedirectToAction("Mine", "Food");
             }
 
             return RedirectToAction("All", "Food");
@@ -114,7 +120,7 @@ namespace FitnessDiary.Controllers
 
             if (this.User.IsInRole("Moderator") && foodHasUser)
             {
-                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                TempData[MessageConstant.ErrorMessage] = "Moderator can't edit private foods";
                 logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
@@ -152,7 +158,7 @@ namespace FitnessDiary.Controllers
 
             if (this.User.IsInRole("Moderator") && foodHasUser)
             {
-                TempData[MessageConstant.ErrorMessage] = "Admin can't edit private foods";
+                TempData[MessageConstant.ErrorMessage] = "Moderator can't edit private foods";
                 logger.LogError($"Moderator {this.User?.Identity?.Name} don't have access to food with id {Id}");
                 return View(model);
             }
@@ -164,7 +170,12 @@ namespace FitnessDiary.Controllers
 
             await service.EditAsync(Id, model);
 
-            return RedirectToAction("Mine");
+            if (User.IsInRole("Admin")|| User.IsInRole("Moderator"))
+            {
+                return RedirectToAction(nameof(All));
+            }
+
+            return RedirectToAction(nameof(Mine));
         }
         [HttpPost]
         [IgnoreAntiforgeryToken]
@@ -195,7 +206,7 @@ namespace FitnessDiary.Controllers
 
             if (this.User.IsInRole("Moderator") && foodHasUser)
             {
-                TempData[MessageConstant.ErrorMessage] = "Admin can't delete private foods";
+                TempData[MessageConstant.ErrorMessage] = "Moderator can't delete private foods";
                 logger.LogError($"Moderator {this.User.Identity.Name} don't have access to food with id {Id}");
                 return RedirectToAction("Index", "Home", new { area = "" });
             }

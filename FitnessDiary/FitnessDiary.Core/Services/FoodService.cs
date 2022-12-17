@@ -157,9 +157,9 @@ namespace FitnessDiary.Core.Services
 
             if (food.UserId == null)
             {
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 
         public async Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync()
