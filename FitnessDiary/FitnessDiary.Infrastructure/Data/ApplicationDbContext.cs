@@ -47,6 +47,7 @@ namespace FitnessDiary.Infrastructure.Data
             {
                 builder.ApplyConfiguration(new ActivityLevelConfiguration());
                 builder.ApplyConfiguration(new ArticleCategoryConfiguration());
+                builder.ApplyConfiguration(new ArticleConfiguration());
                 builder.ApplyConfiguration(new RolesConfiguration());
                 builder.ApplyConfiguration(new NutritionConfiguration());
                 builder.ApplyConfiguration(new IdentityUserConfiguration());
