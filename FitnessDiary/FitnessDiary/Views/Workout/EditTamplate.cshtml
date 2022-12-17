@@ -109,7 +109,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="closeAdd">Close</button>
                     <button id="save" type="button" class="btn btn-danger">Save Exercise</button>
                 </div>
             </div>
@@ -143,7 +143,7 @@
                 </div>
 
                 <div class="modal-footer">
-                    <button type="reset" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="reset" class="btn btn-default" id="closeRemove">Close</button>
                     <button id="remove" type="button" class="btn btn-danger">Remove Exercise</button>
                 </div>
             </div>
@@ -217,7 +217,11 @@
                 }
             });
         });
-
-        
+         $('#closeAdd').click(function() {
+            $("#addExerciseModal").modal('hide');
+        })
+        $('#closeRemove').click(function() {
+            $("#removeExerciseModal").modal('hide');
+        })
     </script>
 }

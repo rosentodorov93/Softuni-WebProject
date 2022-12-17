@@ -2,57 +2,58 @@
 
 
 
-        <div class="mb-5">
-            <h3 class="text-center" style="color:#ff6347">Edit Workout</h3>
-            <hr />
-            
-        </div>
+<div class="mb-5">
+    <h3 class="text-center" style="color:#ff6347">Edit Workout</h3>
+    <hr />
 
-       <div class="d-flex justify-content-center">
-        <div class="mb-3">
-            <form asp-controller="Workout" asp-action="EditWorkout" method="post">
-                <div class="mb-3">
-                    <div class="form-group">
-                        <p class="h4"><b>Name:</b> @Model.Name</p>
-                        @Html.HiddenFor(modelItem => Model.Name)
-                    </div>
-                    <div class="form-group">
-                        <p class="h4"><b>Description:</b> @Model.Description</p>
-                        @Html.HiddenFor(modelItem => Model.Description)
-                    </div>
-                    <p class="h4"><b>Exercises:</b></p>
-                </div>
-                <div>
-                    <ol class="list-group">
+</div>
 
-                        @for (int i = 0; i < Model.Exercises.Count; i++)
-                        {
-                            <li>
-                                <div>
-                                    <p class="h5">@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
-                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
-                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
-                                    @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
-                                </div>
-                                <ol>
-                                    @for (int j = 0; j < @Model.Exercises[i].Sets.Count; j++)
-                                    {
-                                        <div class="form-group">
-                                            <label>Reps</label>
-                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
-                                            <label>Load</label>
-                                            @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
-                                        </div>
-                                    }
-                                </ol>
-                            </li>
-                        }
-                    </ol>
+<div class="d-flex justify-content-center">
+    <div class="mb-3">
+        <form asp-controller="Workout" asp-action="EditWorkout" method="post">
+            <div class="mb-3">
+                <div class="form-group">
+                    <p class="h4"><b>Name:</b> @Model.Name</p>
+                    @Html.HiddenFor(modelItem => Model.Name)
                 </div>
-            </form>
-             <div class="text-center mb-5">
-                <input type="submit" class="btn btn-primary" value="Edit"/>
+                <div class="form-group">
+                    <p class="h4"><b>Description:</b> @Model.Description</p>
+                    @Html.HiddenFor(modelItem => Model.Description)
+                </div>
+                <p class="h4"><b>Exercises:</b></p>
             </div>
-        </div>
-        
+            <div>
+                <ol class="list-group">
+
+                    @for (int i = 0; i < Model.Exercises.Count; i++)
+                    {
+                        <li>
+                            <div>
+                                <p class="h5">@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
+                                @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
+                                @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
+                                @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
+                            </div>
+                            <ol>
+                                @for (int j = 0; j < @Model.Exercises[i].Sets.Count; j++)
+                                {
+                                    <div class="form-group">
+                                        <label>Reps</label>
+                                        @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Reps)
+                                        <label>Load</label>
+                                        @Html.EditorFor(modelItem => @Model.Exercises[i].Sets[j].Load)
+                                    </div>
+                                }
+                            </ol>
+                        </li>
+                    }
+                </ol>
+            </div>
+            <div class="text-center mb-5">
+                <input type="submit" class="btn btn-primary" value="Edit" />
+            </div>
+        </form>
+
     </div>
+
+</div>

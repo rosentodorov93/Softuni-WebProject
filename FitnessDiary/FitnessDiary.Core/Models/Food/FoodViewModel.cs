@@ -4,6 +4,8 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.FoodDataConstants;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.NutritionDataConstants;
 
 namespace FitnessDiary.Core.Models.Food
 {
@@ -11,30 +13,30 @@ namespace FitnessDiary.Core.Models.Food
     {
 
         [Required]
-        [StringLength(50, MinimumLength = 3)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]
-        [StringLength(30, MinimumLength = 3)]
+        [StringLength(MaxTypeLength, MinimumLength = MinTypeLength)]
         public string Type { get; set; } = null!;
 
         [Required]
-        [Range(typeof(double), "0.1", "1000.0")]
+        [Range(typeof(double), MinNutritionMetric, MaxNutritionMetric)]
         public double Calories { get; set; } 
 
         [Required]
         public int MeassureUnit { get; set; }
 
         [Required]
-        [Range(typeof(double), "0.1", "1000.0")]
+        [Range(typeof(double), MinNutritionMetric, MaxNutritionMetric)]
         public double Carbohydtrates { get; set; }
 
         [Required]
-        [Range(typeof(double), "0.1", "1000.0")]
+        [Range(typeof(double), MinNutritionMetric, MaxNutritionMetric)]
         public double Proteins { get; set; }
 
         [Required]
-        [Range(typeof(double), "0.1", "1000.0")]
+        [Range(typeof(double), MinNutritionMetric, MaxNutritionMetric)]
         public double Fats { get; set; }
     }
 }

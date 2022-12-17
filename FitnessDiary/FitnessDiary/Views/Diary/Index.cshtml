@@ -33,21 +33,26 @@
         <div class="d-flex justify-content-center">
             @if (Model.Workout == null)
             {
-                <p class="mb-3">You don't have workout for today yet!</p>
+                <div class="col-3">
+                    <p class="mb-3">You don't have workout for today yet!</p>
+                </div>
+
                 <div>
-                    <a class="btn btn-primary" asp-controller="Workout" asp-action="MIneTamlates">Add workout</a>
+                    <a class="btn btn-primary" asp-controller="Workout" asp-action="MineTamplates">Add workout</a>
                 </div>
 
             }
             else
             {
-                <partial name="_DiaryWorkoutPartial" model="Model"/>
+                <partial name="_DiaryWorkoutPartial" model="Model" />
+
+                <div class="text-center mb-auto">
+                    <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout?.Id">Change Workout Data</a>
+                </div>
             }
 
         </div>
-        <div class="text-center">
-            <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout?.Id">Change Workout Data</a>
-        </div>
+
 
     </div>
 </div>

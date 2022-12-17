@@ -19,6 +19,10 @@ namespace FitnessDiary.Controllers
 
         public async Task<IActionResult> Index()
         {
+            if (User.IsInRole("User"))
+            {
+                return RedirectToAction("Index", "Diary");
+            }
             var latestArticles = await articleService.GetLatestAsync();
             return View(latestArticles);
         }

@@ -112,7 +112,7 @@ namespace FitnessDiary.Controllers
             await workoutService.EditTamplateAsync(model);
             cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
 
-            return RedirectToAction("MineTamlates");
+            return RedirectToAction(nameof(MineTamplates));
         }
         public async Task<IActionResult> EditWorkout(string Id)
         {
@@ -161,7 +161,7 @@ namespace FitnessDiary.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("MineTamlates");
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var result = await workoutService.AddExerciseToTamplateAsync(model);
@@ -183,7 +183,7 @@ namespace FitnessDiary.Controllers
             }
             if (!ModelState.IsValid)
             {
-                return RedirectToAction("MineTamlates");
+                return RedirectToAction(nameof(MineTamplates));
             }
 
             var result = await workoutService.RemoveExerciseAsync(model.ExerciseId, model.TamplateId);

@@ -6,7 +6,7 @@ namespace FitnessDiary.Core.Models.Workout
     {
         public string WorkoutId { get; set; } = null!;
         [Required]
-        [StringLength(70,MinimumLength = 5)]
+        [StringLength(70,MinimumLength = 3)]
         public string ExerciseName { get; set; } = null!;
         public string BodyPart { get; set; } = null!;
         public int SetCount { get; set; } 

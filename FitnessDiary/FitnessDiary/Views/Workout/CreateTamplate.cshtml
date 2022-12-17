@@ -168,7 +168,7 @@
         $("#saveWorkout").click(function(e) {
             e.preventDefault();
 
-            var exerciseArr = [];
+            let exerciseArr = [];
             exerciseArr.length = 0;
 
             $.each($("#exerciseTable tbody tr"), function() {
@@ -179,9 +179,14 @@
                 });
             });
 
-            var data = {
+            let description = $("#description").val();
+            if (description == "") {
+                description = null;
+            }
+
+            let data = {
                 Name: $("#name").val(),
-                Description: $("#description").val(),
+                Description: description,
                 Exercises: exerciseArr
             };
 
@@ -192,7 +197,7 @@
                 url: "/Workout/CreateTamplate",
                 data: JSON.stringify(data),
                 success: function(result) {
-                    window.location = "https://localhost:7043/workout/MineTamlates";
+                    window.location = "https://localhost:7043/workout/MineTamplates";
                 }
             });
         });
