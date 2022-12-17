@@ -46,7 +46,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
             if (await articleService.ExistsById(Id) == false)
             {
                 TempData[MessageConstant.ErrorMessage] = "Invalid Id";
-                RedirectToAction("All", "Article", new {area = ""});
+                RedirectToAction("All", "Article", new { area = "" });
             }
             var article = await articleService.GetByIdAsync(Id);
             article.Categories = await articleService.GetCategoriesAsync();
@@ -59,7 +59,7 @@ namespace FitnessDiary.Areas.Administration.Controllers
         {
             if (await articleService.ExistsById(model.Id) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid Id";
+                TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
                 RedirectToAction("All", "Article", new { area = "" });
             }
 
@@ -75,12 +75,11 @@ namespace FitnessDiary.Areas.Administration.Controllers
                 return RedirectToAction("All", "Article", new { area = "" });
             }
 
-            if (User.IsInRole("Admin"))
-            {
-                await articleService.DeleteAsync(Id);
 
-                logger.LogInformation($"Admin deleted article with id: {Id}");
-            }
+            await articleService.DeleteAsync(Id);
+
+            logger.LogInformation($"Deleted article with id: {Id}");
+
 
 
             return RedirectToAction("All", "Article", new { area = "" });

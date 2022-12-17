@@ -1,12 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ArticleDataConstants;
 
 namespace FitnessDiary.Core.Models.Article
 {
     public class AddViewModel
     {
         [Required]
-        [StringLength(50, MinimumLength = 5)]
+        [StringLength(MaxTitleLength, MinimumLength = MinTitleLength)]
         public string Title { get; set; } = null!;
 
         [Required]
@@ -16,7 +17,7 @@ namespace FitnessDiary.Core.Models.Article
         public DateTime Date { get; set; }
 
         [Required]
-        [StringLength(30, MinimumLength = 4)]
+        [StringLength(MaxAuthorLength, MinimumLength = MinAuthorLength)]
         public string Author { get; set; } = null!;
 
         [Required]

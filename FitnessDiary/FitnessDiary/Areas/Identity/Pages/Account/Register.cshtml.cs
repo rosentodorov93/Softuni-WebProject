@@ -5,14 +5,13 @@
 using System.ComponentModel.DataAnnotations;
 using FitnessDiary.Core.Contracts;
 using FitnessDiary.Infrastructure.Data;
-using FitnessDiary.Infrastructure.Data.Account;
-using FitnessDiary.Infrastructure.Data.Enums;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ApplicationUserDataConstants;
 
 namespace FitnessDiary.Areas.Identity.Pages.Account
 {
@@ -100,22 +99,22 @@ namespace FitnessDiary.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
             [Required]
-            [StringLength(80, MinimumLength = 5)]
+            [StringLength(MaxFullNameLength, MinimumLength = MinFullNameLength)]
             public string FullName { get; set; } = null!;
 
             [Required]
-            [Range(1, 110)]
+            [Range(MinAge, MaxAge)]
             public int Age { get; set; }
 
             [Required]
             public int Gender { get; set; }
 
             [Required]
-            [Range(1, 250)]
+            [Range(MinHeight, MaxHeight)]
             public int Height { get; set; }
 
             [Required]
-            [Range(typeof(double), "0.0", "500.0")]
+            [Range(typeof(double), MinWeight, MaxWeight)]
             public double Weight { get; set; }
 
             [Required]
