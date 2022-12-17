@@ -23,14 +23,7 @@ namespace FitnessDiary.Controllers
 
         public async Task<IActionResult> All(AllArticlesQueryModel query)
         {
-            var articles = cache.Get<List<ListingViewModel>>(ArticlesCacheKey);
-            if (articles == null)
-            {
-                articles = await articleService.GetAllAsync(query.CategoryFilter);
-                var cacheOptions = new MemoryCacheEntryOptions()
-                    .SetAbsoluteExpiration(TimeSpan.FromMinutes(5));
-                cache.Set(ArticlesCacheKey, articles, cacheOptions);
-            }
+            var articles = await articleService.GetAllAsync(query.CategoryFilter);
 
             query.Articles = articles;
             query.Categories = cache.Get<IEnumerable<CategoryViewModel>>(ArticlesCategoriesCacheKey);
