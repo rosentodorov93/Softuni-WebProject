@@ -22,7 +22,24 @@ namespace FitnesDiary.Tests.UnitTests
         public WorkoutTamplate TestTamplate { get; private set; } = null!;
         public ApplicationUser AppUser { get; private set; } = null!;
         public Article TestArticle { get; private set; } = null!;
+
+        [OneTimeTearDown]
+        public void TearDownBase()
+        {
+            this.data.Dispose();
+        }
         private void SeedDatabase()
+        {
+            SeedFood();
+            SeedUser();
+            SeedRecipes();
+            SeedWorkoutTamplates();
+            SeedArticle();
+
+            this.data.SaveChanges();
+        }
+
+        private void SeedFood()
         {
             var nutritions = new List<NutritionData>()
             {
@@ -89,7 +106,9 @@ namespace FitnesDiary.Tests.UnitTests
 
             this.TestFood = foods[0];
             this.data.Foods.AddRange(foods);
-
+        }
+        private void SeedUser()
+        {
             var user = new IdentityUser()
             {
                 Id = "userId",
@@ -129,7 +148,9 @@ namespace FitnesDiary.Tests.UnitTests
             this.AppUser = appUser;
 
             this.data.ApplicationUsers.Add(appUser);
-
+        }
+        private void SeedRecipes()
+        {
             var recipes = new List<Recipe>()
             {
                 new Recipe()
@@ -184,7 +205,9 @@ namespace FitnesDiary.Tests.UnitTests
 
             this.TestRecipe = recipes[0];
             this.data.Recipes.AddRange(recipes);
-
+        }
+        private void SeedWorkoutTamplates()
+        {
             var exercises = new List<ExerciseTamplate>()
             {
                 new ExerciseTamplate()
@@ -223,7 +246,9 @@ namespace FitnesDiary.Tests.UnitTests
 
             this.TestTamplate = tamplate;
             this.data.WorkoutTamplates.Add(tamplate);
-
+        }
+        private void SeedArticle()
+        {
             var articleCategories = new List<ArticleCategory>()
             {
                 new ArticleCategory()
@@ -255,14 +280,6 @@ namespace FitnesDiary.Tests.UnitTests
             this.TestArticle = article;
 
             this.data.Articles.Add(article);
-
-            this.data.SaveChanges();
-        }
-
-        [OneTimeTearDown]
-        public void TearDownBase()
-        {
-            this.data.Dispose();
         }
     }
 }

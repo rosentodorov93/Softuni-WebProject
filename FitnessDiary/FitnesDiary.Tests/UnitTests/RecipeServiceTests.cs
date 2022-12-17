@@ -4,11 +4,6 @@ using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnesDiary.Tests.UnitTests
 {
@@ -134,11 +129,7 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.That(result.Count, Is.EqualTo(ingredientsCount));
             Assert.AreEqual(ingredientsNames, resultingredientNames);
         }
-        [Test]
-        public async Task LoadIngredients_ShouldThrowErrorWithInvalidRecipeId()
-        {
-            Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.GetIngredientsAsync("invalidId"));
-        }
+       
         [Test]
         public async Task EditAsync_ShouldEditCorrectly()
         {
@@ -175,25 +166,7 @@ namespace FitnesDiary.Tests.UnitTests
             Assert.IsTrue(result.Ingredients.All(i => i.Amount == newIngredientAmount));
 
         }
-        [Test]
-        public async Task EditAsync_ShouldThrowErrorWithInvalidId()
-        {
-            var newIngredientAmount = 3;
-            var ingredientIds = this.TestRecipe.Ingredients.Select(i => i.Id).ToList();
-            var editModel = new EditViewModel()
-            {
-                Id = "InvalidId",
-                Name = "Edited name",
-                ServingsSize = 6,
-                ImageUrl = "imgEdited",
-                Ingredients = new List<IngredientDetailsViewModel>(),
-
-            };
-
-
-            Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.EditAsync(editModel));
-
-        }
+       
         [Test]
         public async Task GetBiIdAsync_ShouldThrowErrorWithInvalidId()
         {
