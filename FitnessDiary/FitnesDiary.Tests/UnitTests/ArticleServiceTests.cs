@@ -19,7 +19,7 @@ namespace FitnesDiary.Tests.UnitTests
         }
 
         [Test]
-        public async Task AddArticle_ShpuldAddCorrectly()
+        public async Task AddArticle_ShouldAddCorrectly()
         {
             var countBeforeAdd = repo.AllReadonly<Article>().Where(a => a.IsActive).Count();
             var model = new AddViewModel()
@@ -91,7 +91,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetAll_ShouldReturnAllArticlesWithoutFilter()
         {
-            var articlesCount = repo.AllReadonly<Article>().Where(a => a.IsActive).Count();
+            var articlesCount = data.Articles.Where(a => a.IsActive).Count();
             
 
             var result = await articleService.GetAllAsync(null);
@@ -105,7 +105,7 @@ namespace FitnesDiary.Tests.UnitTests
         public async Task GetAll_ShouldReturnCorrectResultWithFilter()
         {
             
-            var expectedCount = repo.AllReadonly<Article>().Where(a => a.IsActive).Where(a => a.Category.Name == "nutrition").Count();
+            var expectedCount = data.Articles.Where(a => a.IsActive).Where(a => a.Category.Name == "nutrition").Count();
 
 
             var result = await articleService.GetAllAsync("nutrition");
@@ -172,6 +172,77 @@ namespace FitnesDiary.Tests.UnitTests
             var result = articleService.GetCategoryName("invalid");
 
             Assert.That(string.Empty, Is.EqualTo(result));
+
+        }
+        [Test]
+        public async Task DeleteSync_ShouldRemoveArticleCorrectly()
+        {
+
+            var countBeforeDelete = data.Articles.Where(a => a.IsActive).Count();
+            var latestId = data.Articles.Last().Id;
+
+            await articleService.DeleteAsync(latestId);
+            var countAfterDelete = data.Articles.Where(a => a.IsActive).Count();
+
+            Assert.That(countAfterDelete, Is.EqualTo(countBeforeDelete - 1));
+
+        }
+        [Test]
+        public async Task DeleteSync_ShouldNotRemoveArticleWithInvalidId()
+        {
+
+            var countBeforeDelete = data.Articles.Where(a => a.IsActive).Count();
+
+            await articleService.DeleteAsync("Invalid");
+            var countAfterDelete = data.Articles.Where(a => a.IsActive).Count();
+
+            Assert.That(countAfterDelete, Is.EqualTo(countBeforeDelete));
+
+        }
+        [Test]
+        public async Task GetLatest_ReturnsCorrectNumber()
+        {
+
+            data.Articles.AddRange(
+                new Article
+                {
+                    Id = "first",
+                    Author = "",
+                    Title = "",
+                    CategoryId = "categoryId",
+                    Content = "",
+                    Date = DateTime.Now,
+                    ImageUrl = "",
+                    IsActive = true,
+                },
+                new Article
+                {
+                    Id = "second",
+                    Author = "",
+                    Title = "",
+                    CategoryId = "categoryId",
+                    Content = "",
+                    Date = DateTime.Now,
+                    ImageUrl = "",
+                    IsActive = true,
+                },
+                new Article
+                {
+                    Id = "third",
+                    Author = "",
+                    Title = "",
+                    CategoryId = "categoryId",
+                    Content = "",
+                    Date = DateTime.Now,
+                    ImageUrl = "",
+                    IsActive = true,
+                });
+            data.SaveChanges();
+
+            var result = await articleService.GetLatestAsync();
+
+
+            Assert.That(3, Is.EqualTo(result.Count()));
 
         }
     }
