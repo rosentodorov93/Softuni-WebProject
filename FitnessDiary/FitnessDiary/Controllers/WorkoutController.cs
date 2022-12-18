@@ -237,9 +237,19 @@ namespace FitnessDiary.Controllers
                 return RedirectToAction(nameof(MineTamplates));
             }
 
-            await workoutService.AddToDiaryAsync(model, userId);
+            try
+            {
+                await workoutService.AddToDiaryAsync(model, userId);
 
-            return RedirectToAction("Index", "Diary");
+                return RedirectToAction("Index", "Diary");
+            }
+            catch (InvalidOperationException e)
+            {
+
+                TempData[MessageConstant.ErrorMessage] = e.Message;
+
+                return RedirectToAction("Index", "Diary");
+            }
         }
 
         [IgnoreAntiforgeryToken]

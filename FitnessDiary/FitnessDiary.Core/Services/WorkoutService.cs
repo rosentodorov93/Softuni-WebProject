@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Workout;
+using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Account;
 using FitnessDiary.Infrastructure.Data.Common;
 using FitnessDiary.Infrastructure.Data.Enums;
@@ -62,6 +63,20 @@ namespace FitnessDiary.Core.Services
 
             var currentDay = user?.Diary.OrderBy(d => d.Id).Last();
 
+            if (currentDay == null || currentDay.DateTime.Date < DateTime.Today)
+            {
+                var diaryDay = new DiaryDay()
+                {
+                    DateTime = DateTime.Today,
+                    Nutrition = new NutritionData()
+                };
+                user?.Diary.Add(diaryDay);
+                currentDay = diaryDay;
+            }
+            if (currentDay.Workout != null)
+            {
+                throw new InvalidOperationException("You allready have workout added");
+            }
             var workout = new Workout()
             {
                 Name = model.Name,
