@@ -84,7 +84,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = ae.Message;
                 logger.LogError(ae, ae.Message);
 
-                return RedirectToAction(nameof(Index));
+                return BadRequest(ae.Message);
             }
             
         }
@@ -136,7 +136,7 @@ namespace FitnessDiary.Controllers
                 var result = await diaryService.AddFoodServingAsync(userId, model.Id, model.Amount, model.Category);
                 logger.LogInformation(result);
 
-                return Json(result);
+                return Ok(result);
             }
             catch (ArgumentException ae)
             {
@@ -144,7 +144,7 @@ namespace FitnessDiary.Controllers
                 TempData[MessageConstant.ErrorMessage] = ae.Message;
                 logger.LogError(ae, ae.Message);
 
-                return RedirectToAction(nameof(Index));
+                return BadRequest(ae.Message);
             }
             
         }

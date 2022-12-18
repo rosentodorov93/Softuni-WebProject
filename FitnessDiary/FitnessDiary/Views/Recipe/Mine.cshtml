@@ -110,6 +110,9 @@
                     data: JSON.stringify(data),
                     success: function(result) {
                         window.location = "https://localhost:7043/Diary/Index";
+                    },
+                    error: function(error){
+                        window.location = "https://localhost:7043/Diary/Index";
                     }
                 });
             })

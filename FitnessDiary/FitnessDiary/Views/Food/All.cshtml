@@ -123,7 +123,7 @@
     </div>
 
 </div>
-
+<!--Serving Modal-->
 <div class="modal fade" id="servingModal">
     <div class="modal-dialog modal-lg" style=" width: 900px !important;">
         <div class="modal-content">
@@ -194,6 +194,9 @@
                     url: "/Diary/AddFoodServing",
                     data: JSON.stringify(data),
                     success: function() {
+                        window.location = "https://localhost:7043/Diary/Index";
+                    },
+                    error: function(error){
                         window.location = "https://localhost:7043/Diary/Index";
                     }
                 });

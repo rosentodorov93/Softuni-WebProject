@@ -26,7 +26,7 @@
 
         <div class="form-group col-md-3">
             <label asp-for="SearchTerm"></label>
-            <input asp-for="SearchTerm" class="form-control" >
+            <input asp-for="SearchTerm" class="form-control">
         </div>
 
         <div class="form-group col-md-3">
@@ -171,32 +171,35 @@
             $("#servingModal").modal('show');
 
             $('#addServing').click(function(e) {
-            e.preventDefault();
-            let idParam = id;
-            let category = $('#category').find(":selected").val();
-            let amount = $('#amount').val();
+                e.preventDefault();
+                let idParam = id;
+                let category = $('#category').find(":selected").val();
+                let amount = $('#amount').val();
 
-            let data = {
-                Id: idParam,
-                Category: category,
-                Amount: amount
-            };
+                let data = {
+                    Id: idParam,
+                    Category: category,
+                    Amount: amount
+                };
 
-            $.ajax({
-                contentType: 'application/json; charset=utf-8',
-                dataType: 'json',
-                method: 'POST',
-                url: "/Diary/AddFoodServing",
-                data: JSON.stringify(data),
-                success: function() {
-                    
-                    window.location = "https://localhost:7043/Diary/Index";
-                }
-            });
-        })
+                $.ajax({
+                    contentType: 'application/json; charset=utf-8',
+                    dataType: 'json',
+                    method: 'POST',
+                    url: "/Diary/AddFoodServing",
+                    data: JSON.stringify(data),
+                    success: function() {
+
+                        window.location = "https://localhost:7043/Diary/Index";
+                    },
+                    error: function(error) {
+                        window.location = "https://localhost:7043/Diary/Index";
+                    }
+                });
+            })
 
         };
-            $('#close').click(function() {
+        $('#close').click(function() {
             $("#servingModal").modal('hide');
         })
 

@@ -41,6 +41,7 @@ namespace FitnessDiary.Core.Services
 
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
                 .Include(x => x.Diary)
+                .ThenInclude(d => d.Servings)
                 .ThenInclude(d => d.Nutrition)
                 .FirstOrDefaultAsync();
 
@@ -60,6 +61,11 @@ namespace FitnessDiary.Core.Services
                 };
                 user?.Diary.Add(diaryDay);
                 currentDay = diaryDay;
+            }
+
+            if (currentDay.Servings.Any(s => s.Name == food.Name))
+            {
+                throw new ArgumentException($"You allready added {food.Name}");
             }
 
             currentDay.Servings.Add(new Serving()
@@ -117,6 +123,11 @@ namespace FitnessDiary.Core.Services
                 };
                 user?.Diary.Add(diaryDay);
                 currentDay = diaryDay;
+            }
+
+            if (currentDay.Servings.Any(s => s.Name == recipe.Name))
+            {
+                throw new ArgumentException($"You allready added {recipe.Name}");
             }
 
             currentDay.Servings.Add(new Serving()
