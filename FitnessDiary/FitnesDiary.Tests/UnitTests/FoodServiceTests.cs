@@ -4,11 +4,6 @@ using FitnessDiary.Core.Services;
 using FitnessDiary.Infrastructure.Data;
 using FitnessDiary.Infrastructure.Data.Common;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace FitnesDiary.Tests.UnitTests
 {
@@ -44,7 +39,7 @@ namespace FitnesDiary.Tests.UnitTests
             var userFoodsAfterAdd = this.AppUser.Foods.Count;
 
             //Asert
-            Assert.That(userFoodsAfterAdd.Equals(userFoodsBeforeAdd + 1));
+            Assert.That(userFoodsAfterAdd,Is.EqualTo(userFoodsBeforeAdd + 1));
             Assert.IsTrue(this.AppUser.Foods.Any(f => f.Name == food.Name && f.Type == food.Type));
 
         }
@@ -130,12 +125,13 @@ namespace FitnesDiary.Tests.UnitTests
 
 
             //Asert
-            Assert.AreNotEqual(this.TestFood.Name, edited.Name);
-            Assert.AreNotEqual(this.TestFood.Type, edited.Type);
-            Assert.AreNotEqual(this.TestFood.Nutrition.Calories, edited.Calories);
-            Assert.AreNotEqual(this.TestFood.Nutrition.Carbohydrates, edited.Carbohydtrates);
-            Assert.AreNotEqual(this.TestFood.Nutrition.Proteins, edited.Proteins);
-            Assert.AreNotEqual(this.TestFood.Nutrition.Fats, edited.Fats);
+            Assert.That(this.TestFood.Name, Is.Not.EqualTo(edited.Name));
+            Assert.That(this.TestFood.Type, Is.Not.EqualTo(edited.Type));
+            Assert.That(this.TestFood.Nutrition.Calories, Is.Not.EqualTo(edited.Calories));
+            Assert.That(this.TestFood.Nutrition.Carbohydrates, Is.Not.EqualTo(edited.Carbohydtrates));
+            Assert.That(this.TestFood.Nutrition.Proteins, Is.Not.EqualTo(edited.Proteins));
+            Assert.That(this.TestFood.Nutrition.Fats, Is.Not.EqualTo(edited.Fats));
+
         }
         [Test]
         public async Task GetById_ShouldReturnCorrectFood()
@@ -148,11 +144,11 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task Delete_ShouldDeleteItemWithCorrectId()
         {
-            var foodCountBeforeDelete = repo.AllReadonly<Food>().Where(f => f.IsActive).Count();
+            var foodCountBeforeDelete = data.Foods.Where(f => f.IsActive).Count();
             var food = repo.All<Food>().Last();
 
             await foodService.DeleteAsync(food.Id);
-            var foodCountAfterDelete = repo.AllReadonly<Food>().Where(f => f.IsActive).Count();
+            var foodCountAfterDelete = data.Foods.Where(f => f.IsActive).Count();
 
             Assert.IsFalse(food.IsActive);
             Assert.That(foodCountAfterDelete.Equals(foodCountBeforeDelete - 1));
@@ -160,10 +156,10 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task Delete_ShoulNotDeleteItemWithInvalidId()
         {
-            var foodCountBeforeDelete = repo.AllReadonly<Food>().Where(f => f.IsActive).Count();
+            var foodCountBeforeDelete = data.Foods.Where(f => f.IsActive).Count();
 
             await foodService.DeleteAsync("invalid");
-            var foodCountAfterDelete = repo.AllReadonly<Food>().Where(f => f.IsActive).Count();
+            var foodCountAfterDelete = data.Foods.Where(f => f.IsActive).Count();
 
 
             Assert.That(foodCountAfterDelete.Equals(foodCountBeforeDelete));
@@ -171,7 +167,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetAllTypesAsync_ShouldReturnsCorrectData()
         {
-            var types = repo.AllReadonly<Food>().Where(f => f.IsActive).Select(f => f.Type).ToList();
+            var types = data.Foods.Where(f => f.IsActive).Select(f => f.Type).ToList();
 
 
             var result = await foodService.getAllTypesAsync();
@@ -182,7 +178,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task LoadIngredients_ShouldReturnsCorrectData()
         {
-            var foods = repo.All<Food>().Where(f => f.IsActive).Include(f => f.Nutrition).ToList();
+            var foods = data.Foods.Where(f => f.IsActive).Include(f => f.Nutrition).ToList();
 
             var result = await this.foodService.LoadIngedientsAsync();
 
@@ -192,7 +188,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetAllAsync_ShouldReturnFoodsWithNoUserWhenUserIdIsNull()
         {
-            var expectedFoods = repo.AllReadonly<Food>().Where(f => f.IsActive).Where(f => f.UserId == null).ToList();
+            var expectedFoods = data.Foods.Where(f => f.IsActive).Where(f => f.UserId == null).ToList();
 
             var result = await this.foodService.GetAllAsync();
 
@@ -201,7 +197,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task GetAllAsync_ShouldReturnFoodsWithUserWhenUserIdIsValid()
         {
-            var expectedFoods = repo.AllReadonly<Food>().Where(f => f.IsActive).Where(f => f.UserId != null).ToList();
+            var expectedFoods = data.Foods.Where(f => f.IsActive).Where(f => f.UserId != null).ToList();
 
             var result = await this.foodService.GetAllAsync(this.AppUser.Id);
 
@@ -211,7 +207,7 @@ namespace FitnesDiary.Tests.UnitTests
         [TestCase("p")]
         public async Task GetAllAsyncShouldReturnCorrectFoodWithUserAndSearchParams(string search)
         {
-            var expectedFoods = repo.AllReadonly<Food>()
+            var expectedFoods = data.Foods
                 .Where(f => f.IsActive)
                 .Where(f => f.UserId != null)
                 .Where(f => f.Name.ToLower().Contains(search))
@@ -222,6 +218,13 @@ namespace FitnesDiary.Tests.UnitTests
             var result = await this.foodService.GetAllAsync(this.AppUser.Id, null, search);
 
             Assert.That(result.TotalFoodsCount.Equals(expectedFoods.Count));
+        }
+        [Test]
+        public async Task FoodHasUser_WorksCorrectly()
+        {
+            var result = await this.foodService.FoodHasAppUser(this.TestFood.Id);
+
+            Assert.IsFalse(result);
         }
     }
 }

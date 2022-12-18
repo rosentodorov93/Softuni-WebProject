@@ -216,7 +216,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task EditWorkoutAsync_ShouldEditCorrectly()
         {
-            var workoutBeforeEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+            var workoutBeforeEdit = data.Workouts.Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
             var model = new WorkoutViewModel()
             {
                 Id = workoutBeforeEdit.Id,
@@ -244,7 +244,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task EditWorkoutAsync_ShouldNotEditWithInvalidId()
         {
-            var workoutBeforeEdit = repo.AllReadonly<Workout>().Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
+            var workoutBeforeEdit = data.Workouts.Include(w => w.Exercises).ThenInclude(e => e.Sets).First();
             var model = new WorkoutViewModel()
             {
                 Id = "Invalid",

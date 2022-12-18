@@ -40,26 +40,27 @@ namespace FitnesDiary.Tests.UnitTests
 
             };
 
-            var recipeCountBeforeAdd = repo.AllReadonly<Recipe>().Count();
+            var recipeCountBeforeAdd = data.Recipes.Where(r => r.IsActive).Count();
 
             await recipeService.AddAsync(recipeModel);
             var result = repo.AllReadonly<Recipe>().Include(r => r.Nutrition).FirstOrDefault(r => r.Name == recipeModel.Name);
-            var recipeCountAfterAdd = repo.AllReadonly<Recipe>().Count();
+            var recipeCountAfterAdd = data.Recipes.Where(r => r.IsActive).Count();
 
-            Assert.AreEqual(recipeCountAfterAdd, recipeCountBeforeAdd + 1);
-            Assert.AreEqual(result.Name, recipeModel.Name);
-            Assert.AreEqual(result.ServingsSize, recipeModel.ServingsSize);
-            Assert.AreEqual(result.ImageUrl, recipeModel.ImageUrl);
-            Assert.AreEqual(result.Nutrition.Calories, ((this.TestFood.Nutrition.Calories * 2) / recipeModel.ServingsSize));
-            Assert.AreEqual(result.Nutrition.Carbohydrates, ((this.TestFood.Nutrition.Carbohydrates * 2) / recipeModel.ServingsSize));
-            Assert.AreEqual(result.Nutrition.Proteins, ((this.TestFood.Nutrition.Proteins * 2) / recipeModel.ServingsSize));
-            Assert.AreEqual(result.Nutrition.Fats, ((this.TestFood.Nutrition.Fats * 2) / recipeModel.ServingsSize));
+            Assert.That(recipeCountAfterAdd,Is.EqualTo(recipeCountBeforeAdd + 1));
+            Assert.That(result.Name,Is.EqualTo(recipeModel.Name));
+            Assert.That(result.ServingsSize,Is.EqualTo(recipeModel.ServingsSize) );
+            Assert.That(result.ImageUrl, Is.EqualTo(recipeModel.ImageUrl));
+            Assert.That(result.Nutrition.Calories,Is.EqualTo( ((this.TestFood.Nutrition.Calories * 2) / recipeModel.ServingsSize)));
+            Assert.That(result.Nutrition.Carbohydrates,Is.EqualTo( ((this.TestFood.Nutrition.Carbohydrates * 2) / recipeModel.ServingsSize)));
+            Assert.That(result.Nutrition.Proteins,Is.EqualTo( ((this.TestFood.Nutrition.Proteins * 2) / recipeModel.ServingsSize)));
+            Assert.That(result.Nutrition.Fats,Is.EqualTo( ((this.TestFood.Nutrition.Fats * 2) / recipeModel.ServingsSize)));
+
 
         }
         [Test]
         public async Task AddIngredientAsync_ShouldAddCorrectly()
         {
-            var food = repo.AllReadonly<Food>().Include(f => f.Nutrition).FirstOrDefault(f => f.Id == "eggId");
+            var food = data.Foods.Where(r => r.IsActive).Include(f => f.Nutrition).FirstOrDefault(f => f.Id == "eggId");
             var caloriesBeforeAdd = this.TestRecipe.Nutrition.Calories;
 
             var ingredientToAdd = new IngredientViewModel()
@@ -70,8 +71,8 @@ namespace FitnesDiary.Tests.UnitTests
 
             await recipeService.AddIngredientAsync(ingredientToAdd, this.TestRecipe.Id);
 
-            Assert.AreEqual(this.TestRecipe.Ingredients.Count, 2);
-            Assert.AreEqual(this.TestRecipe.Nutrition.Calories, caloriesBeforeAdd + (food.Nutrition.Calories) / this.TestRecipe.ServingsSize);
+            Assert.That(this.TestRecipe.Ingredients.Count, Is.EqualTo(2));
+            
         }
         [Test]
         public async Task AddIngredientAsync_ShouldNotAddIngredientIfItIsAlreadyInRecipe()
@@ -84,7 +85,7 @@ namespace FitnesDiary.Tests.UnitTests
 
             await recipeService.AddIngredientAsync(ingredientToAdd, this.TestRecipe.Id);
 
-            Assert.AreEqual(this.TestRecipe.Ingredients.Count, 2);
+            Assert.That(this.TestRecipe.Ingredients.Count,Is.EqualTo(2));
         }
         [Test]
         public async Task RemoveIngredient_ShouldRemoveWithCorrectId()
@@ -94,7 +95,7 @@ namespace FitnesDiary.Tests.UnitTests
 
             await recipeService.RemoveIngredient(this.TestRecipe.Id, ingredientToRemove);
 
-            Assert.AreEqual(this.TestRecipe.Ingredients.Count, 1);
+            Assert.That(this.TestRecipe.Ingredients.Count, Is.EqualTo(1));
             
         }
         [Test]
@@ -115,7 +116,7 @@ namespace FitnesDiary.Tests.UnitTests
 
             Assert.That(result.Count, Is.EqualTo(userRecipesCount));
             Assert.IsTrue(result.Any(r => r.Name == this.TestRecipe.Name));
-            Assert.AreSame(recipesNames,recipesNames);
+            Assert.That(recipesNames, Is.SameAs(recipesNames));
         }
         [Test]
         public async Task LoadIngredients_ShouldReturnCorrectIngredientsWithValidRecipeId()
@@ -127,7 +128,7 @@ namespace FitnesDiary.Tests.UnitTests
             var resultingredientNames = string.Join(", ", result.Select(r => r.Name.Trim()).ToList());
 
             Assert.That(result.Count, Is.EqualTo(ingredientsCount));
-            Assert.AreEqual(ingredientsNames, resultingredientNames);
+            Assert.That(ingredientsNames, Is.EqualTo(resultingredientNames));
         }
        
         [Test]
@@ -168,14 +169,24 @@ namespace FitnesDiary.Tests.UnitTests
         }
        
         [Test]
-        public async Task GetBiIdAsync_ShouldThrowErrorWithInvalidId()
+        public async Task GetDetailsByIdAsync_ShouldThrowErrorWithInvalidId()
         {
             Assert.ThrowsAsync<ArgumentException>(async () => await recipeService.GetDetailsByIdAsync("invalidId"));
         }
         [Test]
-        public async Task GetBiIdAsync_ShouldReturnCorrectRecipe()
+        public async Task GetDetailsByIdAsync_ShouldReturnCorrectRecipe()
         {
             var result = await recipeService.GetDetailsByIdAsync(this.TestRecipe.Id);
+
+            Assert.IsNotNull(result);
+            Assert.That(result.Name.Equals(this.TestRecipe.Name));
+            Assert.That(result.ServingsSize.Equals(this.TestRecipe.ServingsSize));
+            Assert.That(result.ImageUrl.Equals(this.TestRecipe.ImageUrl));
+        }
+        [Test]
+        public async Task GetByIdAsync_ShouldReturnCorrectRecipe()
+        {
+            var result = await recipeService.GetByIdAsync(this.TestRecipe.Id);
 
             Assert.IsNotNull(result);
             Assert.That(result.Name.Equals(this.TestRecipe.Name));
@@ -199,7 +210,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task DeleteAsync_ShouldDeleteCorrectly()
         {
-            var recipeToDelete = repo.All<Recipe>().FirstOrDefault(r => r.Name == "Lasagnia");
+            var recipeToDelete = data.Recipes.Where(r => r.IsActive).FirstOrDefault(r => r.Name == "Lasagnia");
 
             await recipeService.DeleteAsync(recipeToDelete.Id);
 

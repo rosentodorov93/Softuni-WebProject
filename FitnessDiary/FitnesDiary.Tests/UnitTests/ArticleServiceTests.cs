@@ -21,7 +21,7 @@ namespace FitnesDiary.Tests.UnitTests
         [Test]
         public async Task AddArticle_ShouldAddCorrectly()
         {
-            var countBeforeAdd = repo.AllReadonly<Article>().Where(a => a.IsActive).Count();
+            var countBeforeAdd = data.Articles.Where(a => a.IsActive).Count();
             var model = new AddViewModel()
             {
                 Author = "Rosen",
@@ -33,7 +33,7 @@ namespace FitnesDiary.Tests.UnitTests
             };
 
             await articleService.AddAsync(model);
-            var countAfterAdd = repo.AllReadonly<Article>().Where(a => a.IsActive).Count();
+            var countAfterAdd = data.Articles.Where(a => a.IsActive).Count();
 
             Assert.That(countAfterAdd, Is.EqualTo(countBeforeAdd + 1));
             Assert.IsTrue(repo.AllReadonly<Article>().Where(a => a.IsActive).Any(a => a.Title == model.Title));
@@ -188,7 +188,7 @@ namespace FitnesDiary.Tests.UnitTests
 
         }
         [Test]
-        public async Task DeleteSync_ShouldNotRemoveArticleWithInvalidId()
+        public async Task DeleteAsync_ShouldNotRemoveArticleWithInvalidId()
         {
 
             var countBeforeDelete = data.Articles.Where(a => a.IsActive).Count();

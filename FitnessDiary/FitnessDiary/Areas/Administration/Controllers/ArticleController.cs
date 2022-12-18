@@ -3,7 +3,6 @@ using FitnessDiary.Core.Contracts;
 using FitnessDiary.Core.Models.Article;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using static FitnessDiary.Areas.Administration.Constants.AdminConstants;
 
 namespace FitnessDiary.Areas.Administration.Controllers
 {
