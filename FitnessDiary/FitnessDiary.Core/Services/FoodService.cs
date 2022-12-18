@@ -16,7 +16,12 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Creates new food
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task AddFood(FoodViewModel model, string? userId)
         {
             var food = new Food()
@@ -37,7 +42,11 @@ namespace FitnessDiary.Core.Services
             await repo.AddAsync<Food>(food);
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Deletes food
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<string> DeleteAsync(string id)
         {
             var resultMessage = "Error! Unable to delete this item";
@@ -52,7 +61,12 @@ namespace FitnessDiary.Core.Services
 
             return resultMessage;
         }
-
+        /// <summary>
+        /// Edit food
+        /// </summary>
+        /// <param name="Id"></param>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task EditAsync(string Id, FoodViewModel model)
         {
             var food = await LoadFood(Id);
@@ -70,12 +84,25 @@ namespace FitnessDiary.Core.Services
                 await repo.SaveChangesAsync();
             }
         }
-
+        /// <summary>
+        /// Chech if food exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> ExistsByIdAsync(string id)
         {
             return await repo.AllReadonly<Food>().Where(f => f.IsActive).AnyAsync(f => f.Id == id);
         }
-
+        /// <summary>
+        /// Returns foods based on userid or all foods in userid is null
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="type"></param>
+        /// <param name="searchTerm"></param>
+        /// <param name="sorting"></param>
+        /// <param name="currentPage"></param>
+        /// <param name="foodsPerPage"></param>
+        /// <returns></returns>
         public async Task<FoodsQueryModel> GetAllAsync(string? userId = null,
             string? type = null, string? searchTerm = null,
             FoodSorting sorting = FoodSorting.PerName,
@@ -129,12 +156,19 @@ namespace FitnessDiary.Core.Services
 
             return result;
         }
-
+        /// <summary>
+        /// Returns all food types
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<string>> getAllTypesAsync()
         {
             return await repo.All<Food>().Where(f => f.IsActive).Select(f => f.Type).Distinct().ToListAsync();
         }
-
+        /// <summary>
+        /// Returns food by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<FoodViewModel> GetByIdAsync(string id)
         {
             var food = await LoadFood(id);
@@ -150,7 +184,11 @@ namespace FitnessDiary.Core.Services
                 Fats = food.Nutrition.Fats
             };
         }
-
+        /// <summary>
+        /// Checks if food has userId
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> FoodHasAppUser(string id)
         {
             var food = await repo.AllReadonly<Food>().FirstOrDefaultAsync(f => f.Id == id);
@@ -161,7 +199,10 @@ namespace FitnessDiary.Core.Services
             }
             return true;
         }
-
+        /// <summary>
+        /// Returns all foods for recipe service
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<FoodServiceModel>> LoadIngedientsAsync()
         {
             var foods = await repo.All<Food>().Where(f => f.IsActive).Include(f => f.Nutrition).ToListAsync();

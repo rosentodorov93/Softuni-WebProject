@@ -85,7 +85,7 @@ namespace FitnesDiary.Tests.UnitTests
                 {
                     Id = "foodId",
                     Name = "Potato",
-                    MeassureUnits = FitnessDiary.Infrastructure.Data.Enums.MeassureUnitType.CaloriesPer100grams,
+                    MeassureUnits = FitnessDiary.Infrastructure.Data.Enums.MeassureUnitType.NutritionPer100g,
                     User = null,
                     Type = "vegetable",
                     IsActive = true,
@@ -95,7 +95,7 @@ namespace FitnesDiary.Tests.UnitTests
                 {
                     Id = "eggId",
                     Name = "Egg",
-                    MeassureUnits = FitnessDiary.Infrastructure.Data.Enums.MeassureUnitType.CaloriesPerItem,
+                    MeassureUnits = FitnessDiary.Infrastructure.Data.Enums.MeassureUnitType.NutritionPerItem,
                     User = null,
                     Type = "eggs and meat",
                     IsActive = true,

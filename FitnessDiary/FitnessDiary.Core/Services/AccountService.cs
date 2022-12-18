@@ -20,7 +20,18 @@ namespace FitnessDiary.Core.Services
             repo = _repo;
             userManager = _userManager;
         }
-
+        /// <summary>
+        /// Creates new application user
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="age"></param>
+        /// <param name="fullName"></param>
+        /// <param name="gender"></param>
+        /// <param name="height"></param>
+        /// <param name="weight"></param>
+        /// <param name="activityLevel"></param>
+        /// <param name="fitnessGoal"></param>
+        /// <returns></returns>
         public async Task<bool> CreateApplicationUser(IdentityUser user,
             int age,
             string fullName,
@@ -91,7 +102,11 @@ namespace FitnessDiary.Core.Services
                 Fats = targetFats
             };
         }
-
+        /// <summary>
+        /// Creates new administration user
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task CreateAdministrationUser(CreateAdministrationUserViewModel model)
         {
             var username = $"{model.FirstName.Substring(0, 1)}.{model.LastName}";
@@ -116,15 +131,25 @@ namespace FitnessDiary.Core.Services
                 await repo.SaveChangesAsync();
             }
         }
-
+        /// <summary>
+        /// Checks if application user exists
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public Task<bool> ExistsById(string? userId)
         {
             return repo.AllReadonly<ApplicationUser>().AnyAsync(u => u.Id == userId);
         }
-
+        /// <summary>
+        /// Returns all activity levels
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<ActivityLevel>> GetActivityLevels()
             => await repo.All<ActivityLevel>().ToListAsync();
-
+        /// <summary>
+        /// Returns all users in the system
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<AllUsersViewModel>> GetAllUsersAsync()
         {
             var users = new List<AllUsersViewModel>();
@@ -156,14 +181,22 @@ namespace FitnessDiary.Core.Services
       
             return users;
         }
-
+        /// <summary>
+        /// Returns user by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public string? GetById(string id)
         {
             var appUser = repo.AllReadonly<ApplicationUser>().FirstOrDefault(a => a.UserId == id);
 
             return appUser?.Id ?? null;
         }
-
+        /// <summary>
+        /// Returns required nutrients for user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<NutritionServiceModel> GetUserTargetNutritionAsync(string userId)
         {
             var user = await repo
@@ -179,7 +212,11 @@ namespace FitnessDiary.Core.Services
                 Fats = user.TargetNutrients.Fats
             };
         }
-
+        /// <summary>
+        /// Returns appuser full name
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public string GetAppUserFullName(string userId)
         {
             var fullName = repo.AllReadonly<ApplicationUser>().Where(u => u.UserId == userId).FirstOrDefault().FullName;
@@ -191,7 +228,11 @@ namespace FitnessDiary.Core.Services
 
             return fullName;
         }
-
+        /// <summary>
+        /// Returns Administration user full name
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public string GetAdminUserFullName(string userId)
         {
             var user = repo.AllReadonly<AdministrationUser>().Where(u => u.UserId == userId).FirstOrDefault();

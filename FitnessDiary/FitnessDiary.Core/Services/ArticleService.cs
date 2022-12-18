@@ -14,7 +14,11 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Creates new article
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task AddAsync(AddViewModel model)
         {
             var article = new Article()
@@ -30,7 +34,11 @@ namespace FitnessDiary.Core.Services
             await repo.AddAsync<Article>(article);
             await repo.SaveChangesAsync();
         }
-
+        /// <summary>
+        /// Delete article
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task DeleteAsync(string id)
         {
             var article = repo.All<Article>().Where(a => a.IsActive).FirstOrDefault(a => a.Id == id);
@@ -41,7 +49,11 @@ namespace FitnessDiary.Core.Services
                 await repo.SaveChangesAsync();
             }
         }
-
+        /// <summary>
+        /// Edit article
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task EditAsync(ArticleDetailsViewModel model)
         {
             var article = repo.All<Article>().Where(a => a.IsActive).FirstOrDefault(a => a.Id == model.Id);
@@ -58,12 +70,20 @@ namespace FitnessDiary.Core.Services
                 await repo.SaveChangesAsync();
             }
         }
-
+        /// <summary>
+        /// Check if article exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> ExistsById(string id)
         {
             return await repo.AllReadonly<Article>().Where(a => a.IsActive).AnyAsync(a => a.Id == id);
         }
-
+        /// <summary>
+        /// Returns all articles filtered by category
+        /// </summary>
+        /// <param name="filter"></param>
+        /// <returns></returns>
         public async Task<List<ListingViewModel>> GetAllAsync(string? filter)
         {
             var articles =  repo.AllReadonly<Article>()
@@ -86,7 +106,11 @@ namespace FitnessDiary.Core.Services
                 Date = a.Date
             }).ToListAsync();
         }
-
+        /// <summary>
+        /// Returns article by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<ArticleDetailsViewModel> GetByIdAsync(string id)
         {
             var article = await repo.All<Article>()
@@ -105,7 +129,10 @@ namespace FitnessDiary.Core.Services
                 Title = article.Title
             };
         }
-
+        /// <summary>
+        /// Returns all article categories
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<CategoryViewModel>> GetCategoriesAsync()
         {
             var categories =  await repo.AllReadonly<ArticleCategory>().ToListAsync();
@@ -116,13 +143,20 @@ namespace FitnessDiary.Core.Services
                 Name = c.Name
             });
         }
-
+        /// <summary>
+        /// Returns category name from categor id
+        /// </summary>
+        /// <param name="categoryId"></param>
+        /// <returns></returns>
         public string GetCategoryName(string categoryId)
         {
 
             return repo.AllReadonly<ArticleCategory>().FirstOrDefault(a => a.Id == categoryId)?.Name ?? "";
         }
-
+        /// <summary>
+        /// Returns latest 3 articles
+        /// </summary>
+        /// <returns></returns>
         public async Task<IEnumerable<ListingViewModel>> GetLatestAsync()
         {
             var latestArticles = await repo.AllReadonly<Article>()

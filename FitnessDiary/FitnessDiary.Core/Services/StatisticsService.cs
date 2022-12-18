@@ -20,7 +20,11 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Returns data on calorie eaten and load liften in workouts for the past 6 days
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<StatisticsServiceModel> Total(string userId)
         {
             var user = await repo.All<ApplicationUser>()

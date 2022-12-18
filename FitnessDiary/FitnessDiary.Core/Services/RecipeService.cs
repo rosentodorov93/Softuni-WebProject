@@ -14,7 +14,11 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Creates new recipe
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<string> AddAsync(CreateRecipeModel model)
         {
             var ingredients = new List<Ingredient>();
@@ -69,7 +73,12 @@ namespace FitnessDiary.Core.Services
             return resultMessage;
 
         }
-
+        /// <summary>
+        /// Ads more ingredients to recipe
+        /// </summary>
+        /// <param name="ingredient"></param>
+        /// <param name="recipeId"></param>
+        /// <returns></returns>
         public async Task<DetailsViewModel> AddIngredientAsync(IngredientViewModel ingredient, string recipeId)
         {
             var food = await repo.All<Food>()
@@ -114,7 +123,11 @@ namespace FitnessDiary.Core.Services
                 }).ToList()
             };
         }
-
+        /// <summary>
+        /// Edits ingredients amout in recipe
+        /// </summary>
+        /// <param name="model"></param>
+        /// <returns></returns>
         public async Task<DetailsViewModel> EditAsync(EditViewModel model)
         {
             var recipe = await LoadFullRecipe(model.Id);
@@ -172,7 +185,11 @@ namespace FitnessDiary.Core.Services
             }
             recipe.CaloriesPerServing = recipe.Nutrition.Calories;
         }
-
+        /// <summary>
+        /// Returns all recipes by user
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<RecipeListingViewModel>> GetAllByUserId(string userId)
         {
             var recipe = await repo.All<Recipe>()
@@ -193,7 +210,12 @@ namespace FitnessDiary.Core.Services
                 CaloriesPerPortion = r.CaloriesPerServing
             });
         }
-
+        /// <summary>
+        /// Returns recipe details
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<DetailsViewModel> GetDetailsByIdAsync(string id)
         {
             var recipe = await LoadFullRecipe(id);
@@ -221,6 +243,11 @@ namespace FitnessDiary.Core.Services
                 }).ToList()
             };
         }
+        /// <summary>
+        /// Returns recipe by id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<EditViewModel> GetByIdAsync(string id)
         {
             var recipe = await repo.All<Recipe>()
@@ -245,7 +272,11 @@ namespace FitnessDiary.Core.Services
                 }).ToList()
             };
         }
-
+        /// <summary>
+        /// Returns all ingredients in recie
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<IEnumerable<IngredientDetailsViewModel>> GetIngredientsAsync(string id)
         {
             var recipe = await LoadFullRecipe(id);
@@ -257,7 +288,13 @@ namespace FitnessDiary.Core.Services
                 Amount = i.Amount
             });
         }
-
+        /// <summary>
+        /// Removes ingredient from recipe
+        /// </summary>
+        /// <param name="recipeid"></param>
+        /// <param name="ingredientToRemove"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task RemoveIngredient(string recipeid, int ingredientToRemove)
         {
             var recipe = await LoadFullRecipe(recipeid);
@@ -281,12 +318,20 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
 
         }
-
+        /// <summary>
+        /// Chech if recipe exists
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<bool> ExistsByIdAsync(string id)
         {
             return await repo.AllReadonly<Recipe>().Where(r => r.IsActive).AnyAsync(r => r.Id == id);
         }
-
+        /// <summary>
+        /// Deletes recipe 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         public async Task<string> DeleteAsync(string id)
         {
             var resultMessage = "Error! Unable to delete item";

@@ -18,7 +18,15 @@ namespace FitnessDiary.Core.Services
         {
             repo = _repo;
         }
-
+        /// <summary>
+        /// Ads food record in diary
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="id"></param>
+        /// <param name="amount"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<string> AddFoodServingAsync(string userId, string id, double amount, string category)
         {
             var food = await repo.All<Food>()
@@ -66,7 +74,15 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
             return $"Successfully added {amount} {food.Name} to {category}";
         }
-
+        /// <summary>
+        /// Ads food record in diary from recipes
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="id"></param>
+        /// <param name="amount"></param>
+        /// <param name="category"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task<string> AddRecipeServingAsync(string userId, string id, double amount, string category)
         {
             
@@ -115,7 +131,11 @@ namespace FitnessDiary.Core.Services
             await repo.SaveChangesAsync();
             return $"Successfully added {amount} portions {recipe.Name} to {category}";
         }
-
+        /// <summary>
+        /// Returns main diary information for today
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public async Task<DiaryDayServiceModel> LoadDiaryDay(string userId)
         {
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)
@@ -197,7 +217,13 @@ namespace FitnessDiary.Core.Services
             }
             return null;
         }
-
+        /// <summary>
+        /// Remove food record from diary
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentException"></exception>
         public async Task RemoveServingAsync(string userId, int id)
         {
             var user = await repo.All<ApplicationUser>().Where(u => u.Id == userId)

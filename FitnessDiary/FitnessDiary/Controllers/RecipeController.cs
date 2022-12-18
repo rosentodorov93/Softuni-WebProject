@@ -57,6 +57,7 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await recepieService.AddAsync(model);
+            TempData[MessageConstant.SuccessMessage] = result;
             cache.Remove(RecipeConstants.MineRecipesCacheKey);
             logger.LogInformation(result);
 
@@ -241,6 +242,8 @@ namespace FitnessDiary.Controllers
             }
 
             var result = await recepieService.DeleteAsync(id);
+
+            TempData[MessageConstant.ErrorMessage] = result;
             cache.Remove(RecipeConstants.MineRecipesCacheKey);
             logger.LogInformation(result);
 
