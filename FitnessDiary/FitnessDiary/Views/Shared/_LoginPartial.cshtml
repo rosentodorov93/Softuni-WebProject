@@ -6,12 +6,12 @@
 @inject IAccountService service;
 
 @{
-    string fullName;
+    string fullName = string.Empty;
     if (User.IsInRole("User"))
     {
         fullName = service.GetAppUserFullName(User.Id());
     }
-    else
+    else if(User.IsInRole("Admin") || User.IsInRole("Moderator"))
     {
         fullName = service.GetAdminUserFullName(User.Id());
     }
@@ -21,9 +21,13 @@
     @if (SignInManager.IsSignedIn(User))
     {
 
-        <li class="nav-item d-none d-sm-inline-block">
-            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @fullName!</a>
-        </li>
+        @if (User?.Identity?.IsAuthenticated ?? false)
+        {
+            <li class="nav-item d-none d-sm-inline-block">
+                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @fullName!</a>
+            </li>
+
+        }
 
         <li class="nav-item d-none d-sm-inline-block">
             <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">

@@ -30,10 +30,10 @@
     </div>
     <div class="col-6 ">
         <h4 class="text-center mb-3"><b>Workout Record:</b></h4>
-        <div class="d-flex justify-content-center">
+        <div class="text-center">
             @if (Model.Workout == null)
             {
-                <div class="col-3">
+                <div >
                     <p class="mb-3">You don't have workout for today yet!</p>
                 </div>
 
@@ -46,7 +46,7 @@
             {
                 <partial name="_DiaryWorkoutPartial" model="Model" />
 
-                <div class="text-center mb-auto">
+                <div class="mb-auto">
                     <a class="btn btn-primary" asp-controller="Workout" asp-action="EditWorkout" asp-route-id="@Model.Workout?.Id">Change Workout Data</a>
                 </div>
             }
