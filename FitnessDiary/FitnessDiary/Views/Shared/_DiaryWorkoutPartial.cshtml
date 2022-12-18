@@ -1,4 +1,5 @@
-﻿@model IdexViewQueryModel
+﻿@using FitnessDiary.Infrastructure.Data.Enums
+@model IdexViewQueryModel
 
 <div>
     <p><b>Workout Name:</b> @Model.Workout.Name</p>
@@ -10,7 +11,7 @@
             {
                 <tr data-widget="expandable-table" aria-expanded="false">
                     <td>Exercise: @exercise.Name</td>
-                    <td>BodyPart: @exercise.BodyPart</td>
+                    <td>BodyPart: @((BodyPartType)exercise.BodyPart)</td>
                     <td>Sets: @exercise.Sets.Count</td>
                 </tr>
                 <tr class="expandable-body d-none">

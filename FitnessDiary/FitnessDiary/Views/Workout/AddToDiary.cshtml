@@ -1,4 +1,5 @@
-﻿@model AddToDiaryViewModel
+﻿@using FitnessDiary.Infrastructure.Data.Enums
+@model AddToDiaryViewModel
 
 <div class="panel panel-default mb-5">
     <div class="panel-heading">
@@ -32,7 +33,7 @@
                         {
                             <li>
                                 <div>
-                                    <p class="h5">@Model.Exercises[i].Name - @Model.Exercises[i].BodyPart</p>
+                                    <p class="h5">@Model.Exercises[i].Name - @((BodyPartType)Model.Exercises[i].BodyPart)</p>
                                     @Html.HiddenFor(modelItem => @Model.Exercises[i].Id)
                                     @Html.HiddenFor(modelItem => @Model.Exercises[i].Name)
                                     @Html.HiddenFor(modelItem => @Model.Exercises[i].BodyPart)
