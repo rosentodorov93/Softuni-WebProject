@@ -184,7 +184,7 @@
                 SetCount: sets
             }
 
-            $.ajax({
+            $.ajax({ 
                 contentType: 'application/json; charset=utf-8',
                 dataType: 'json',
                 method: 'POST',
@@ -192,9 +192,13 @@
                 data: JSON.stringify(data),
                 success: function(result) {
                     window.location = `${tamplateId}`;
+                },
+                error: function(error) {
+                    window.location = `${tamplateId}`;
                 }
             });
             clearItem();
+            $("#removeExerciseModal").modal('hide');
         })
 
         function clearItem() {

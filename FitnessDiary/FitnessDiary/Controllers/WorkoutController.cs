@@ -164,11 +164,22 @@ namespace FitnessDiary.Controllers
                 return RedirectToAction(nameof(MineTamplates));
             }
 
-            var result = await workoutService.AddExerciseToTamplateAsync(model);
-            cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
-            logger.LogInformation(result);
+            try
+            {
+                var result = await workoutService.AddExerciseToTamplateAsync(model);
+                cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
+                logger.LogInformation(result);
 
-            return Json(result);
+                return Json(result);
+            }
+            catch (ArgumentException ae)
+            {
+
+                TempData[MessageConstant.ErrorMessage] = ae.Message;
+                logger.LogError(ae, ae.Message);
+
+                return BadRequest(ae.Message);
+            }
         }
         [HttpPost]
         [IgnoreAntiforgeryToken]
@@ -190,7 +201,7 @@ namespace FitnessDiary.Controllers
             cache.Remove(WorkoutConstants.MineTamplatesCacheKey);
             logger.LogInformation(result);
 
-            return Json(result);
+            return Ok(result);
         }
         public async Task<IActionResult> AddToDiary(string Id)
         {

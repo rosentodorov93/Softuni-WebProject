@@ -21,13 +21,17 @@ namespace FitnessDiary.Core.Services
         {
             var workout = await LoadTamplate(model.WorkoutId);
 
-
             var exercise = new ExerciseTamplate()
             {
                 Name = model.ExerciseName,
                 BodyPart = (BodyPartType)Enum.Parse(typeof(BodyPartType), model.BodyPart),
                 SetCount = model.SetCount,
             };
+
+            if (workout.Exercises.Any(e => e.Name == exercise.Name))
+            {
+                throw new ArgumentException("Error! Exercise is already added");
+            }
 
             workout.Exercises.Add(exercise);
 

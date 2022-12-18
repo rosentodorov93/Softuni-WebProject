@@ -179,5 +179,29 @@ namespace FitnessDiary.Core.Services
                 Fats = user.TargetNutrients.Fats
             };
         }
+
+        public string GetAppUserFullName(string userId)
+        {
+            var fullName = repo.AllReadonly<ApplicationUser>().Where(u => u.UserId == userId).FirstOrDefault().FullName;
+
+            if (string.IsNullOrEmpty(fullName))
+            {
+                return null;
+            }
+
+            return fullName;
+        }
+
+        public string GetAdminUserFullName(string userId)
+        {
+            var user = repo.AllReadonly<AdministrationUser>().Where(u => u.UserId == userId).FirstOrDefault();
+
+            if (string.IsNullOrEmpty(user.FirstName) || string.IsNullOrEmpty(user.LastName))
+            {
+                return null;
+            }
+
+            return $"{user.FirstName} {user.LastName}";
+        }
     }
 }

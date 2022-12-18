@@ -18,7 +18,7 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
                 {
                     Id = "00c51d79-b0a2-44c4-9dfd-cc197f24c3e8",
                     Name = "Egg Size M",
-                    MeassureUnits = Enums.MeassureUnitType.CaloriesPerItem,
+                    MeassureUnits = Enums.MeassureUnitType.NutritionPerItem,
                     Type = "Protein",
                     NutritionId = 3
                 },
@@ -26,7 +26,7 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
                 {
                     Id = "8070aa93-ea4c-477e-972b-aa3370f2d701",
                     Name = "Banana",
-                    MeassureUnits = Enums.MeassureUnitType.CaloriesPerItem,
+                    MeassureUnits = Enums.MeassureUnitType.NutritionPerItem,
                     Type = "Fruit",
                     NutritionId = 4
                 },
@@ -34,7 +34,7 @@ namespace FitnessDiary.Infrastructure.Data.Configuration
                 {
                     Id = "7bbc16e1-faa6-46ad-90ba-3dc038105ea2",
                     Name = "Potato",
-                    MeassureUnits = Enums.MeassureUnitType.CaloriesPer100grams,
+                    MeassureUnits = Enums.MeassureUnitType.NutritionPer100g,
                     Type = "Vegetables",
                     NutritionId = 5
                 },

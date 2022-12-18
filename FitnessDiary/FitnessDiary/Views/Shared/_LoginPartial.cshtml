@@ -1,27 +1,43 @@
-﻿@using FitnessDiary.Infrastructure.Data.Account
+﻿@using FitnessDiary.Core.Contracts
+@using FitnessDiary.Extensions
+@using FitnessDiary.Infrastructure.Data.Account
 @using Microsoft.AspNetCore.Identity
 @inject SignInManager<IdentityUser> SignInManager
+@inject IAccountService service;
 
+@{
+    string fullName;
+    if (User.IsInRole("User"))
+    {
+        fullName = service.GetAppUserFullName(User.Id());
+    }
+    else
+    {
+        fullName = service.GetAdminUserFullName(User.Id());
+    }
+}
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item d-none d-sm-inline-block">
-        <a  class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-        <form  class="form-inline"  asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
-            <button  type="submit" class="nav-link btn btn-link text-dark">Logout</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item d-none d-sm-inline-block">
-        <a class="nav-link"  asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li class="nav-item d-none d-sm-inline-block">
-        <a class="nav-link"  asp-area="Identity" asp-page="/Account/Login">Login</a>
-    </li>
-}
+    @if (SignInManager.IsSignedIn(User))
+    {
+
+        <li class="nav-item d-none d-sm-inline-block">
+            <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @fullName!</a>
+        </li>
+
+        <li class="nav-item d-none d-sm-inline-block">
+            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                <button type="submit" class="nav-link btn btn-link text-dark">Logout</button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item d-none d-sm-inline-block">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Register">Register</a>
+        </li>
+        <li class="nav-item d-none d-sm-inline-block">
+            <a class="nav-link" asp-area="Identity" asp-page="/Account/Login">Login</a>
+        </li>
+    }
 </ul>

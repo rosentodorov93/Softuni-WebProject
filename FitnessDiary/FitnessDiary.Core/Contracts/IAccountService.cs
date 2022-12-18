@@ -22,5 +22,8 @@ namespace FitnessDiary.Core.Contracts
         string? GetById(string id);
         Task CreateAdministrationUser(CreateAdministrationUserViewModel model);
         Task<bool> ExistsById(string? userId);
+        string GetAppUserFullName(string userId);
+        string GetAdminUserFullName(string userId);
+
     }
 }

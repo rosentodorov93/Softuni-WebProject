@@ -1,9 +1,12 @@
-﻿@{
+﻿@using FitnessDiary.Core.Contracts
+@using FitnessDiary.Extensions
+@inject IAccountService service;
+@{
     ViewData["Title"] = "Home Page";
 }
 
 <div class="mt-4 p-5 bg-light text-center">
-    <h2 class="display-4">Hello</h2>
+    <h2 class="display-4">Hello @service.GetAdminUserFullName(User.Id())</h2>
     <p class="lead mb-1 mt-3">
         This is the administration area - you can <b>read</b>, <b>create</b>,
         <b>delete</b> and <b>edit</b> articles and food database.
