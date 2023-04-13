@@ -4,10 +4,11 @@ using FitnessDiary.Core.Models.Diary;
 using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using static FitnessDiary.Core.Constants.UserConstants;
 
 namespace FitnessDiary.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = UserRole)]
     public class DiaryController : Controller
     {
         private readonly IDiaryService diaryService;
@@ -65,8 +66,8 @@ namespace FitnessDiary.Controllers
 
             if (await accountService.ExistsById(userId) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
-                logger.LogError("Invalid user");
+                TempData[MessageConstant.ErrorMessage] = InvalidUserId;
+                logger.LogError(InvalidUserId);
 
 
                 return RedirectToAction("Index", "Home", new { area = "" });
@@ -124,8 +125,8 @@ namespace FitnessDiary.Controllers
 
             if (await accountService.ExistsById(userId) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Ivalid user Id";
-                logger.LogError("Invalid user");
+                TempData[MessageConstant.ErrorMessage] = InvalidUserId;
+                logger.LogError(InvalidUserId);
 
 
                 return RedirectToAction("Index", "Home", new { area = "" });

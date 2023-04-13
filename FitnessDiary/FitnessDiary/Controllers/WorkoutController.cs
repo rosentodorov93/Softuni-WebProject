@@ -5,13 +5,13 @@ using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
-using System.Security.Claims;
-using static FitnessDiary.Infrastructure.Data.Common.DataConstants.WorkoutTamplateDataConstants;
-using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ApplicationUserDataConstants;
+using static FitnessDiary.Core.Constants.WorkoutConstants;
+using static FitnessDiary.Core.Constants.UserConstants;
+
 
 namespace FitnessDiary.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = UserRole)]
     public class WorkoutController : Controller
     {
         private readonly IWorkoutService workoutService;
@@ -63,8 +63,8 @@ namespace FitnessDiary.Controllers
             var userId = accountService.GetById(this.User.Id());
             if (userId == null)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
-                logger.LogError("Invalid user Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidTamplateId;
+                logger.LogError(InvalidUserId);
 
                 return RedirectToAction("Index", "Home");
             }

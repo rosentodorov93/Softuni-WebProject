@@ -1,16 +1,17 @@
 ﻿using FitnessDiary.Core.Constants;
 using FitnessDiary.Core.Contracts;
-using FitnessDiary.Core.Models.Food;
 using FitnessDiary.Core.Models.Recepie;
 using FitnessDiary.Extensions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using System.Security.Claims;
+using static FitnessDiary.Core.Constants.UserConstants;
+using static FitnessDiary.Core.Constants.RecipeConstants;
 
 namespace FitnessDiary.Controllers
 {
-    [Authorize(Roles = "User")]
+    [Authorize(Roles = UserRole)]
     public class RecipeController : Controller
     {
         private readonly IFoodService foodService;
@@ -47,7 +48,7 @@ namespace FitnessDiary.Controllers
         {
             if ((await accountService.ExistsById(model.UserId)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
 
@@ -68,8 +69,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction(nameof(Mine));
             }
@@ -87,15 +88,15 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(model.RecepieId)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction(nameof(Mine));
             }
             if ((await foodService.ExistsByIdAsync(model.Ingredient.FoodId)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid ingredient Id";
-                logger.LogError("Invalid ingredient Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidIngredientId;
+                logger.LogError(InvalidIngredientId);
 
                 return RedirectToAction(nameof(Mine));
             }
@@ -116,8 +117,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction("Mine");
             }
@@ -136,8 +137,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(model.Recipeid)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction(nameof(Mine));
             }
@@ -163,8 +164,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction("Mine");
             }
@@ -175,8 +176,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction("Mine");
             }
@@ -204,7 +205,7 @@ namespace FitnessDiary.Controllers
 
             await recepieService.EditAsync(model);
             cache.Remove(RecipeConstants.MineRecipesCacheKey);
-            logger.LogInformation($"Recipe {model.Name} was edited!");
+            logger.LogInformation(string.Format(RecipeEdited,model.Name));
 
             return RedirectToAction("Details", "Recipe", new { id = model.Id });
 
@@ -215,7 +216,7 @@ namespace FitnessDiary.Controllers
             var userId = accountService.GetById(this.User.Id());
             if ((await accountService.ExistsById(userId)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid user Id";
+                TempData[MessageConstant.ErrorMessage] = InvalidUserId;
                 return RedirectToAction("Index", "Home", new { area = "" });
             }
             var recipes = cache.Get<IEnumerable<RecipeListingViewModel>>(RecipeConstants.MineRecipesCacheKey);
@@ -235,8 +236,8 @@ namespace FitnessDiary.Controllers
         {
             if ((await recepieService.ExistsByIdAsync(id)) == false)
             {
-                TempData[MessageConstant.ErrorMessage] = "Invalid recipe Id";
-                logger.LogError("Invalid recipe Id");
+                TempData[MessageConstant.ErrorMessage] = InvalidRecipeId;
+                logger.LogError(InvalidRecipeId);
 
                 return RedirectToAction(nameof(Mine));
             }

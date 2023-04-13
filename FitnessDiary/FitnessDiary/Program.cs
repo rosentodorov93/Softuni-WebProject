@@ -1,10 +1,6 @@
 
 using FitnessDiary.Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
-using FitnessDiary.Core.Contracts;
-using FitnessDiary.Core.Services;
-using FitnessDiary.Infrastructure.Data.Common;
 using Microsoft.AspNetCore.Mvc;
 using FitnessDiary.Extensions;
 using FitnessDiary.ModelBinders;

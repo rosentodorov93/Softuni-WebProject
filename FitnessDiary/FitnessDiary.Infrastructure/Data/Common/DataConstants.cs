@@ -48,7 +48,7 @@
             public const int MaxDescriptionLength = 250;
             public const int MinDescriptionLength = 5;
 
-            public const string InvalidTamplateId = "Invalid workout tamplate Id";
+            
 
         }
 
@@ -108,7 +108,6 @@
             public const string MaxWeight = "500";
             public const string MinWeight = "1";
 
-            public const string InvalidUserId = "Invalid user Id";
         }
     }
 }
