@@ -1,13 +1,12 @@
-
 using FitnessDiary.Infrastructure.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using FitnessDiary.Extensions;
 using FitnessDiary.ModelBinders;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddApplicationDbContexts(builder.Configuration);
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -34,7 +33,6 @@ builder.Services.AddMemoryCache();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseMigrationsEndPoint();
