@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.IgredientsDataConstants;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -13,6 +14,8 @@ namespace FitnessDiary.Infrastructure.Data
 
         [ForeignKey(nameof(FoodId))]
         public Food Food { get; set; } = null!;
+
+        [Range(typeof(double), AmountMinValue, AmontMaxValue)]
         public double Amount { get; set; }
 
     }

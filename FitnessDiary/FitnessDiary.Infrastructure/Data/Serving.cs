@@ -1,6 +1,7 @@
 ﻿using FitnessDiary.Infrastructure.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ServingDataConstants;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -10,10 +11,11 @@ namespace FitnessDiary.Infrastructure.Data
         public int Id { get; set; }
 
         [Required]
-        [MaxLength(50)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]
+        [Range(typeof(double), MinAmount, MaxAmount)]
         public double Amount { get; set; }
 
         [Required]

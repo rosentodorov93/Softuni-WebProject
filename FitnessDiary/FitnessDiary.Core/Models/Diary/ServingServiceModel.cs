@@ -9,7 +9,7 @@ namespace FitnessDiary.Core.Models.Diary
         public string Id { get; set; } = null!;
         public string Category { get; set; } = null!;
 
-        [Range(MinAmount,MaxAmount)]
-        public double Amount { get; set; } 
+        [Range(typeof(double), MinAmount, MaxAmount)]
+        public double Amount { get; set; }
     }
 }

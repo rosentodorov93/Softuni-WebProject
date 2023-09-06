@@ -1,5 +1,6 @@
 ﻿using FitnessDiary.Infrastructure.Data.Enums;
 using System.ComponentModel.DataAnnotations;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ExerciseDataConstants;
 
 namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
 {
@@ -9,7 +10,7 @@ namespace FitnessDiary.Infrastructure.Data.WorkoutEntites
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [MaxLength(70)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]

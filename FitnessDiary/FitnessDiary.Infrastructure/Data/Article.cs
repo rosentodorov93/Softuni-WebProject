@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.ArticleDataConstants;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -9,7 +10,7 @@ namespace FitnessDiary.Infrastructure.Data
         public string Id { get; set; } = Guid.NewGuid().ToString();
 
         [Required]
-        [MaxLength(50)]
+        [StringLength(MaxTitleLength, MinimumLength = MinTitleLength)]
         public string Title { get; set; } = null!;
 
         [Required]
@@ -19,7 +20,7 @@ namespace FitnessDiary.Infrastructure.Data
         public string ImageUrl { get; set; } = null!;
 
         [Required]
-        [MaxLength(30)]
+        [StringLength(MaxAuthorLength, MinimumLength = MinAuthorLength)]
         public string Author { get; set; } = null!;
 
         [Required]

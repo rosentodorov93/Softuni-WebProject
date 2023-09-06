@@ -2,6 +2,7 @@
 using FitnessDiary.Infrastructure.Data.Enums;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using static FitnessDiary.Infrastructure.Data.Common.DataConstants.FoodDataConstants;
 
 namespace FitnessDiary.Infrastructure.Data
 {
@@ -12,15 +13,15 @@ namespace FitnessDiary.Infrastructure.Data
         public string Id { get; init; } = Guid.NewGuid().ToString();
 
         [Required]
-        [MaxLength(50)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength)]
         public string Name { get; set; } = null!;
 
         [Required]
         [MaxLength(25)]
-        public MeassureUnitType MeassureUnits { get; set; } 
+        public MeassureUnitType MeassureUnits { get; set; }
 
         [Required]
-        [MaxLength(30)]
+        [StringLength(MaxTypeLength, MinimumLength = MinTypeLength)]
         public string Type { get; set; } = null!;
 
         [Required]

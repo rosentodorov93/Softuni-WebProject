@@ -33,9 +33,14 @@
             public const int MinNameLength = 4;
 
 
-            public const int MaxServingSize = int.MaxValue;
+            public const int MaxServingSize = 100;
             public const int MinServingSize = 1;
 
+            
+        }
+
+        public static class IgredientsDataConstants
+        {
             public const string AmountMinValue = "0.1";
             public const string AmontMaxValue = "100";
         }
@@ -72,10 +77,12 @@
 
         public static class ServingDataConstants
         {
-            public const int MaxAmount = 100;
-            public const int MinAmount = 1;
+            public const string MaxAmount = "100";
+            public const string MinAmount = "1";
 
-         
+            public const int MaxNameLength = 50;
+            public const int MinNameLength = 3;
+
         }
 
         public static class ArticleDataConstants
@@ -92,6 +99,12 @@
         {
             public const int MaxNameLength = 80;
             public const int MinNameLength = 4;
+        }
+
+        public static class ActivityLevelDataConstants
+        {
+            public const int MaxTypeLength = 15;
+            public const int MinTypeLength = 3;
         }
 
         public static class ApplicationUserDataConstants
