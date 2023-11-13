@@ -1,12 +1,13 @@
 # Softuni-WebProject
-Asp.net mvc app for Softuni Asp.Net Advanced course
+A deffense Asp.Net Web app with MVC structure written for Asp.Net Advanced Course in Softuni Sep 2022
 
-admin user: **admin** password **admin123**
+Fitness Diry is a aimed to help and support active people track thei daily calories intake and also track and manage their workouts and activities. 
 
-* Fitness Diary lets you record yor daily food intake and workouts
+* You can record yor daily food intake and workouts and see yor nutrition data for the day
 * You can read articles about lifstyle health and training
-* You can create foods recipes and workouts and add them in your diary to see your progress 
-
+* You can create foods recipes and workouts and add them in your diary 
+* You can see statistics of total calories for the week
+  
 ### **Description and Features**
 Guest features:
   * can register as regular user
@@ -34,3 +35,10 @@ Moderator User features:
   * have access to food database
   * can edit food database
   * can edit and delete articles
+
+### **Builded With**
+  * Asp.Net
+  * Entity Framework
+  * Html, CSS, JavaScript
+  * ChartJs, TinyMCE
+    
