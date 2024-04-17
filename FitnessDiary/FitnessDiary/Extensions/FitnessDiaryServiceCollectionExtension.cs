@@ -24,7 +24,7 @@ namespace FitnessDiary.Extensions
         }
         public static IServiceCollection AddApplicationDbContexts(this IServiceCollection services, IConfiguration config)
         {
-            var connectionString = config.GetConnectionString("ApplicationConnection");
+            var connectionString = config.GetConnectionString("DefaultConnection");
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(connectionString));
             services.AddDatabaseDeveloperPageExceptionFilter();
