@@ -6,35 +6,36 @@
     ViewBag.Title = "Article Details";
 }
 
-<div class="mb-5">
-    <h2 class="text-center mb-5">@Model.Title</h2>
+    <div class="d-flex justify-content-center align-content-center">
 
-    <div class="row mb-5">
-        <label class="h4 col-4">Author: @Model.Author  </label>
-        <label class="h4 col-4">Date: @Model.Date.Date.ToString("dd/MM/yyyy")</label>
-        <label class="h4 col-4">Category: @articleService.GetCategoryName(Model.CategoryId)</label>
-    </div>
-
-    <div class="text-center mb-5">
-        <img src="@Model.ImageUrl" alt="@Model.Title" width="400" height="400">
-    </div>
-    <!-- /.card-header -->
-
-    <div class="mb-5">
-        @Html.Raw(@Model.Content)
-    </div>
-    @if (User.IsInRole("Admin"))
-    {
-        <div class="text-center mb-5">
-            <div class="mb-3">
-                <a asp-area="Administration" asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ">Edit Article</a>
-            </div>
-            <div class="mb-3">
-                <form asp-area="Administration" asp-controller="Article" asp-action="Delete" method="post">
-                    <input asp-for="@Model.Id" type="hidden" value="@Model.Id">
-                    <input type="submit" class="btn btn-primary" value="Delete Article">
-                </form>
+        <div class="w-75 mt-5">
+            <div class="mb-5">
+                <img class="img-fluid w-100 rounded mb-5" src="@Model.ImageUrl" alt="">
+                <p>@articleService.GetCategoryName(Model.CategoryId)</p>
+                <p>@Model.Date.Date.ToString("dd/MM/yyyy") | @Model.Author</p>
+                <h1 class="text-uppercase mb-4">@Model.Title</h1>
+                <div class="mb-5">
+                    @Html.Raw(@Model.Content)
+                </div>
             </div>
         </div>
-    }
+
+    </div>
+
+</div>
+
+@if (User.IsInRole("Admin"))
+{
+    <div class="text-center mb-5">
+        <div class="mb-3">
+            <a asp-area="Administration" asp-controller="Article" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary ">Edit Article</a>
+        </div>
+        <div class="mb-3">
+            <form asp-area="Administration" asp-controller="Article" asp-action="Delete" method="post">
+                <input asp-for="@Model.Id" type="hidden" value="@Model.Id">
+                <input type="submit" class="btn btn-primary" value="Delete Article">
+            </form>
+        </div>
+    </div>
+}
 </div>
